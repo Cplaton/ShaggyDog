@@ -1,0 +1,12 @@
+REDIRECTION PROJECT
+
+Ce répertoire contient un projet abandonné faute de temps et d'un problème non résolu. A l'origine, Smartfox devait pouvoir fonctionner sur n'importe qu'elle application externe, en ne s'appuyant plus sur le SDK de Parrot.
+Le répertoire Google drive dans SPRINT 3 présente la conception prévue.
+
+Voici le problème non résolu : il y avait 2 solutions :
+- soit arriver à rediriger les paquets dès le départ (initialisation entre le drone et l'appareil externe compris) : mais le drone vérifie énormément de chose sur la provenance et la destinnation des paquets (@source/dest et port source/dest) et là je n'ai pas réussi à fournir les règles IP tables qui fonctionnent, la connexion ne s'effectue pas.
+- soit rediriger seulement après cette initialisation : le problème est que le nat ne prend en compte les nouvelles règles qu'on lui applique que pour les nouvelles "connexion" UDP. Hors la communication UDP existe déjà et on ne veut pas la recréer. Il faut donc aller toucher le kernel : l'utilitaire conntrack permet de faire ça facilement (réinitialisation des communications UDP) mais très compliqué soit de compiler l'appli pour l'archi du drone, soit d'extraire dans le code source de cet utilitaire le code qui fait ça (ioctl ???).
+
+Répertoire SFe (Smartfox Embedded): représente le code embarqué sur le drone : gère la redirection (ou pas) des commandes, renvoie les commandes envoyée par l'appli externe à Smartfox débarqué (Sfd).
+
+Répertoire Sfd (Smartfox "Debedded") : code débarqué qui tourne sur une station tierce et qui exécute le diagnostiquer. Récupère les commandes envoyées par Sfe, les analyse et ordonne à Sfe de soit continuer à rediriger les commandes de l'appli externe  (pas de collision avec obstacle) soit  de les bloquer et par conséquent prendre en compte les commandes envoyée par Sfd (situation de Safety Mode : Sfd prend ke controle du drone).
