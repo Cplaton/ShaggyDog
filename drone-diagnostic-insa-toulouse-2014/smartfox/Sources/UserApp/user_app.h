@@ -12,7 +12,7 @@ PROTO_THREAD_ROUTINE(th_user_app, data);
 /* ############################################################################################################## */
 
 /* configuration file containing the keyboard file */
-#define CONF_FILE "./user_app.conf"
+#define CONF_FILE "./Sources/UserApp/user_app.conf"
 
 /* drone motions and keyboard keys association*/
 #define GO_FORWARD 	KEY_W

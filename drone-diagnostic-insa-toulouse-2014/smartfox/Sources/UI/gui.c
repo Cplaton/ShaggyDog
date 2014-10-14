@@ -21,6 +21,7 @@ void OnDestroy(GtkWidget *pWidget, gpointer pData) {
 void init_gui(int argc, char **argv)
 {
   gui = vp_os_malloc(sizeof (gui_t));
+  g_thread_init(NULL);
   gdk_threads_init();
   gtk_init(&argc, &argv);
 
