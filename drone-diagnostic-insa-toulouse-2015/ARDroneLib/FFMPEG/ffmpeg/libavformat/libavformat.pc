@@ -1,7 +1,7 @@
 prefix=/usr/local
 exec_prefix=${prefix}
-libdir=/home/kiwor/Documents/INSA/5SEC/Projet/drone-diagnostic-insa-toulouse-2014/ARDroneLib/FFMPEG/ffmpeg/../../Soft/Build/targets_versions//ffmpeg_x86_64_PROD_MODE_Linux_3.16.4-1-ARCH_GNU_Linux_usrbingcc_4.9.1
-includedir=/home/kiwor/Documents/INSA/5SEC/Projet/drone-diagnostic-insa-toulouse-2014/ARDroneLib/FFMPEG/ffmpeg/../Includes
+libdir=/media/sf_ShaggyDog/ShaggyDog/drone-diagnostic-insa-toulouse-2015/ARDroneLib/FFMPEG/ffmpeg/../../Soft/Build/targets_versions//ffmpeg_i686_PROD_MODE_Linux_2.6.32-45-generic_GNU_Linux_usrbingcc_4.4.3
+includedir=/media/sf_ShaggyDog/ShaggyDog/drone-diagnostic-insa-toulouse-2015/ARDroneLib/FFMPEG/ffmpeg/../Includes
 
 Name: libavformat
 Description: FFmpeg container format library
@@ -9,6 +9,6 @@ Version: 53.4.0
 Requires: libavcodec = 53.7.0
 Requires.private: 
 Conflicts:
-Libs: -L${libdir} -lavformat -lva -lSDL -lpthread -lm -pthread -lbz2 -lz
+Libs: -L${libdir} -lavformat -lm -pthread -lz
 Libs.private: 
 Cflags: -I${includedir}

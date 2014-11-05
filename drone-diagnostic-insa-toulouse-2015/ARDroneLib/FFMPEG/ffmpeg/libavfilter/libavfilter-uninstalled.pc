@@ -1,12 +1,12 @@
 prefix=
 exec_prefix=
 libdir=${pcfiledir}
-includedir=/home/kiwor/Documents/INSA/5SEC/Projet/drone-diagnostic-insa-toulouse-2014/ARDroneLib/FFMPEG/ffmpeg
+includedir=/media/sf_ShaggyDog/ShaggyDog/drone-diagnostic-insa-toulouse-2015/ARDroneLib/FFMPEG/ffmpeg
 
 Name: libavfilter
 Description: FFmpeg video filtering library
 Version: 2.23.0
 Requires: 
 Conflicts:
-Libs: ${libdir}/libavfilter.a -lva -lSDL -lpthread -lm -pthread -lbz2 -lz 
+Libs: ${libdir}/libavfilter.a -lm -pthread -lz 
 Cflags: -I${includedir}
