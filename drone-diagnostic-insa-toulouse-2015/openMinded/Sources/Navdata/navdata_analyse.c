@@ -16,9 +16,11 @@
 #include "Model/residue.h"
 #include "UI/gui.h"
 #include "Navdata/navdata_analyse.h"
+#include "Navdata/database/bd_management.h"
 #include "utils.h"
 
 #define RECORD_TIME 15 //(en s)
+#define BDD_ENABLED 1
 
 FILE * fr;
 FILE * fm;
@@ -118,19 +120,28 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
         refresh_command();
 
         if (!isInit) {
-          updateNavdata(&selectedNavdata, nd);
-          initModel(&selectedNavdata,(float32_t)(nd->altitude)/1000, nd->psi/1000);
-           initFilters(&selectedNavdata);
-           isInit = 1;
-					 if(options.debug!=0){
+        	updateNavdata(&selectedNavdata, nd);
+         	initModel(&selectedNavdata,(float32_t)(nd->altitude)/1000, nd->psi/1000);
+        	initFilters(&selectedNavdata);
+           	isInit = 1;
+		if(options.debug!=0){
       			fm = open_navdata_file(NAME_MODEL_DATA);
       			fr = open_navdata_file(NAME_REAL_DATA);
       			ff = open_navdata_file(NAME_FILTERED_DATA);
       			fc = open_navdata_file("selectedNav");
       			fres = open_navdata_file("residue");
       			logSFM=openLogFile("logSFM");
-			csv = open_csv_file("WekaData");
-    			 }
+			//
+			if( BDD_ENABLED ){
+				if(connect_to_database()!=0){
+					// ERROR
+				} else {
+					start_new_flight();
+				}
+			} else {
+				csv = open_csv_file("WekaData");
+			}
+    		}
           }
 					
           updateNavdata(&selectedNavdata, nd);          
@@ -174,7 +185,12 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 	   ay = (filtered_drone_output.Vy - ay)/50 ;
 	   az = (filtered_drone_output.Vx - az)/50 ;
 	   counter = 0 ;
-	   new_data_csv(csv,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az);   
+	   if( BDD_ENABLED ){
+		insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az);
+	   } else {
+		new_data_csv(csv,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az);  
+	   }
+	    
 	  }
 	
             fprintf(logSFM,"sign: %d\n",fault_msg);
@@ -220,7 +236,13 @@ inline C_RESULT navdata_analyse_release( void )
          close_navdata_file(fc);
          close_navdata_file(fres);
          closeLogFile(logSFM);
-	 close_navdata_file(csv);
+	 //close_navdata_file(csv);
+
+	 if( BDD_ENABLED ){
+		disconnect_to_database();
+	 } else {
+		close_navdata_file(csv);
+	 }
          printf("closed\n");
          isStopped = 1;
   }

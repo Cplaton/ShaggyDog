@@ -1,12 +1,12 @@
 prefix=
 exec_prefix=
 libdir=${pcfiledir}
-includedir=/home/kiwor/Documents/INSA/5SEC/Projet/drone-diagnostic-insa-toulouse-2014/ARDroneLib/FFMPEG/ffmpeg
+includedir=/media/sf_ShaggyDog/ShaggyDog/drone-diagnostic-insa-toulouse-2015/ARDroneLib/FFMPEG/ffmpeg
 
 Name: libavdevice
 Description: FFmpeg device handling library
 Version: 53.1.1
 Requires: libavformat = 53.4.0
 Conflicts:
-Libs: ${libdir}/libavdevice.a -lva -lSDL -lpthread -lm -pthread -lbz2 -lz 
+Libs: ${libdir}/libavdevice.a -lm -pthread -lz 
 Cflags: -I${includedir}

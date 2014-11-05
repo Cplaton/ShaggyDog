@@ -18,6 +18,12 @@ endif
 
 TARGET=smartfox
 
+PG_INC=/usr/include/postgresql/
+PG_LIB=/usr/lib/postgresql/8.4/lib/
+
+#CFLAGS=-I$(PG_INC)
+#LDLIBS=-L$(PG_LIB) -lpq
+
 SRC_DIR:=$(shell pwd)/../Sources
 
 # Define application source files
@@ -25,6 +31,7 @@ GENERIC_BINARIES_SOURCE_DIR:=$(SRC_DIR)
 
 GENERIC_BINARIES_COMMON_SOURCE_FILES+=			\
    Navdata/navdata_analyse.c    \
+   Navdata/database/bd_management.c    \
    ardrone_move_cmd.c   \
    disable_navdata_demo.c    \
    utils.c		\
@@ -45,8 +52,10 @@ GENERIC_BINARIES_COMMON_SOURCE_FILES+=			\
 GENERIC_INCLUDES+=					\
 	$(SRC_DIR) \
 	$(LIB_DIR) \
+	$(PG_INC) \
 	$(SDK_PATH)/Soft/Common \
-	$(SDK_PATH)/Soft/Lib
+	$(SDK_PATH)/Soft/Lib \
+	
 
 GENERIC_TARGET_BINARIES_PREFIX=
 
@@ -57,7 +66,7 @@ GENERIC_BINARIES_SOURCE_ENTRYPOINTS+=			\
 
 GENERIC_INCLUDES:=$(addprefix -I,$(GENERIC_INCLUDES))
 
-GENERIC_LIB_PATHS=-L$(GENERIC_TARGET_BINARIES_DIR)
+GENERIC_LIB_PATHS=-L$(GENERIC_TARGET_BINARIES_DIR) -L$(PG_LIB) -lpq 
 GENERIC_LIBS=-lpc_ardrone -lgtk-x11-2.0 -lrt
 
 SDK_FLAGS+="USE_APP=yes"
@@ -77,9 +86,10 @@ export GENERIC_BINARIES_SOURCE_ENTRYPOINTS
 export GENERIC_LIBRARY_SOURCE_DIR=$(GENERIC_BINARIES_SOURCE_DIR)
 
 
-.PHONY: $(TARGET) build_libs
+.PHONY: $(TARGET) build_libs 
 
 all: build_libs $(TARGET)
+
 
 $(TARGET):
 	@$(MAKE) -C $(SDK_PATH)/VP_SDK/Build $(TMP_SDK_FLAGS) $(SDK_FLAGS) $(MAKECMDGOALS) USE_LINUX=yes
@@ -90,5 +100,4 @@ $(MAKECMDGOALS): build_libs
 	@$(MAKE) -C $(SDK_PATH)/VP_SDK/Build $(TMP_SDK_FLAGS) $(SDK_FLAGS) $(MAKECMDGOALS) USE_LINUX=yes
 
 build_libs:
-	@$(MAKE) -C $(SDK_PATH)/Soft/Build $(TMP_SDK_FLAGS) $(SDK_FLAGS) $(MAKECMDGOALS) USE_LINUX=yes
-
+	@$(MAKE) -C $(SDK_PATH)/Soft/Build $(TMP_SDK_FLAGS) $(SDK_FLAGS)  $(MAKECMDGOALS) USE_LINUX=yes
