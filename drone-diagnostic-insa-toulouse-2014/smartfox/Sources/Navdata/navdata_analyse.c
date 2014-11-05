@@ -26,6 +26,20 @@ FILE * ff;
 FILE * fc;
 FILE * fres;
 FILE * logSFM;
+FILE * csv;
+
+static int counter = 0 ;
+static float av_alt = 0.0 ;
+static float av_pitch = 0.0 ;
+static float av_roll = 0.0 ;
+static float av_Vyaw = 0.0 ;
+static float av_Vx = 0.0 ;
+static float av_Vy = 0.0 ;
+static float av_Vz = 0.0 ;
+static float ax = 0.0 ;
+static float ay = 0.0 ;
+static float az = 0.0 ;
+
 
 static drone_state_t drone_state = UNKNOWN_STATE;	// current drone state : taking off, flying...
 static float drone_battery = 0.0 ;			// current battery level
@@ -115,6 +129,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
       			fc = open_navdata_file("selectedNav");
       			fres = open_navdata_file("residue");
       			logSFM=openLogFile("logSFM");
+			csv = open_csv_file("WekaData");
     			 }
           }
 					
@@ -131,8 +146,37 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
           if(safetyOn==4){
             fault_msg=diagnosis(1);
           }
-			
-          if(options.debug!=0){
+	  if(options.debug!=0){
+	  if(counter==0){
+ 	    av_alt = 0.0 ; 
+ 	    av_pitch = 0.0 ; 
+ 	    av_roll = 0.0 ;
+ 	    av_Vyaw = 0.0 ;
+ 	    av_Vx = 0.0 ;
+ 	    av_Vy = 0.0 ;
+ 	    av_Vz = 0.0 ;
+	    ax = filtered_drone_output.Vx ;
+	    ay = filtered_drone_output.Vy ;
+	    az = filtered_drone_output.Vz ;
+	  }
+	  if(counter<9){
+	    av_alt += (float32_t)(nd->altitude)/10000 ;
+            av_pitch += filtered_drone_output.pitch/10 ;
+            av_roll += filtered_drone_output.roll/10 ;
+            av_Vyaw += filtered_drone_output.Vyaw/10 ;
+            av_Vx += filtered_drone_output.Vx/10 ;
+            av_Vy += filtered_drone_output.pitch/10 ;
+            av_Vz += filtered_drone_output.pitch/10 ;
+	    counter++;
+	  }
+	  if(counter==9){
+	   ax = (filtered_drone_output.Vx - ax)/50 ;
+	   ay = (filtered_drone_output.Vy - ay)/50 ;
+	   az = (filtered_drone_output.Vx - az)/50 ;
+	   counter = 0 ;
+	   new_data_csv(csv,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az);   
+	  }
+	
             fprintf(logSFM,"sign: %d\n",fault_msg);
             fprintf(logSFM,"drone state: alt:%f pitch:%f roll:%f Vyaw:%f Vx:%f Vy:%f Vz:%f \n time:%u\n\n",
                     (float32_t)(nd->altitude)/1000,
@@ -176,6 +220,7 @@ inline C_RESULT navdata_analyse_release( void )
          close_navdata_file(fc);
          close_navdata_file(fres);
          closeLogFile(logSFM);
+	 close_navdata_file(csv);
          printf("closed\n");
          isStopped = 1;
   }
