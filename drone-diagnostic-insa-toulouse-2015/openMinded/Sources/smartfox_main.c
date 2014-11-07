@@ -70,6 +70,7 @@ C_RESULT ardrone_tool_init_custom(void)
   /* ####################### USER APPLICATION ##################### */
   /* ## add here the statement that start the thread of your app ## */
   START_THREAD (th_user_app, NULL);
+  START_THREAD (mission, NULL);
 
   return C_OK;
 }
@@ -129,5 +130,6 @@ BEGIN_THREAD_TABLE
   /* ####################### USER APPLICATION ##################### */
   /* ## states the threads that you are creating  ## */
   THREAD_TABLE_ENTRY( th_user_app,20)
+  THREAD_TABLE_ENTRY( mission, 20)
 END_THREAD_TABLE
 
