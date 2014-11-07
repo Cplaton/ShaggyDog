@@ -34,3 +34,8 @@
 *.jpg
 *.jpeg
 *.gif
+*.avi
+
+# AR DRONE LIB
+**/ARDroneLib/**
+
