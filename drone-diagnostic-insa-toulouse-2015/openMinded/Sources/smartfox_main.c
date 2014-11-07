@@ -33,7 +33,7 @@
 #include <UI/ardrone_gui.h>
 #include <Model/model.h>
 #include <Navdata/navdata_analyse.h>
-
+#include <UserApp/mission.h>
 
 /* ############# USER APPLICATION ############ */
 /* #### add here the .h files of your app #### */
