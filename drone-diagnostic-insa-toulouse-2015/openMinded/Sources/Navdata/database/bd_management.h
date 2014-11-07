@@ -9,17 +9,6 @@
 /**
  * @struct	augmented_navdata
  * @abstract	Struct representing the data of one sensor mesure as it's stored in the database.
- * @field	time
- * @field	alt
- * @field	pitch
- * @field	roll
- * @field	vyaw
- * @field	vx
- * @field	vy
- * @field 	vz
- * @field
- * @field
- * @field
  **/
 struct augmented_navdata {
 	int time;       /**< Time spent since the begining of the flight. */
@@ -33,6 +22,7 @@ struct augmented_navdata {
 	float ax;       /**< x acceleration of the drone (m.s^-2). */
 	float ay;       /**< y acceleration of the drone (m.s^-2). */
 	float az;       /**< z acceleration of the drone (m.s^-2). */
+	int class_id;	/**< identifier of the class representing the data. 0 represent the no classified items. */
 };
 
 
@@ -81,9 +71,10 @@ int start_new_flight();
  * @param 	ax 		x acceleration of the drone
  * @param 	ay 		y acceleration of the drone
  * @param 	az 		z acceleration of the drone
+ * @param 	class_id	identifier of the class in wich the item has been classified. 0 if it's unclassified.
  * @return : 0 if connection successes, 1 in case of error. Error messages are printed in standard error.
  **/
-int insert_new_data( int time, float alt, float pitch, float roll, float vyaw, float vx, float vy, float vz, float ax, float ay, float az);
+int insert_new_data( int time, float alt, float pitch, float roll, float vyaw, float vx, float vy, float vz, float ax, float ay, float az, int class_id);
 
 
 /** 
