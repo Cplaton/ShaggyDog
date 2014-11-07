@@ -43,7 +43,8 @@ GENERIC_BINARIES_COMMON_SOURCE_FILES+=			\
    UI/debugPage.c 	\
    UI/diagnosisPage.c 	\
    UI/ardrone_gui.c	\
-   UserApp/user_app.c
+   UserApp/user_app.c \
+   mission.c
 
 # ^ ######### USER APPLICATION ########  ^
 # | add here the c files of your threads |
