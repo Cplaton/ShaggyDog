@@ -1,7 +1,7 @@
 prefix=/usr/local
 exec_prefix=${prefix}
-libdir=/media/sf_ShaggyDog/ShaggyDog/drone-diagnostic-insa-toulouse-2015/ARDroneLib/FFMPEG/ffmpeg/../../Soft/Build/targets_versions//ffmpeg_i686_PROD_MODE_Linux_2.6.32-45-generic_GNU_Linux_usrbingcc_4.4.3
-includedir=/media/sf_ShaggyDog/ShaggyDog/drone-diagnostic-insa-toulouse-2015/ARDroneLib/FFMPEG/ffmpeg/../Includes
+libdir=/home/zuser/openminded/ShaggyDog/drone-diagnostic-insa-toulouse-2015/ARDroneLib/FFMPEG/ffmpeg/../../Soft/Build/targets_versions//ffmpeg_i686_PROD_MODE_Linux_2.6.32-67-generic_GNU_Linux_usrbingcc_4.4.3
+includedir=/home/zuser/openminded/ShaggyDog/drone-diagnostic-insa-toulouse-2015/ARDroneLib/FFMPEG/ffmpeg/../Includes
 
 Name: libswscale
 Description: FFmpeg image rescaling library
