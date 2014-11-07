@@ -27,7 +27,7 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 	float fin;
 	Inputs_t lastcommand;
 	commandType_t type;
-	int etat = -1;
+	int etat = 1;
 	int ancien_etat = 1;
 
 	while(1) {
