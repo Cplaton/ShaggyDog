@@ -7,9 +7,6 @@ main()
 	if(connect_to_database()==0)
 	{
 		printf("Connected\n");
-		
-		printf("Next flight: %d\n", next_flight_id);
-		printf("Next data: %d\n", next_data_id);
 
 		// Test d'insertion de donnée :
 		printf("\nTest d'insertion de donnée:\n");
@@ -21,9 +18,6 @@ main()
 			if(insert_new_data( 1, 72.0, 1.0, 5.0, 4.0, 65.0, 45.0, 0.6, 0.4, 0.6, 0.678) == 0)
 			{
 				printf("Ajout de donnée réussi\n");
-				printf("Next flight: %d\n", next_flight_id);
-				printf("Next data: %d\n", next_data_id);
-			
 			
 				struct augmented_navdata * data;
 				int nb_res;
