@@ -15,6 +15,13 @@ int next_flight_id_bd;		// Next flight id
 int next_data_id_bd;		// Next data id
 
 /**
+ * @var		next_class_id
+ * @brief	Id of the next class that would be created in the database (current max id + 1
+ * @warning 	Take care, the management of this value suppose that no value can be inserted into the database by another program
+ */
+int next_class_id_bd;
+
+/**
  * @var 	res_bd_req
  * @brief	Result of the last database request
  * @warning	In order to preserve memory, this variable should be cleared as soon as it content is has been readed (and used)
@@ -85,6 +92,22 @@ int connect_to_database()
 	}	
 	PQclear(res_bd_req);
 
+
+	res_bd_req = PQexec(conn_bd, "SELECT MAX(class_id) as max from \"Classes\"");
+	if (PQresultStatus(res_bd_req) != PGRES_TUPLES_OK) {
+		fprintf(stderr, "libpq error: %s\n\n", PQresultErrorMessage(res_bd_req));
+		next_class_id_bd = 0;
+	}
+	else 
+	{
+		for(i=0; i<PQntuples(res_bd_req); i++){
+			temp = PQgetvalue(res_bd_req, i, PQfnumber(res_bd_req, "max"));
+		}
+		next_class_id_bd = atoi(temp) + 1;
+	
+	}
+	PQclear(res_bd_req);
+
 	// Finally return	
 	return 0;
 }
@@ -108,7 +131,7 @@ struct augmented_navdata * get_values_from_db(int number, int flight_id, int * n
 		sprintf(where_req ," WHERE flight=%d", flight_id);
 	}
 
-	sprintf( request, "SELECT time, altitude, pitch, roll, vyaw, vx, vy, vz, ax, ay, az FROM \"BasicSensors\" %s %s", where_req, limit_req);
+	sprintf( request, "SELECT time, altitude, pitch, roll, vyaw, vx, vy, vz, ax, ay, az, classe FROM \"BasicSensors\" %s %s", where_req, limit_req);
 	printf("\n %s \n", request);
 	res_bd_req = PQexec(conn_bd, request);
 
@@ -136,6 +159,7 @@ struct augmented_navdata * get_values_from_db(int number, int flight_id, int * n
 			temp_data->ax    = atof(PQgetvalue(res_bd_req, i, PQfnumber(res_bd_req, "ax"))); 
 			temp_data->ay    = atof(PQgetvalue(res_bd_req, i, PQfnumber(res_bd_req, "ay"))); 
 			temp_data->az    = atof(PQgetvalue(res_bd_req, i, PQfnumber(res_bd_req, "az")));
+			temp_data->class_id = atoi(PQgetvalue(res_bd_req, i, PQfnumber(res_bd_req, "classe")));
 		}
 		if(DEBUG_MODE) 
 		{
@@ -183,15 +207,15 @@ int start_new_flight()
 }
 
 
-int insert_new_data( int time, float alt, float pitch, float roll, float vyaw, float vx, float vy, float vz, float ax, float ay, float az)
+int insert_new_data( int time, float alt, float pitch, float roll, float vyaw, float vx, float vy, float vz, float ax, float ay, float az, int class_id)
 {
 
 	// Sends the request
 	char request[512];
 
 	// TODO protéger du débordement
-	sprintf(request, "INSERT INTO \"BasicSensors\" VALUES (%d, %d, %d, %f, %f, %f , %f, %f, %f, %f, %f, %f, %f) ",
-			 next_data_id_bd, next_flight_id_bd -1, time, alt, pitch, roll, vyaw, vx, vy, vz, ax, ay, az);
+	sprintf(request, "INSERT INTO \"BasicSensors\" VALUES (%d, %d, %d, %f, %f, %f , %f, %f, %f, %f, %f, %f, %f, %d) ",
+			 next_data_id_bd, next_flight_id_bd -1, time, alt, pitch, roll, vyaw, vx, vy, vz, ax, ay, az, class_id);
 
 	res_bd_req = PQexec(conn_bd, request);
 	if (PQresultStatus(res_bd_req) != PGRES_COMMAND_OK)
