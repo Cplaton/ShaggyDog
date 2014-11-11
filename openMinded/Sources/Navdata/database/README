@@ -1,0 +1,18 @@
+openMinded_db_lib
+
+THIS LIBRARY IS A PROPERTY OF SHAGGYDOGS
+
+It provides simple and easy to use funtions that make the link betwin a C program and a PostgreSQL database.
+This is the first version of the library and due to that, the database options are not configurable for the moment.
+
+Due to that, the database should respect the following specifications :
+Name: zuser
+User: zuser
+Password: zinsa2010
+Server: localhost
+
+Tables : 
+Flight(integer flight_id)
+Classes(integer class_id, text class_name)
+BasicSensors(integer data_id, integer time, float altitude, float pitch, float roll, float vyaw, float vx, float vy, float vz, float ax, float ay, float az, integer classe)
+You will find enclosed to this library the sql scripts that generated these tables.
