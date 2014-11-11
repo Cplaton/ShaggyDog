@@ -42,7 +42,7 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 				takeoff();
 				usleep(2000000);
 				vp_os_mutex_lock(&class_mutex);
-				class_id=1;
+   				class_id=1;
   				vp_os_mutex_unlock(&class_mutex);							
 				usleep(5000000);
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
@@ -58,8 +58,8 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 				
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
-                class_id=0;
-                vp_os_mutex_unlock(&class_mutex);
+                                class_id=0;
+                                vp_os_mutex_unlock(&class_mutex);
 				command = pitch(-0.2, 1000000);
 				if (command != 0) {
 					etat = 3;

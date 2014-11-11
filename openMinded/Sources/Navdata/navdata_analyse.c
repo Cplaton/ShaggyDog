@@ -52,7 +52,7 @@ static vp_os_mutex_t battery_mutex;
 static vp_os_mutex_t wifi_mutex;
 static vp_os_mutex_t class_mutex;
 
-int class_id;
+int class_id = 0;
 int class_id_aux;
 
 Inputs_t local_cmd,sfm_cmd;          // local command taken into account here
