@@ -23,5 +23,5 @@ float get_battery_level();
 /* returns the wifi link quality */
 float get_wifi_quality();
 
-
+extern int class_id;
 #endif // _NAVDATA_H_

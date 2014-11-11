@@ -93,7 +93,7 @@ int connect_to_database()
 	PQclear(res_bd_req);
 
 
-	res_bd_req = PQexec(conn_bd, "SELECT MAX(class_id) as max from \"Classes\"");
+	res_bd_req = PQexec(conn_bd, "SELECT MAX(classe_id) as max from \"Classes\"");
 	if (PQresultStatus(res_bd_req) != PGRES_TUPLES_OK) {
 		fprintf(stderr, "libpq error: %s\n\n", PQresultErrorMessage(res_bd_req));
 		next_class_id_bd = 0;
