@@ -190,9 +190,10 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 	   az = (filtered_drone_output.Vx - az)/50 ;
 	   counter = 0 ;
 	   if( BDD_ENABLED ){
-                vp_os_mutex_lock(&class_mutex);
-                class_id_aux=class_id;
-                vp_os_mutex_unlock(&class_mutex);
+               vp_os_mutex_lock(&class_mutex);
+               class_id_aux=class_id;
+               vp_os_mutex_unlock(&class_mutex);
+
 		insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az,class_id_aux);
 	   } else {
 		new_data_csv(csv,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az);  
