@@ -17,7 +17,6 @@
 #include "user_app.h"
 #include "ardrone_move_cmd.h"
 #include "Model/model.h"
-#include "Navdata/navdata_analyse.h"
 
 
 DEFINE_THREAD_ROUTINE(mission, data) {
@@ -29,7 +28,6 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 	commandType_t type;
 	int etat = 1;
 	int ancien_etat = 1;
-	int class_id;
 	static vp_os_mutex_t class_mutex;	
 	vp_os_mutex_init(&class_mutex);
 	while(1) {
@@ -38,27 +36,31 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 		switch (etat) {
 
 			case 1 :
-				
-				takeoff();							
+				vp_os_mutex_lock(&class_mutex);
+   				class_id=0;
+  				vp_os_mutex_unlock(&class_mutex);
+				takeoff();
+				usleep(2000000);
+				vp_os_mutex_lock(&class_mutex);
+   				class_id=1;
+  				vp_os_mutex_unlock(&class_mutex);							
 				usleep(5000000);
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
 				status = get_drone_state();				
 				if ((type != TAKEOFF_REQUEST) && (status == FLYING)){
 					etat = 2;
-					vp_os_mutex_lock(&class_mutex);
-   					class_id=1;
-  					vp_os_mutex_unlock(&class_mutex);	
 					printf("Passage à l'état 2\n");
 				}		
 				break;
 			
 			case 2 :			
 				
+				
 				//void apply_command(roll, pitch, yaw, gas)
-				command = pitch(-0.2, 1000000);
 				vp_os_mutex_lock(&class_mutex);
                                 class_id=0;
                                 vp_os_mutex_unlock(&class_mutex);
+				command = pitch(-0.2, 1000000);
 				if (command != 0) {
 					etat = 3;
 					ancien_etat = 2;
@@ -68,11 +70,10 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 			case 3 :
 	
 
-
-				command = roll(-0.2,1000000);
-                                vp_os_mutex_lock(&class_mutex);
+				vp_os_mutex_lock(&class_mutex);
                                 class_id=0;
-                                vp_os_mutex_unlock(&class_mutex);	
+                                vp_os_mutex_unlock(&class_mutex);
+				command = roll(-0.2,1000000);
 				if (command != 0) {
 					etat = 4;
 					printf("Passage à l'état 11\n");
@@ -80,11 +81,10 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 				}
 				break;
 			case 4 : 
-
-				command = pitch(0.2,1000000);
-                                vp_os_mutex_lock(&class_mutex);
+				vp_os_mutex_lock(&class_mutex);
                                 class_id=0;
                                 vp_os_mutex_unlock(&class_mutex);
+				command = pitch(0.2,1000000);
 				if (command != 0) {
 					etat = 5;
 					printf("Passage à l'état 11\n");
@@ -93,10 +93,10 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 				break;
 			case 5 :
 
-				command = roll(0.2,1000000);
-                                vp_os_mutex_lock(&class_mutex);
+				vp_os_mutex_lock(&class_mutex);
                                 class_id=0;
                                 vp_os_mutex_unlock(&class_mutex);
+				command = roll(0.2,1000000);
 				if (command != 0) {
 					printf("Passage à l'état 11");
 					etat = 6;
@@ -105,10 +105,10 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 				break;			
 			case 6 : 
 
-				command = gas(0.4,2000000);	
-                                vp_os_mutex_lock(&class_mutex);
+				vp_os_mutex_lock(&class_mutex);
                                 class_id=0;
-                                vp_os_mutex_unlock(&class_mutex);		
+                                vp_os_mutex_unlock(&class_mutex);
+				command = gas(0.4,2000000);	
 				if (command != 0) {
 					printf("Passage à l'état 11");
 					etat = 7;
@@ -117,10 +117,10 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 				break;	
 			case 7:
 
-				command = yaw(-1.0,2000000);	
-                                vp_os_mutex_lock(&class_mutex);
+				vp_os_mutex_lock(&class_mutex);
                                 class_id=0;
-                                vp_os_mutex_unlock(&class_mutex);		
+                                vp_os_mutex_unlock(&class_mutex);
+				command = yaw(-1.0,2000000);	
 				if (command != 0) {
 					printf("Passage à l'état 11");
 					etat = 8;
@@ -129,10 +129,11 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 				break;				
 			
 			case 8:
-				command = gas(-0.4,2000000);	
-                                vp_os_mutex_lock(&class_mutex);
+
+				vp_os_mutex_lock(&class_mutex);
                                 class_id=0;
                                 vp_os_mutex_unlock(&class_mutex);
+				command = gas(-0.4,2000000);	
 				if (command != 0) {
 					printf("Passage à l'état 11");
 					etat = 9;
@@ -141,10 +142,11 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 				break;	
 
 			case 9:
-				command = yaw(1.0,2000000);	
-                                vp_os_mutex_lock(&class_mutex);
+
+				vp_os_mutex_lock(&class_mutex);
                                 class_id=0;
-                                vp_os_mutex_unlock(&class_mutex);		
+                                vp_os_mutex_unlock(&class_mutex);
+				command = yaw(1.0,2000000);	
 				if (command != 0) {
 					printf("Passage à l'état 11");
 					etat = 10;
@@ -154,17 +156,17 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 
 			case 10 :
 
-				landing();
-                                vp_os_mutex_lock(&class_mutex);
+				vp_os_mutex_lock(&class_mutex);
                                 class_id=0;
                                 vp_os_mutex_unlock(&class_mutex);
+				landing();
 				break;					
 			case 11 : 
 
-				fin = hover(5000000);
-                                vp_os_mutex_lock(&class_mutex);
+				vp_os_mutex_lock(&class_mutex);
                                 class_id=0;
                                 vp_os_mutex_unlock(&class_mutex);
+				fin = hover(5000000);
 				if (fin == 1)
 					etat = ancien_etat + 1;
 				break;				

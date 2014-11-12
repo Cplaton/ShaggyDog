@@ -9,6 +9,18 @@
 
 PROTO_THREAD_ROUTINE(th_user_app, data);
 
+/* to make the drone hovers over the floor*/
+void hovering();
+
+/* to send a specifing command to the drone while it is flying */
+void apply_command(float roll, float pitch, float Vyaw, float gas);
+
+/* to make the drone lands */
+void landing();
+
+/* to make the drone takes off */
+void takeoff();
+
 /* ############################################################################################################## */
 
 /* configuration file containing the keyboard file */
