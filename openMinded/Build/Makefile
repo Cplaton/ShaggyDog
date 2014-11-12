@@ -30,6 +30,7 @@ GENERIC_BINARIES_SOURCE_DIR:=$(SRC_DIR)
 
 GENERIC_BINARIES_COMMON_SOURCE_FILES+=	\
    Navdata/navdata_analyse.c    	\
+   Navdata/classifier.c    	\
    ardrone_move_cmd.c   		\
    disable_navdata_demo.c    		\
    utils.c		\
@@ -42,7 +43,8 @@ GENERIC_BINARIES_COMMON_SOURCE_FILES+=	\
    UI/diagnosisPage.c 	\
    UI/ardrone_gui.c	\
    UserApp/user_app.c \
-   UserApp/mission.c
+   UserApp/mission.c 
+   
 
 # ^ ######### USER APPLICATION ########  ^
 # | add here the c files of your threads |
@@ -114,5 +116,5 @@ build_libs:
 build_openMinded_db_lib:
 	@(cd $(DB_LIB_DIR) && $(MAKE))
 	@(cd $(BUILD_DIR)) 
-	@(cd $(MSVMPACK_DIR) && $(MAKE))
+#	@(cd $(MSVMPACK_DIR) && $(MAKE))
 

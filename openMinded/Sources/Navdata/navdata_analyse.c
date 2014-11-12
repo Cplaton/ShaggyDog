@@ -27,13 +27,6 @@
 #include "Navdata/database/bd_management.h"
 #include "utils.h"
 
-/* TEST */
-#include "libMSVM.h"        // Generic structure and function declarations
-#include "libtrainMSVM.h"   // Training functions (not required for predictions only)
-#include "libevalMSVM.h"    // Evaluation functions (also used during training)
-
-/*    */
-
 #define RECORD_TIME 15 //(en s)
 
 //(en s)

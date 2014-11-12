@@ -893,7 +893,7 @@ void MSVM_2_compute_vector_y_bar(double **vector_y_bar, double **vector_u, doubl
 	
 	mult_mat(cache->A0T, vector_u, cache->vector_z_bar, nb_variables, nb_sat, 1);
 
-	add_mat(vector_gradient, cache->vector_z_bar, cache->working_matrix1, nb_variables, 1);
+	add_mat2(vector_gradient, cache->vector_z_bar, cache->working_matrix1, nb_variables, 1);
 	scal_mat(-1.0, cache->working_matrix1, vector_y_bar, nb_variables, 1);
 
 	for(k=1; k<=nb_variables; k++)
