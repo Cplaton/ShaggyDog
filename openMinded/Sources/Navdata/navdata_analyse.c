@@ -27,7 +27,6 @@
 #include "Navdata/database/bd_management.h"
 #include "utils.h"
 
-<<<<<<< HEAD
 /* TEST */
 #include "libMSVM.h"        // Generic structure and function declarations
 #include "libtrainMSVM.h"   // Training functions (not required for predictions only)
@@ -36,11 +35,10 @@
 /*    */
 
 #define RECORD_TIME 15 //(en s)
-=======
+
 //(en s)
 #define RECORD_TIME 15
 
->>>>>>> ccac7a8bf420a2efb5d2390fe2e12098e555c199
 #define BDD_ENABLED 1
 
 /********************************FILEs************************************/
