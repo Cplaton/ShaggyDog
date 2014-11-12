@@ -1,6 +1,14 @@
+/**
+ * @file    bd_management.h
+ * @author  Arnaud LECHANTRE  - ShaggyDogs
+ * @brief   Librairy that manage a specific database that save each sensor values available on AR - Drone
+ * @version 1.0
+ * @date    1 november 2014
+ **/
 #include <stdio.h>
 #include <stdlib.h>
-#include <strings.h>
+#include <strings.h>	
+//#include "utils.h"
 #include "libpq-fe.h"                                   /* Postgress library header */
 #ifndef OPENMINDED_BD_LIB
 #define OPENMINDE_BD_LIB 
@@ -40,16 +48,57 @@ static void exit_nicely();
 int connect_to_database();
 
 
+/**
+ * @brief	Get the maximum value from the selected column from the selected table 
+ * @param	columName	String representing the name of the column in witch the maximun should be searched
+ * @param	tableName	String representign the name of the table in witch the value should be searched
+ * @return	The maximum value founded in the selected column from the selected table (into float format).
+ **/
+float get_max(char * columnName, char * tableName);
+
+/**
+ * @brief	Get the minimum value from the selected column from the selected table 
+ * @param	columName	String representing the name of the column in witch the minimun should be searched
+ * @param	tableName	String representign the name of the table in witch the value should be searched
+ * @return	The minimum value founded in the selected column from the selected table (into float format).
+ **/
+float get_min(char * columnName, char * tableName);
+
+/**
+ * @brief	Norm a value (between -1 and 1) considering the given limits
+ * @param	init	Initial value to be normed
+ * @param	min		Current minimum value
+ * @param	max		Current maximum value 
+ * @return 	The normed value
+ **/
+ float norm_value(float init, float min, float max);
 
 /**
  * @brief	get values from the database
  * @param 	number	 	Limit for the number of values that should be getted, 0 if no limit
  * @param 	flight_id	The id of the flight that should be getted, -1 if get all 
- * @param 	result 		Would be filled with the number of line founded corresponding to the request
+ * @param 	nb_res 		Would be filled with the number of line founded corresponding to the request
  * @return	An array filled with the data matching the request, null in case of error 
  **/
 struct augmented_navdata * get_values_from_db(int number, int flight_id, int * nb_res);
 
+/**
+ * @brief	get values from the database and return them into a normed format
+ * @param 	number	 	Limit for the number of values that should be getted, 0 if no limit
+ * @param 	flight_id	The id of the flight that should be getted, -1 if get all 
+ * @param 	nb_res 		Would be filled with the number of line founded corresponding to the request
+ * @return	An array filled with the normed data matching the request, null in case of error 
+ **/
+struct augmented_navdata * get_normed_values_from_db(int number, int flight_id, int * nb_res);
+
+/**
+ * @brief	get values from the database and write them into a CSV file
+ * @param 	number	 	Limit for the number of values that should be getted, 0 if no limit
+ * @param 	flight_id	The id of the flight that should be getted, -1 if get all 
+ * @param 	should_norm	Indicate whether the values should be normed or not before being writed in the CSV file.
+ * @return	0 in case of success, 1 in case of error 
+ **/
+ int write_data_to_csv(char * csvFileName, int number, int flight_id, int should_norm);
 
 /**
  * @brief 	Create a new flight in the database

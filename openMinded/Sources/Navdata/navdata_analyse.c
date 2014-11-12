@@ -1,3 +1,11 @@
+/**
+ * @file    navdata_analyse.c
+ * @author  ShaggyDogs and Smartfox
+ * @brief   Navdata management based on Smartfox's file
+ * @version 2.0
+ * @date    November 2014
+ **/
+
 #include <ardrone_tool/UI/ardrone_input.h>
 #include <ardrone_api.h>
 #include <stdio.h>
@@ -19,50 +27,263 @@
 #include "Navdata/database/bd_management.h"
 #include "utils.h"
 
-#define RECORD_TIME 15 //(en s)
+//(en s)
+#define RECORD_TIME 15
+
 #define BDD_ENABLED 1
 
+/********************************FILEs************************************/
+
+/**
+ * @var		fr
+ * @brief	file in which the real data would be stored
+ **/
 FILE * fr;
+
+/**
+ * @var		fm
+ * @brief	File in which the model data would be stored
+ **/
 FILE * fm;
+
+/**
+ * @var		ff
+ * @brief	File in which the filtered navdata would be stored
+ **/
 FILE * ff;
+
+/**
+ * @var		fc
+ * @brief	??
+ **/
 FILE * fc;
+
+/**
+ * @var		fres
+ * @brief	File in which the residues of the navdata would be stored
+ **/
 FILE * fres;
+
+/**
+ * @var		logSFM
+ * @brief	File in which the logs would be stored.
+ **/
 FILE * logSFM;
+
+/**
+ * @var		csv
+ * @brief	File in which the navdata would be stored in CSV format (in case BDD_ENABLED is 0)
+ * @warning	In case BDD_ENABLED is equal to 1, this file won't be created.
+ **/
 FILE * csv;
 
+/********************************SENSED VALUES************************************/
+
+/**
+ * @var		counter     TODO : set in static in fn
+ * @brief	Counter that represent the number of values that have been saved since .
+ **/
 static int counter = 0 ;
+
+/**
+ * @var		av_alt
+ * @brief	Average altitude of the last statements.
+ **/
 static float av_alt = 0.0 ;
+
+/**
+ * @var		av_pitch
+ * @brief	Average pitch of the last statements.
+ **/
 static float av_pitch = 0.0 ;
+
+/**
+ * @var		av_roll
+ * @brief	Average roll of the last statements.
+ **/
 static float av_roll = 0.0 ;
+
+/**
+ * @var		av_Vyaw
+ * @brief	Average yaw speed of the last statements.
+ **/
 static float av_Vyaw = 0.0 ;
+
+/**
+ * @var		av_Vx
+ * @brief	Average x speed of the last statements.
+ **/
 static float av_Vx = 0.0 ;
+
+/**
+ * @var		av_aVy
+ * @brief	Average y speed of the last statements.
+ **/
 static float av_Vy = 0.0 ;
+
+/**
+ * @var		av_z speed
+ * @brief	Average z speed of the last statements.
+ **/
 static float av_Vz = 0.0 ;
+
+/**
+ * @var		av_alt
+ * @brief	Average x acceleration of the last statements.
+ **/
 static float ax = 0.0 ;
+
+/**
+ * @var		av_alt
+ * @brief	Average y acceleration of the last statements.
+ **/
 static float ay = 0.0 ;
+
+/**
+ * @var		av_alt
+ * @brief	Average z acceleration of the last statements.
+ **/
 static float az = 0.0 ;
 
+/**
+ * @var		drone_state
+ * @brief	Current state of the drone (taking off, flying ...).
+ * @warning This variable is protected by the state_mutex. Do not forget to call it before accessing the variable.
+ * @see     drone_state_t
+ **/
+static drone_state_t drone_state = UNKNOWN_STATE;
 
-static drone_state_t drone_state = UNKNOWN_STATE;	// current drone state : taking off, flying...
-static float drone_battery = 0.0 ;			// current battery level
-static float wifi_link_quality = 0.0;			// quantify the wifi link quality
+/**
+ * @var		drone_battery
+ * @brief	Current battery level  of the drone. Value is in percentage.
+ * @warning This variable is protected by the battery_mutex. Do not forget to call it before accessing the variable.
+ **/
+static float drone_battery = 0.0 ;
 
+/**
+ * @var		drone_battery
+ * @brief	Current wifi link qualité of the drone. Value is in percentage
+ * @warning This variable is protected by the wifi_mutex. Do not forget to call it before accessing the variable.
+ **/
+static float wifi_link_quality = 0.0;
+
+
+/********************************MUTEXs************************************/
+
+
+/**
+ * @var		state_mutex
+ * @brief	Protect the drone's state variable.
+ * @warning This mutex should be called before each call to drone_state variable.
+ **/
 static vp_os_mutex_t state_mutex;
+
+/**
+ * @var		battery_mutex
+ * @brief	Protect the drone's battery level variable.
+ * @warning This mutex should be called before each call to drone_battery variable.
+ **/
 static vp_os_mutex_t battery_mutex;
+
+/**
+ * @var		wifi_mutex
+ * @brief	Protect the drone's wifi quality indicator.
+ * @warning This mutex should be called before each call to wifi_link_quality variable.
+ **/
 static vp_os_mutex_t wifi_mutex;
+
+/**
+ * @var		class_mutex
+ * @brief	Protect the drone's class.
+ * @warning This mutex should be called before each call to class_id variable.
+ **/
 static vp_os_mutex_t class_mutex;
 
+/********************************OTHER VARIABLES*******************************/
+
+/**
+ * @var     class_id
+ * @brief   Identifier of the current class of the drone
+ * @warning This variable is protected by the class_mutex. Do not forget to call it before accessing the variable.
+ **/
 int class_id = 0;
 int class_id_aux;
 
-Inputs_t local_cmd,sfm_cmd;          // local command taken into account here
+/**
+ * @var     local_cmd
+ * @brief   ?
+ * @see     Inputs_t
+ **/
+Inputs_t local_cmd;         // local command taken into account here
+
+/**
+ * @var     sfm_cmd
+ * @brief   ?
+ * @see     Inputs_t
+ **/
+Inputs_t sfm_cmd;
+
+/**
+ * @var     fault_msg
+ * @brief   ?
+ * @see     fault_t
+ **/
 fault_t fault_msg = NO_FAULT;
+
+/**
+ * @var     alert_msg
+ * @brief   ?
+ * @see     alert_t
+ **/
 alert_t alert_msg = NO_ALERT;
+
+/**
+ * @var     residues
+ * @brief   ?
+ * @see     Residue_t
+ **/
 Residue_t residues;
 
+
+/**
+ * @var     safetyOn
+ * @brief   Inform whether the safety mode is activated(1) or not (0). Safety mode is activated when some
+ *          dangerous situation are detected.
+ **/
 unsigned char safetyOn=0;
+
+/**
+ * @var     options
+ * @brief   Contains some informations about how the program should be started (debug mode ...).
+ * @see     options_t
+ **/
 extern options_t options;
+
+/**
+ * @var     killsig
+ * @brief   ?? TODO check if used somewhere
+ **/
 extern unsigned char killSig;
+
+/**
+ * @var     isStopped
+ * @brief   Inform whether the record has been stopped(1) or not(0).
+ **/
+int isStopped = 0;
+
+/**
+ * @var     isInit
+ * @brief   Inform whether the diagnoser has been initialised(1) or not(0).
+ **/
+int isInit = 0;
+
+/**
+ * @var     recordNumber
+ * @brief   The number of navdata that have already been analysed.
+ **/
+int recordNumber = 0;
+
+/*************************FUNCTION DECLARATIONs********************************/
 
 /* according to the last navdata received, resfresh the drone state */
 void extract_drone_state(navdata_demo_t *);
@@ -73,28 +294,31 @@ void refresh_battery(navdata_demo_t *);
 /* according to the last navdata received, refresh the drone wifi quality */
 void refresh_wifi_quality(navdata_wifi_t *);
 
-
-int isStopped = 0,           // has stopped the record or not
-    isInit = 0,              // to know whether the diagnoser has been initialised
-    recordNumber = 0;        // number of navdata analysed
-
-
 void extractDesiredNavdata(const navdata_demo_t * nd, Navdata_t *selectedNavdata);
 void refresh_command();
 
+/*************************FUNCTION IMPLEMENTATIONs*******************************/
 
-inline C_RESULT navdata_analyse_init( void* data )
+/**
+ * @brief   Initialize the analyse process 
+ * @param   data    data to analyse
+ * @return  C_OK...(usefull)
+ **/
+inline C_RESULT navdata_analyse_init( void * data )
 {
 
-    vp_os_mutex_init(&state_mutex); 
+    vp_os_mutex_init(&state_mutex);     // TODO : Check le retour
     vp_os_mutex_init(&battery_mutex);
     vp_os_mutex_init(&wifi_mutex);
-		mkdir("./DataModel", 0777);
+    
+    
+    if( )mkdir("./DataModel", 0777) != 0)   //PEPITE
+    {
+        perror("navdata_anayse_init");
+    };
  		
     return C_OK;
 }
-
-
 
 /* Analyse navdata during the event loop */
 inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata )
@@ -176,12 +400,12 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 	  }
 	  if(counter<9){
 	    av_alt += (float32_t)(nd->altitude)/10000 ;
-            av_pitch += filtered_drone_output.pitch/10 ;
-            av_roll += filtered_drone_output.roll/10 ;
-            av_Vyaw += filtered_drone_output.Vyaw/10 ;
-            av_Vx += filtered_drone_output.Vx/10 ;
-            av_Vy += filtered_drone_output.pitch/10 ;
-            av_Vz += filtered_drone_output.pitch/10 ;
+        av_pitch += filtered_drone_output.pitch/10 ;
+        av_roll += filtered_drone_output.roll/10 ;
+        av_Vyaw += filtered_drone_output.Vyaw/10 ;
+        av_Vx += filtered_drone_output.Vx/10 ;
+        av_Vy += filtered_drone_output.pitch/10 ;
+        av_Vz += filtered_drone_output.pitch/10 ;
 	    counter++;
 	  }
 	  if(counter==9){
@@ -275,13 +499,17 @@ void extractDesiredNavdata(const navdata_demo_t * nd, Navdata_t *selectedNavdata
 
 // keep updated the data concerning current
 // motion command sent to the drone
-void refresh_command() {
+
+void refresh_command() {                        //PEPITE
 	commandType_t commandType;
 	get_command (&local_cmd , &commandType);
 }
 
 
-/* according to the last navdata received, refresh the drone battery level ( in percentage) */
+/**
+ * @brief   Refresh the battery indicator from the last navdata received
+ * @param   nd      The last navdata packet received
+ **/
 void refresh_battery(navdata_demo_t * nd) {
 
   vp_os_mutex_lock(&battery_mutex);
@@ -292,7 +520,10 @@ void refresh_battery(navdata_demo_t * nd) {
 
 } 
 
-/* returns the battery level in percentage */
+/**
+ * @brief   Gets the battery level in percentage 
+ * @return  The battery level in percentage
+ **/
 float get_battery_level() {
   
   float bat_level;
@@ -305,9 +536,10 @@ float get_battery_level() {
  
 }
 
-/*
- * according to the last navdata received, resfresh the drone state
- */
+/**
+ * @brief   Extracts the drone state from a given navdata and update global variable with it's value
+ * @param   nd     The last navdata received
+ **/
 void extract_drone_state(navdata_demo_t * nd) {
 
   vp_os_mutex_lock(&state_mutex);
@@ -339,9 +571,10 @@ void extract_drone_state(navdata_demo_t * nd) {
  
 }
 
-/* 
- * To get the last drone state
- */
+/**
+ * @brief   Gets the last drone state 
+ * @return  The last drone state
+ **/
 drone_state_t get_drone_state() {
 
   drone_state_t state_tempo;
@@ -354,7 +587,10 @@ drone_state_t get_drone_state() {
 }
 
 
-/* according to the last navdata received, refresh the drone wifi quality */
+/**
+ * @brief  refresh the wifi quality indicator from the last navdata received,
+ * @param  nw      the wifi indicator received into a navdata
+ **/
 void refresh_wifi_quality(navdata_wifi_t * nw) {
  
   vp_os_mutex_lock(&wifi_mutex);
@@ -363,7 +599,10 @@ void refresh_wifi_quality(navdata_wifi_t * nw) {
 
 }
 
-/* returns the wifi link quality */
+/**
+ * @brief   Gets the wifi quality indicator
+ * @return  the wifi link quality into float format
+ **/
 float get_wifi_quality() {
  
   float link_quality;

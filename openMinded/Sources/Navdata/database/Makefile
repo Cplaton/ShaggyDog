@@ -1,8 +1,7 @@
-# Makefile for sample programs
-# in Beginning PostgreSQL
+# ShaggyDogs lib_openMinded_db makefile
+# version 1.0
+# November 2014
 
-# Edit the base directories for your
-# PostgreSQL installation
 CC=gcc
 
 INC=/usr/include/postgresql/
