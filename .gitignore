@@ -27,6 +27,8 @@
 *.i*86
 *.x86_64
 *.hex
+smartfox
+sym_smartfox_main
 
 #Documents
 *.pdf
@@ -37,6 +39,10 @@
 *.avi
 *.m
 *.csv
+
+
+#????
+.goutputstream*
 
 # AR DRONE LIB
 **/ARDroneLib/**

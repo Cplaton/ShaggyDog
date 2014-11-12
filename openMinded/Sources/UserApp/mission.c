@@ -40,7 +40,7 @@ DEFINE_THREAD_ROUTINE(mission, data) {
    				class_id=0;
   				vp_os_mutex_unlock(&class_mutex);
 				takeoff();
-				usleep(2000000);
+				usleep(5000000);
 				vp_os_mutex_lock(&class_mutex);
    				class_id=1;
   				vp_os_mutex_unlock(&class_mutex);							
