@@ -1,4 +1,10 @@
-/* utils.c */
+/**
+ * @file    utils.c
+ * @author  ShaggyDogs and Smartfox
+ * @brief   Utilitaries functionnalities based on Smartfox's file
+ * @version 2.0
+ * @date    November 2014
+ **/
 
 #include <stdio.h>
 #include <utils.h>
