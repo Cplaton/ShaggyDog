@@ -27,9 +27,20 @@
 #include "Navdata/database/bd_management.h"
 #include "utils.h"
 
+<<<<<<< HEAD
+/* TEST */
+#include "libMSVM.h"        // Generic structure and function declarations
+#include "libtrainMSVM.h"   // Training functions (not required for predictions only)
+#include "libevalMSVM.h"    // Evaluation functions (also used during training)
+
+/*    */
+
+#define RECORD_TIME 15 //(en s)
+=======
 //(en s)
 #define RECORD_TIME 15
 
+>>>>>>> ccac7a8bf420a2efb5d2390fe2e12098e555c199
 #define BDD_ENABLED 1
 
 /********************************FILEs************************************/
@@ -78,12 +89,6 @@ FILE * logSFM;
 FILE * csv;
 
 /********************************SENSED VALUES************************************/
-
-/**
- * @var		counter     TODO : set in static in fn
- * @brief	Counter that represent the number of values that have been saved since .
- **/
-static int counter = 0 ;
 
 /**
  * @var		av_alt
@@ -306,13 +311,11 @@ void refresh_command();
  **/
 inline C_RESULT navdata_analyse_init( void * data )
 {
-
-    vp_os_mutex_init(&state_mutex);     // TODO : Check le retour
+    vp_os_mutex_init(&state_mutex);
     vp_os_mutex_init(&battery_mutex);
     vp_os_mutex_init(&wifi_mutex);
     
-    
-    if(mkdir("./DataModel", 0777) != 0)   //PEPITE
+    if(mkdir("./DataModel", 0722) != 0)
     {
         perror("navdata_anayse_init");
     };
@@ -320,9 +323,14 @@ inline C_RESULT navdata_analyse_init( void * data )
     return C_OK;
 }
 
-/* Analyse navdata during the event loop */
+/**
+ * @brief   Analyse the navdata and fill the files 
+ * @return  C_OK ...
+ **/
 inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata )
 {
+    static int counter = 0 ;
+    
     // navdata structures
     const navdata_demo_t *nd = &navdata->navdata_demo;
     const navdata_time_t *nt = &navdata->navdata_time;
