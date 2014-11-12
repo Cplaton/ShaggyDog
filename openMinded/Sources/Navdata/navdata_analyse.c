@@ -312,7 +312,7 @@ inline C_RESULT navdata_analyse_init( void * data )
     vp_os_mutex_init(&wifi_mutex);
     
     
-    if( )mkdir("./DataModel", 0777) != 0)   //PEPITE
+    if(mkdir("./DataModel", 0777) != 0)   //PEPITE
     {
         perror("navdata_anayse_init");
     };
