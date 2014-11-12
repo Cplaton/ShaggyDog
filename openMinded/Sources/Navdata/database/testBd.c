@@ -1,3 +1,11 @@
+/**
+ * @file    testBd.c
+ * @author  Arnaud LECHANTRE  - ShaggyDogs
+ * @brief   Test file of the db_management lib (lib_openMinded_db)
+ * @version 1.0
+ * @date    1 november 2014
+ **/
+
 #include "bd_management.h"
  
 int

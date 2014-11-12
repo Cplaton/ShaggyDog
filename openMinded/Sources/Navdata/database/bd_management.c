@@ -1,3 +1,11 @@
+/**
+ * @file    bd_management.c
+ * @author  Arnaud LECHANTRE  - ShaggyDogs
+ * @brief   Librairy that manage a specific database that save each sensor values available on AR - Drone 
+ * @version 1.0
+ * @date    1 november 2014
+ **/
+
 #include "bd_management.h"
 
 /**
@@ -112,6 +120,62 @@ int connect_to_database()
 	return 0;
 }
 
+float get_max(char * columnName, char * tableName)
+{
+	char request[300] ; 
+	char * temp;
+	int i;
+	sprintf(request, "SELECT MAX (%s) AS max FROM \"%s\"", columnName, tableName);
+
+	res_bd_req = PQexec(conn_bd, request);
+	if (PQresultStatus(res_bd_req) != PGRES_TUPLES_OK) {
+
+		fprintf(stderr, "libpq error: PGress tuples was not OK.\n\n");
+		fprintf(stderr, "libpq error: %s\n\n", PQresultErrorMessage(res_bd_req));
+		PQclear(res_bd_req);
+		return 0;
+	}
+	else 
+	{
+		for(i=0; i<PQntuples(res_bd_req); i++){
+			temp = PQgetvalue(res_bd_req, i, PQfnumber(res_bd_req, "max"));
+		}
+		PQclear(res_bd_req);
+		return atof(temp);
+	}
+
+}
+
+float get_min(char * columnName, char * tableName)
+{
+	char request[300] ; 
+	char * temp;
+	int i;
+	sprintf(request, "SELECT MIN (%s) AS max FROM \"%s\"", columnName, tableName);
+
+	res_bd_req = PQexec(conn_bd, request);
+	if (PQresultStatus(res_bd_req) != PGRES_TUPLES_OK) {
+
+		fprintf(stderr, "libpq error: PGress tuples was not OK.\n\n");
+		fprintf(stderr, "libpq error: %s\n\n", PQresultErrorMessage(res_bd_req));
+		PQclear(res_bd_req);
+		return 0;
+	}
+	else 
+	{
+		for(i=0; i<PQntuples(res_bd_req); i++){
+			temp = PQgetvalue(res_bd_req, i, PQfnumber(res_bd_req, "max"));
+		}
+		PQclear(res_bd_req);
+		return atof(temp);
+	}
+
+}
+
+float norm_value(float init, float min, float max)
+{
+	return (init - ((min+max)/2.0)) / ((max-min) / 2.0);
+}
 
 struct augmented_navdata * get_values_from_db(int number, int flight_id, int * nb_res)
 {
@@ -183,6 +247,106 @@ struct augmented_navdata * get_values_from_db(int number, int flight_id, int * n
 	}
 
 }
+
+struct augmented_navdata * get_normed_values_from_db(int number, int flight_id, int * nb_res)
+{
+
+	// Declarations 
+	struct augmented_navdata * data;
+	float min_alt, max_alt;
+	float min_pitch, max_pitch;
+	float min_roll, max_roll;
+	float min_vyaw, max_vyaw;
+	float min_vx, max_vx;
+	float min_vy, max_vy;
+	float min_vz, max_vz;
+	float min_ax, max_ax;
+	float min_ay, max_ay;
+	float min_az, max_az;
+	int i;
+
+	// First get current fields limits 
+	min_alt = get_min("altitude", "Flight");
+	max_alt = get_max("altitude", "Flight");
+	min_pitch = get_min("pitch", "Flight");
+	max_pitch = get_max("pitch", "Flight");
+	min_roll = get_min("roll", "Flight");
+	max_roll = get_max("roll", "Flight");
+	min_vyaw = get_min("vyaw", "Flight");
+	max_vyaw = get_max("vyaw", "Flight");
+	min_vx = get_min("vx", "Flight");
+	max_vx = get_max("vx", "Flight");
+	min_vy = get_min("vy", "Flight");
+	max_vy = get_max("vy", "Flight");
+	min_vz = get_min("vz", "Flight");
+	max_vz = get_max("vz", "Flight");
+	min_ax = get_min("ax", "Flight");
+	max_ax = get_max("ax", "Flight");
+	min_ay = get_min("ay", "Flight");
+	max_ay = get_max("ay", "Flight");
+	min_az = get_min("az", "Flight");
+	max_az = get_max("az", "Flight");
+
+	// Then get DB values 
+	data = get_values_from_db(number, flight_id, nb_res);
+
+	// Then norm the values
+	for( i=0; i< *nb_res; i++)
+	{
+		data[i].alt		= norm_value(data[i].alt, min_alt, max_alt);
+		data[i].pitch	= norm_value(data[i].pitch, min_pitch, max_pitch);
+		data[i].roll	= norm_value(data[i].roll, min_roll, max_roll);
+		data[i].vyaw	= norm_value(data[i].vyaw, min_vyaw, max_vyaw);
+		data[i].vx		= norm_value(data[i].vx, min_vx, max_vx);
+		data[i].vy		= norm_value(data[i].vy, min_vy, max_vy);
+		data[i].vz		= norm_value(data[i].vz, min_vz, max_vz);
+		data[i].ax		= norm_value(data[i].ax, min_ax, max_ax);
+		data[i].ay		= norm_value(data[i].ay, min_ay, max_ay);
+		data[i].az		= norm_value(data[i].az, min_az, max_az);
+	}
+	
+	// And finaly return
+	return data;
+
+}
+
+int write_data_to_csv(char * csvFileName, int number, int flight_id, int should_norm)
+{
+    /*
+	// Declarations 
+	struct augmented_navdata * data;
+	int nb_res;
+	FILE * csv;
+	int i;
+
+	// First open the CSV file 
+	csv= open_csv_file(csvFileName);
+
+	// Then get the data from the database 
+
+	// If should norm is set to 1, get the limits of each field
+	if(should_norm == 1)
+	{
+		data = get_normed_values_from_db(number, flight_id, &nb_res);
+	}
+	else 
+	{
+		data = get_values_from_db(number, flight_id, &nb_res);
+	}
+	
+
+	// Then write each values into the CSV file
+	for(i=0; i<nb_res; i++)
+	{
+		new_data_csv(csv, data[i].alt, data[i].pitch, data[i].roll, data[i].vyaw, data[i].vx, data[i].vy, data[i].vy, data[i].vz, data[i].ax, data[i].ay, data[i].az, data[i].class_id);
+	}
+
+	// Finally, close the file
+	close_navdata_file(csv);
+    */
+	return 0; 
+}
+
 
 int start_new_flight()
 {

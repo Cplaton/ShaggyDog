@@ -17,7 +17,6 @@
 #include "user_app.h"
 #include "ardrone_move_cmd.h"
 #include "Model/model.h"
-#include "Navdata/navdata_analyse.h"
 
 
 DEFINE_THREAD_ROUTINE(mission, data) {
@@ -29,7 +28,6 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 	commandType_t type;
 	int etat = 1;
 	int ancien_etat = 1;
-	int class_id;
 	static vp_os_mutex_t class_mutex;	
 	vp_os_mutex_init(&class_mutex);
 	while(1) {
@@ -38,7 +36,9 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 		switch (etat) {
 
 			case 1 :
-				
+				vp_os_mutex_lock(&class_mutex);
+   				class_id=0;
+  				vp_os_mutex_unlock(&class_mutex);
 				takeoff();
 				usleep(2000000);
 				vp_os_mutex_lock(&class_mutex);
