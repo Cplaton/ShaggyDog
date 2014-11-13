@@ -21,6 +21,17 @@
 #define MISSION_SFS_1 1
 #define MISSION_SFS_2 2
 #define MISSION_WALL_1 3
+#define TAKEOFF_DRONE 1
+#define FORWARD_PITCH 2
+#define LEFT_ROLL 3
+#define BACKWARD_PITCH 4
+#define RIGHT_ROLL 5
+#define GAS_UP 6
+#define LEFT_YAW 7
+#define GAS_DOWN 8
+#define RIGHT_YAW 9
+#define LAND_DRONE 10
+#define HOVER_DRONE 11
 
 DEFINE_THREAD_ROUTINE(mission, data) {
 	
@@ -46,8 +57,6 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 			break;
 
 	}	
-		
-	
 			
 return 0;
 
@@ -60,15 +69,16 @@ void mission_SFS_1 () {
 	float fin;
 	Inputs_t lastcommand;
 	commandType_t type;
-	int etat = 1;
-	int ancien_etat = 1;
+	int etat = TAKEOFF_DRONE;
+	int ancien_etat = TAKEOFF_DRONE;
 	static vp_os_mutex_t class_mutex;	
 	vp_os_mutex_init(&class_mutex);
 	
 	while (1) {
 		switch (etat) {
+
 			printf("Etat %d\n", etat);
-			case 1 :
+			case TAKEOFF_DRONE :
 				vp_os_mutex_lock(&class_mutex);
    				class_id=0;
   				vp_os_mutex_unlock(&class_mutex);
@@ -81,12 +91,12 @@ void mission_SFS_1 () {
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
 				status = get_drone_state();				
 				if ((type != TAKEOFF_REQUEST) && (status == FLYING)){
-					etat = 2;
+					etat = FORWARD_PITCH;
 					printf("Passage à l'état 2\n");
 				}		
 				break;
 			
-			case 2 :			
+			case FORWARD_PITCH :			
 				
 				
 				//void apply_command(roll, pitch, yaw, gas)
@@ -95,12 +105,12 @@ void mission_SFS_1 () {
                 vp_os_mutex_unlock(&class_mutex);
 				command = pitch(-0.2, 1000000);
 				if (command != 0) {
-					etat = 3;
-					ancien_etat = 2;
+					etat = LEFT_ROLL;
+					ancien_etat = FORWARD_PITCH;
 					printf("Passage à l'état 3\n");
 				}
 				break;
-			case 3 :
+			case LEFT_ROLL :
 	
 
 				vp_os_mutex_lock(&class_mutex);
@@ -108,23 +118,23 @@ void mission_SFS_1 () {
                 vp_os_mutex_unlock(&class_mutex);
 				command = roll(-0.2,1000000);
 				if (command != 0) {
-					etat = 4;
+					etat = BACKWARD_PITCH;
 					printf("Passage à l'état 4\n");
-					ancien_etat = 3;
+					ancien_etat = LEFT_ROLL;
 				}
 				break;
-			case 4 : 
+			case BACKWARD_PITCH : 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
 				command = pitch(0.2,1000000);
 				if (command != 0) {
-					etat = 5;
+					etat = RIGHT_ROLL;
 					printf("Passage à l'état 5\n");
-					ancien_etat = 4;
+					ancien_etat = BACKWARD_PITCH;
 				}
 				break;
-			case 5 :
+			case RIGHT_ROLL :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -132,11 +142,11 @@ void mission_SFS_1 () {
 				command = roll(0.2,1000000);
 				if (command != 0) {
 					printf("Passage à l'état 6");
-					etat = 6;
-					ancien_etat = 5;
+					etat = GAS_UP;
+					ancien_etat = RIGHT_ROLL;
 				}
 				break;			
-			case 6 : 
+			case GAS_UP : 
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -144,11 +154,11 @@ void mission_SFS_1 () {
 				command = gas(0.4,2000000);	
 				if (command != 0) {
 					printf("Passage à l'état 7");
-					etat = 7;
-					ancien_etat = 6;
+					etat = LEFT_YAW;
+					ancien_etat = GAS_UP;
 				}
 				break;	
-			case 7:
+			case LEFT_YAW:
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -156,12 +166,12 @@ void mission_SFS_1 () {
 				command = yaw(-1.0,2000000);	
 				if (command != 0) {
 					printf("Passage à l'état 8");
-					etat = 8;
-					ancien_etat = 7;
+					etat = GAS_DOWN;
+					ancien_etat = LEFT_YAW;
 				}
 				break;				
 			
-			case 8:
+			case GAS_DOWN:
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -169,12 +179,12 @@ void mission_SFS_1 () {
 				command = gas(-0.4,2000000);	
 				if (command != 0) {
 					printf("Passage à l'état 9");
-					etat = 9;
-					ancien_etat = 8;
+					etat = RIGHT_YAW;
+					ancien_etat = GAS_DOWN;
 				}
 				break;	
 
-			case 9:
+			case RIGHT_YAW:
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -182,19 +192,19 @@ void mission_SFS_1 () {
 				command = yaw(1.0,2000000);	
 				if (command != 0) {
 					printf("Passage à l'état 10");
-					etat = 10;
-					ancien_etat = 9;
+					etat = LAND_DRONE;
+					ancien_etat = RIGHT_YAW;
 				}
 				break;	
 
-			case 10 :
+			case LAND_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
 				landing();
 				break;					
-			case 11 : 
+			case HOVER_DRONE : 
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -210,6 +220,7 @@ void mission_SFS_1 () {
 
 void mission_SFS_2() {
 
+	
 
 }
 
