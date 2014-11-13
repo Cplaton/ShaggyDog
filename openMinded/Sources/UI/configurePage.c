@@ -2,7 +2,7 @@
 
 extern gui_t *gui;
 
-int debugModeOn = 0,stop = 0, isOpen = 0;
+int debugModeOn = 0,stop = 0, isOpen = 0, missionModeOn = 0;
 
 void check_button_callback(GtkWidget *widget, gpointer data){
 	options_t options;
@@ -60,6 +60,15 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 	}else{
 		options.disableSSM = 0; 
 	}
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonDebug))==TRUE){
+        options.debug = 1;
+        options.disableSSM = 1;
+        debugModeOn = 1;
+        missionModeOn = 1;
+    }else{
+        missionModeOn = 0;
+    }
+
 
 	/*-----switch the page to the next-----*/
 	gtk_notebook_next_page(GTK_NOTEBOOK(gui->notebook));
@@ -181,9 +190,10 @@ void configPage(){
 	char infoBullDebug[2000] = "Enable the user to see all informations dynamically on diagnosis and safety softwares (in the debug window) and create log files that register all information during execution";
 	char infoBullDisableSSM[2000] = "The application only detects error, the drone will not try to land or to get off detected obsatcles.";
 	char infoBullSys[2000] = "It will send a landing order if drone state is too dangerous,and any procedure could protect the drone. It may not work for high speeds.";
+    char infoBullMission[2000] = "It will start a mission for filling the database which it is used for the learning process";
 
 	/*-----Create a table of 8 rows and 6 lines-----*/
-	gui->tableConfigPage = gtk_table_new(6, 8, TRUE);
+	gui->tableConfigPage = gtk_table_new(7, 8, TRUE);
   gtk_table_set_col_spacings(GTK_TABLE(gui->tableConfigPage), 10);
 
 	/*-----create the labels-----*/
@@ -199,6 +209,7 @@ void configPage(){
 	gui->checkButtonSMLimited = gtk_check_button_new_with_label("Limited Smart Safety Mode");
 	gui->checkButtonDebug = gtk_check_button_new_with_label("Debug mode");
 	gui->checkButtonDisableSSM = gtk_check_button_new_with_label("Disable Smart Safety Mode");
+    gui->checkButtonMission = gtk_check_button_new_with_label("Mission for learning process");
 
 	/*-----create finish button-----*/
 	gui->buttonFinish = gtk_button_new_with_label("Finish");
@@ -222,8 +233,10 @@ void configPage(){
 	gtk_tooltips_set_tip (gui->tooltipsSys, gui->checkButtonSys,infoBullSys, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsDisableSSM, gui->checkButtonDisableSSM,infoBullDisableSSM, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsSaturation, gui->checkButtonSaturation,infoBullSaturation, NULL);
+    gtk_tooltips_set_tip (gui->tooltipsSaturation, gui->checkButtonSaturation,infoBullSaturation, NULL);
+    gtk_tooltips_set_tip (gui->tooltipsMission, gui->checkButtonMission,infoBullMission, NULL);
 
-	/*-----create smart fox image-----*/
+    /*-----create smart fox image-----*/
 	gui->pixbuf = gdk_pixbuf_new_from_file_at_size("smartfox-final.png",40,40,NULL);
 	gui->imgSmartFox = gtk_image_new_from_pixbuf(gui->pixbuf);
 
@@ -242,6 +255,7 @@ void configPage(){
 	//gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonSMLimited);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonDebug);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonDisableSSM);
+   	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonMission);
 
 	/*-----add finish button to haligh-----*/
 	gtk_container_add(GTK_CONTAINER(gui->halignButtonFinish), gui->buttonFinish);

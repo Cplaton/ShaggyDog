@@ -92,7 +92,8 @@ typedef struct gui
 	GtkWidget *checkButtonSMLimited;
 	GtkWidget *checkButtonDebug;
 	GtkWidget *checkButtonDisableSSM;
-	/*-----boxes-----*/
+	GtkWidget *checkButtonMission;
+    /*-----boxes-----*/
 	GtkWidget *vboxCheckButton;
 	GtkWidget *hboxButtonFinish;
 	GtkWidget *vboxDebugGeneral;
@@ -128,7 +129,8 @@ typedef struct gui
 	GtkTooltips *tooltipsDisableSSM;
 	GtkTooltips *tooltipsSys;
 	GtkTooltips *tooltipsFile;
-	/*-----colors-----*/
+    GtkTooltips *tooltipsMission;
+    /*-----colors-----*/
 	GdkColor color;
 	GdkColor RED_COLOR;
 	/*-----event box-----*/
