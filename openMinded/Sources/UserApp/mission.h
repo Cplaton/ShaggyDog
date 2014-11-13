@@ -14,7 +14,11 @@
 
 #include "Model/residue.h"
 
+void mission_SFS_1();
 
+void mission_SFS_2();
+
+void mission_WALL_1();
 
 float roll(float value, int us);
 
