@@ -116,5 +116,5 @@ build_libs:
 build_openMinded_db_lib:
 	@(cd $(DB_LIB_DIR) && $(MAKE))
 	@(cd $(BUILD_DIR)) 
-#	@(cd $(MSVMPACK_DIR) && $(MAKE))
+	@(cd $(MSVMPACK_DIR) && $(MAKE))
 
