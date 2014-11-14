@@ -15,21 +15,10 @@
 #include "smartfox_api.h"
 #include "user_app.h"
 
-/* ############################################################ */
-/* ################### BEGINNING CUSTOM CODE ################## */
-/* ############### internal function declaration ############## */
-/* ############################################################ */
-/* extract the key that triggered the event and send the matching command to the drone */
-void extract_key_event(struct input_event * ev);
+static vp_os_mutex_t class_mutex;
 
 /*to stop diagnosis app*/
 void kill();
-
-/* initialization function : reads the conf file */
-void init_userapp(char * keyboard_file, size_t len);
-/* ############################################################ */
-/* ###################### END CUSTOM CODE ##################### */
-/* ############################################################ */
 
 DEFINE_THREAD_ROUTINE(th_user_app, data)
 {
@@ -41,9 +30,10 @@ DEFINE_THREAD_ROUTINE(th_user_app, data)
 
   char keyboard_file[50];
 
-
   struct input_event ev;
   int fd;
+
+  vp_os_mutex_init(&class_mutex);
 
   printf("STARTING USER APP................. \n");
  
@@ -70,6 +60,8 @@ DEFINE_THREAD_ROUTINE(th_user_app, data)
       if (ev.type == EV_KEY) {
         extract_key_event(&ev);
       }
+      
+
   }
   
   close(fd);
@@ -117,6 +109,9 @@ void init_userapp(char * keyboard_file, size_t len) {
 /* extract the key that triggered the event and send the matching command to the drone */
 void extract_key_event(struct input_event * ev) {
 
+  vp_os_mutex_lock(&class_mutex);
+  class_id=0;
+  vp_os_mutex_unlock(&class_mutex); 
   switch (ev->code) {
 
   case GO_FORWARD :
@@ -198,12 +193,19 @@ void extract_key_event(struct input_event * ev) {
       break;
     case TAKEOFF :
       takeoff();
+
       break;
     case KILL:
       kill();
       break;
-
+    case CLASS_WALL :
+      vp_os_mutex_lock(&class_mutex);
+      class_id=2;
+      vp_os_mutex_unlock(&class_mutex); 
+      break;
     default : ;
+      
+      
   }
 
 }

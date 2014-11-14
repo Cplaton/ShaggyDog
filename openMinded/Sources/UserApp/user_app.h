@@ -21,6 +21,12 @@ void landing();
 /* to make the drone takes off */
 void takeoff();
 
+/* initialization function : reads the conf file */
+void init_userapp(char * keyboard_file, size_t len);
+
+/* extract the key that triggered the event and send the matching command to the drone */
+void extract_key_event(struct input_event * ev);
+
 /* ############################################################################################################## */
 
 /* configuration file containing the keyboard file */
@@ -38,6 +44,7 @@ void takeoff();
 #define TAKEOFF		KEY_T
 #define LANDING		KEY_L
 #define KILL		KEY_K
+#define CLASS_WALL  KEY_N
 
 #define LOW_VELOCITY	0.3
 

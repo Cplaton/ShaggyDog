@@ -21,6 +21,7 @@
 #define MISSION_SFS_1 1
 #define MISSION_SFS_2 2
 #define MISSION_WALL_1 3
+
 #define TAKEOFF_DRONE 1
 #define FORWARD_PITCH 2
 #define LEFT_ROLL 3
@@ -33,20 +34,19 @@
 #define LAND_DRONE 10
 #define HOVER_DRONE 11
 
+static vp_os_mutex_t class_mutex;
+
 DEFINE_THREAD_ROUTINE(mission, data) {
 	
-	int mission_nb = MISSION_SFS_1;
+	int mission_nb = MISSION_WALL_1;
 	
 	
     printf("missionModeOn=%d\n",missionModeOn);	
-//    vp_os_mutex_lock(&mission_mutex);
 	while(missionModeOn==0){
-  //      vp_os_mutex_unlock(&mission_mutex);
+  
         printf("c'est la déprime\n");
         usleep(1000000);
-    //    vp_os_mutex_lock(&mission_mutex);
     }
-    //vp_os_mutex_unlock(&mission_mutex);
 		
 	switch (mission_nb) {
 
@@ -80,7 +80,8 @@ void mission_SFS_1 () {
 	commandType_t type;
 	int etat = TAKEOFF_DRONE;
 	int ancien_etat = TAKEOFF_DRONE;
-	static vp_os_mutex_t class_mutex;	
+	vp_os_mutex_init(&class_mutex);
+
     while (1) {
 		switch (etat) {
 
@@ -105,7 +106,6 @@ void mission_SFS_1 () {
 			
 			case FORWARD_PITCH :			
 				
-				
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -117,9 +117,9 @@ void mission_SFS_1 () {
 					printf("Passage à l'état 3\n");
 				}
 				break;
+
 			case LEFT_ROLL :
 	
-
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
@@ -130,7 +130,9 @@ void mission_SFS_1 () {
 					ancien_etat = LEFT_ROLL;
 				}
 				break;
+
 			case BACKWARD_PITCH : 
+
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
@@ -141,6 +143,7 @@ void mission_SFS_1 () {
 					ancien_etat = BACKWARD_PITCH;
 				}
 				break;
+
 			case RIGHT_ROLL :
 
 				vp_os_mutex_lock(&class_mutex);
@@ -152,7 +155,8 @@ void mission_SFS_1 () {
 					etat = GAS_UP;
 					ancien_etat = RIGHT_ROLL;
 				}
-				break;			
+				break;	
+
 			case GAS_UP : 
 
 				vp_os_mutex_lock(&class_mutex);
@@ -165,6 +169,7 @@ void mission_SFS_1 () {
 					ancien_etat = GAS_UP;
 				}
 				break;	
+
 			case LEFT_YAW:
 
 				vp_os_mutex_lock(&class_mutex);
@@ -233,7 +238,6 @@ void mission_SFS_2() {
 	Inputs_t lastcommand;
 	commandType_t type;
 	int etat = TAKEOFF_DRONE;
-	static vp_os_mutex_t class_mutex;	
 	vp_os_mutex_init(&class_mutex);
 	
 	while (1) {
@@ -337,7 +341,75 @@ void mission_SFS_2() {
 
 void mission_WALL_1() {
 
+	drone_state_t status = get_drone_state();
+	float command;
+	float fin;
+	Inputs_t lastcommand;
+	commandType_t type;
+	int etat = TAKEOFF_DRONE;
+	vp_os_mutex_init(&class_mutex);
+	while (1) {
+		switch (etat) {
 
+			case TAKEOFF_DRONE :
+				vp_os_mutex_lock(&class_mutex);
+   				class_id=0;
+  				vp_os_mutex_unlock(&class_mutex);
+				takeoff();
+				usleep(5000000);
+				vp_os_mutex_lock(&class_mutex);
+   				class_id=1;
+  				vp_os_mutex_unlock(&class_mutex);							
+				usleep(5000000);
+				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
+				status = get_drone_state();				
+				if ((type != TAKEOFF_REQUEST) && (status == FLYING)){
+					etat = GAS_DOWN;
+				}		
+				break;
+
+			case GAS_DOWN:
+
+				vp_os_mutex_lock(&class_mutex);
+                class_id=0;
+                vp_os_mutex_unlock(&class_mutex);
+				command = gas(-0.4,1000000);	
+				if (command != 0) {
+					etat = HOVER_DRONE;
+				}
+				break;
+
+			case HOVER_DRONE : 
+
+				vp_os_mutex_lock(&class_mutex);
+                class_id=1;
+                vp_os_mutex_unlock(&class_mutex);
+				fin = hover(2000000);
+				if (fin == 1)
+					etat = FORWARD_PITCH;
+				break;
+			
+			case FORWARD_PITCH :			
+				
+				//void apply_command(roll, pitch, yaw, gas)
+				vp_os_mutex_lock(&class_mutex);
+                class_id=0;
+                vp_os_mutex_unlock(&class_mutex);
+				command = pitch(-0.1, 10000000);
+				if (command != 0) {
+					etat = LAND_DRONE;
+				}
+				break;
+				
+			case LAND_DRONE :
+
+				vp_os_mutex_lock(&class_mutex);
+                class_id=0;
+                vp_os_mutex_unlock(&class_mutex);
+				landing();
+				break;						
+		}
+	}
 }
 
 float roll(float value, int us) {
