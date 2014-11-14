@@ -14,6 +14,8 @@
 
 #include "Model/residue.h"
 
+#include "UI/configurePage.h"
+
 void mission_SFS_1();
 
 void mission_SFS_2();

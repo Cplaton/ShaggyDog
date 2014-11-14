@@ -35,9 +35,18 @@
 
 DEFINE_THREAD_ROUTINE(mission, data) {
 	
-	int mission_nb = MISSION_SFS_2;
+	int mission_nb = MISSION_SFS_1;
 	
 	
+    printf("missionModeOn=%d\n",missionModeOn);	
+//    vp_os_mutex_lock(&mission_mutex);
+	while(missionModeOn==0){
+  //      vp_os_mutex_unlock(&mission_mutex);
+        printf("c'est la déprime\n");
+        usleep(1000000);
+    //    vp_os_mutex_lock(&mission_mutex);
+    }
+    //vp_os_mutex_unlock(&mission_mutex);
 		
 	switch (mission_nb) {
 
@@ -72,9 +81,7 @@ void mission_SFS_1 () {
 	int etat = TAKEOFF_DRONE;
 	int ancien_etat = TAKEOFF_DRONE;
 	static vp_os_mutex_t class_mutex;	
-	vp_os_mutex_init(&class_mutex);
-	
-	while (1) {
+    while (1) {
 		switch (etat) {
 
 			printf("Etat %d\n", etat);

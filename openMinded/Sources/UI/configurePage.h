@@ -7,5 +7,5 @@
 #include "Navdata/navdata_analyse.h"
 
 void configPage();
-
+extern int missionModeOn ; 
 #endif

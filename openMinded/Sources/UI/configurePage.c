@@ -3,7 +3,7 @@
 extern gui_t *gui;
 
 int debugModeOn = 0,stop = 0, isOpen = 0, missionModeOn = 0;
-
+static vp_os_mutex_t mission_mutex;
 void check_button_callback(GtkWidget *widget, gpointer data){
 	options_t options;
 	Navdata_t navdata;
@@ -19,7 +19,7 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 	int i;
 	float batteryLevel = 0.0, wifiLevel = 0.0;
 	gdk_color_parse ("red", &(gui->RED_COLOR));
-
+    vp_os_mutex_init(&mission_mutex);
   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSaturation))==TRUE){
 		options.saturation = 1;
 	}else{
@@ -60,13 +60,26 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 	}else{
 		options.disableSSM = 0; 
 	}
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonDebug))==TRUE){
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonMission))==TRUE){
         options.debug = 1;
-        options.disableSSM = 1;
+        //options.disableSSM = 1;
         debugModeOn = 1;
+        //vp_os_mutex_lock(&mission_mutex);
         missionModeOn = 1;
+        //vp_os_mutex_unlock(&mission_mutex);
+		if(isOpen != 1) {
+			gui->frameNoteBook = gtk_frame_new (NULL);
+			gtk_container_set_border_width (GTK_CONTAINER (gui->frameNoteBook), 10);
+			debugPage();
+			gui->labelNoteBook = gtk_label_new ("Debug");
+			gtk_notebook_append_page (GTK_NOTEBOOK (gui->notebook), gui->frameNoteBook, gui->labelNoteBook);
+			gtk_widget_show_all(gui->frameNoteBook);
+			isOpen = 1;
+		}
     }else{
+        //vp_os_mutex_lock(&mission_mutex);
         missionModeOn = 0;
+        //vp_os_mutex_unlock(&mission_mutex);
     }
 
 
@@ -192,7 +205,7 @@ void configPage(){
 	char infoBullSys[2000] = "It will send a landing order if drone state is too dangerous,and any procedure could protect the drone. It may not work for high speeds.";
     char infoBullMission[2000] = "It will start a mission for filling the database which it is used for the learning process";
 
-	/*-----Create a table of 8 rows and 6 lines-----*/
+	/*-----Create a table of 8 rows and 7 lines-----*/
 	gui->tableConfigPage = gtk_table_new(7, 8, TRUE);
   gtk_table_set_col_spacings(GTK_TABLE(gui->tableConfigPage), 10);
 
@@ -225,6 +238,7 @@ void configPage(){
 	gui->tooltipsDebug = gtk_tooltips_new ();
 	gui->tooltipsDisableSSM = gtk_tooltips_new ();
 	gui->tooltipsSys = gtk_tooltips_new ();
+    gui->tooltipsMission = gtk_tooltips_new ();
 
 	/*-----associate tooltips with its checkbutton-----*/
 	gtk_tooltips_set_tip (gui->tooltipsSePoser,gui->checkButtonSePoser ,infoBullSePoser, NULL);
