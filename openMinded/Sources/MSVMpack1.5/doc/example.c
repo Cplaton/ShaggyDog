@@ -35,8 +35,8 @@ int main(void) {
 
     printf("Loading the data... \n");
     // The data format can be either DOUBLE, FLOAT, INT, SHORT, BYTE, or BIT
-    training_set = MSVM_make_dataset("myTrainingData",DOUBLE); // load the training data
-    test_set = MSVM_make_dataset("myTestData",DOUBLE);         // load the test data
+    training_set = MSVM_make_dataset("myTrainingData",DATATYPE_DOUBLE); // load the training data
+    test_set = MSVM_make_dataset("myTestData",DATATYPE_DOUBLE);         // load the test data
         
     printf("Calling MSVM_train()...\n");
     /* Train the model on the training_set
