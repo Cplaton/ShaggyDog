@@ -31,6 +31,7 @@ GENERIC_BINARIES_SOURCE_DIR:=$(SRC_DIR)
 GENERIC_BINARIES_COMMON_SOURCE_FILES+=	\
    Navdata/navdata_analyse.c    	\
    Navdata/classifier.c    	\
+   Navdata/svm.cpp \
    ardrone_move_cmd.c   		\
    disable_navdata_demo.c    		\
    utils.c		\
@@ -43,9 +44,7 @@ GENERIC_BINARIES_COMMON_SOURCE_FILES+=	\
    UI/diagnosisPage.c 	\
    UI/ardrone_gui.c	\
    UserApp/user_app.c \
-   UserApp/mission.c 
-   
-   
+   UserApp/mission.c   
 
 # ^ ######### USER APPLICATION ########  ^
 # | add here the c files of your threads |
@@ -71,7 +70,7 @@ GENERIC_INCLUDES:=$(addprefix -I,$(GENERIC_INCLUDES))
 
 # Included libraries management
 GENERIC_LIB_PATHS=-L$(GENERIC_TARGET_BINARIES_DIR) -L$(PG_LIB) -L$(DB_LIB_DIR) -lopenMinded_db -L$(SVM_DIR)/
-GENERIC_LIBS=-lpc_ardrone -lgtk-x11-2.0 -lrt -lpq
+GENERIC_LIBS=-lpc_ardrone -lgtk-x11-2.0 -lrt -lpq -lstdc++
 
 SDK_FLAGS+="USE_APP=yes"
 SDK_FLAGS+="APP_ID=smartfox"
@@ -112,5 +111,4 @@ build_libs:
 build_openMinded_db_lib:
 	@(cd $(DB_LIB_DIR) && $(MAKE))
 	@(cd $(BUILD_DIR)) 
-	@(cd $(SVM_DIR) && $(MAKE))
-
+#	@(cd $(SVM_DIR) && $(MAKE))
