@@ -23,6 +23,12 @@ void mission_SFS_2();
 
 void mission_WALL_1();
 
+void mission_WALL_2();
+
+void mission_WALL_3();
+
+void mission_WALL_4();
+
 float roll(float value, int us);
 
 float pitch(float value, int us);

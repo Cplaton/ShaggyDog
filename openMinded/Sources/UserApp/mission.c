@@ -41,7 +41,7 @@ static vp_os_mutex_t class_mutex;
 
 DEFINE_THREAD_ROUTINE(mission, data) {
 	
-	int mission_nb = MISSION_WALL_2;
+	int mission_nb = MISSION_WALL_4;
 	
 	
     printf("missionModeOn=%d\n",missionModeOn);	
@@ -68,17 +68,17 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 			mission_WALL_1();
 			break;
 
-		case MISSION_WALL_2;
+		case MISSION_WALL_2:
 			
 			mission_WALL_2();
 			break;
 
-		case MISSION_WALL_3;
+		case MISSION_WALL_3:
 			
 			mission_WALL_3();
 			break;
 
-		case MISSION_WALL_4;
+		case MISSION_WALL_4:
 			
 			mission_WALL_4();
 			break;
