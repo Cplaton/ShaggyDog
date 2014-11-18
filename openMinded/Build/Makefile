@@ -19,7 +19,7 @@ endif
 TARGET=smartfox
 
 # Used directories
-MSVMPACK_DIR= $(shell pwd)/../Sources/MSVMpack1.5/
+SVM_DIR=$(shell pwd)/../Sources/libsvm-3.20/
 PG_INC=/usr/include/postgresql/
 PG_LIB=/usr/lib/postgresql/8.4/lib/
 DB_LIB_DIR=$(shell pwd)/../Sources/Navdata/database/
@@ -45,6 +45,7 @@ GENERIC_BINARIES_COMMON_SOURCE_FILES+=	\
    UserApp/user_app.c \
    UserApp/mission.c 
    
+   
 
 # ^ ######### USER APPLICATION ########  ^
 # | add here the c files of your threads |
@@ -57,7 +58,7 @@ GENERIC_INCLUDES+=			\
 	$(PG_INC) 			\
 	$(SDK_PATH)/Soft/Common 	\
 	$(SDK_PATH)/Soft/Lib 		\
-	$(MSVMPACK_DIR)include/ 	\
+	$(SVM_DIR) 		\
 
 GENERIC_TARGET_BINARIES_PREFIX=
 
@@ -69,8 +70,8 @@ GENERIC_BINARIES_SOURCE_ENTRYPOINTS+=			\
 GENERIC_INCLUDES:=$(addprefix -I,$(GENERIC_INCLUDES))
 
 # Included libraries management
-GENERIC_LIB_PATHS=-L$(GENERIC_TARGET_BINARIES_DIR) -L$(PG_LIB) -L$(DB_LIB_DIR) -lopenMinded_db -L$(MSVMPACK_DIR)lib/
-GENERIC_LIBS=-lpc_ardrone -lgtk-x11-2.0 -lrt -lpq -lmsvm -lm -ldl -lpthread
+GENERIC_LIB_PATHS=-L$(GENERIC_TARGET_BINARIES_DIR) -L$(PG_LIB) -L$(DB_LIB_DIR) -lopenMinded_db -L$(SVM_DIR)/
+GENERIC_LIBS=-lpc_ardrone -lgtk-x11-2.0 -lrt -lpq
 
 SDK_FLAGS+="USE_APP=yes"
 SDK_FLAGS+="APP_ID=smartfox"
@@ -87,15 +88,11 @@ export GENERIC_TARGET_BINARIES_DIR
 export GENERIC_BINARIES_SOURCE_ENTRYPOINTS
 
 
-LIB=-lmsvm -lm -ldl -lpthread
-
 # Bug fix ...
 export GENERIC_LIBRARY_SOURCE_DIR=$(GENERIC_BINARIES_SOURCE_DIR)
 
 # Prevent from erasing files that are called like a makefile keyword
 .PHONY: $(TARGET) build_libs build_openMinded_db_lib
-
-
 
 all: build_openMinded_db_lib build_libs $(TARGET)
 
@@ -111,10 +108,9 @@ build_libs:
 	@$(MAKE) -C $(SDK_PATH)/Soft/Build $(TMP_SDK_FLAGS) $(SDK_FLAGS)  $(MAKECMDGOALS) USE_LINUX=yes
 
 
-
 # OpenMinded Database management library compilation
 build_openMinded_db_lib:
 	@(cd $(DB_LIB_DIR) && $(MAKE))
 	@(cd $(BUILD_DIR)) 
-	@(cd $(MSVMPACK_DIR) && $(MAKE))
+	@(cd $(SVM_DIR) && $(MAKE))
 
