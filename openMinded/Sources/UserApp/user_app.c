@@ -109,9 +109,6 @@ void init_userapp(char * keyboard_file, size_t len) {
 /* extract the key that triggered the event and send the matching command to the drone */
 void extract_key_event(struct input_event * ev) {
 
-  vp_os_mutex_lock(&class_mutex);
-  class_id=0;
-  vp_os_mutex_unlock(&class_mutex); 
   switch (ev->code) {
 
   case GO_FORWARD :
@@ -199,9 +196,14 @@ void extract_key_event(struct input_event * ev) {
       kill();
       break;
     case CLASS_WALL :
-      vp_os_mutex_lock(&class_mutex);
-      class_id=2;
-      vp_os_mutex_unlock(&class_mutex); 
+      if(ev->value==1){
+        vp_os_mutex_lock(&class_mutex);
+        class_id=2;
+        vp_os_mutex_unlock(&class_mutex);}
+      else{
+        vp_os_mutex_lock(&class_mutex);
+        class_id=0;
+        vp_os_mutex_unlock(&class_mutex);}
       break;
     default : ;
       
