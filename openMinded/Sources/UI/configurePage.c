@@ -62,7 +62,7 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 	}
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonMission))==TRUE){
         options.debug = 1;
-        //options.disableSSM = 1;
+        options.disableSSM = 1;
         debugModeOn = 1;
         //vp_os_mutex_lock(&mission_mutex);
         missionModeOn = 1;

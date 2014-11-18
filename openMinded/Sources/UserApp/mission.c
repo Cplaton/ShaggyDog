@@ -98,7 +98,7 @@ void mission_SFS_1 () {
 				usleep(5000000);
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
 				status = get_drone_state();				
-				if ((type != TAKEOFF_REQUEST) && (status == FLYING)){
+				if (status == FLYING){
 					etat = FORWARD_PITCH;
 					printf("Passage à l'état 2\n");
 				}		
@@ -255,7 +255,7 @@ void mission_SFS_2() {
 				usleep(5000000);
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
 				status = get_drone_state();				
-				if ((type != TAKEOFF_REQUEST) && (status == FLYING)){
+				if (status == FLYING){
 					etat = FORWARD_PITCH;
 				}		
 				break;
@@ -363,7 +363,7 @@ void mission_WALL_1() {
 				usleep(5000000);
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
 				status = get_drone_state();				
-				if ((type != TAKEOFF_REQUEST) && (status == FLYING)){
+				if (status == FLYING){
 					etat = GAS_DOWN;
 				}		
 				break;
