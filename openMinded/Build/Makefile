@@ -30,7 +30,6 @@ GENERIC_BINARIES_SOURCE_DIR:=$(SRC_DIR)
 
 GENERIC_BINARIES_COMMON_SOURCE_FILES+=	\
    Navdata/navdata_analyse.c    	\
-   Navdata/classifier.c    	\
    ardrone_move_cmd.c   		\
    disable_navdata_demo.c    		\
    utils.c		\
