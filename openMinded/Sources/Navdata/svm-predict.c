@@ -12,7 +12,7 @@ static int (*info)(const char *fmt,...) = &printf;
 struct svm_node *x;
 int max_nr_attr = 64;
 
-struct svm_model* model;
+struct svm_model* modell;
 int predict_probability=0;
 
 static char *line = NULL;
@@ -49,21 +49,21 @@ void predict(FILE *input, FILE *output)
 	double error = 0;
 	double sump = 0, sumt = 0, sumpp = 0, sumtt = 0, sumpt = 0;
 
-	int svm_type=svm_get_svm_type(model);
-	int nr_class=svm_get_nr_class(model);
+	int svm_type=svm_get_svm_type(modell);
+	int nr_class=svm_get_nr_class(modell);
 	double *prob_estimates=NULL;
 	int j;
 
 	if(predict_probability)
 	{
 		if (svm_type==NU_SVR || svm_type==EPSILON_SVR)
-			info("Prob. model for test data: target value = predicted value + z,\nz: Laplace distribution e^(-|z|/sigma)/(2sigma),sigma=%g\n",svm_get_svr_probability(model));
+			info("Prob. model for test data: target value = predicted value + z,\nz: Laplace distribution e^(-|z|/sigma)/(2sigma),sigma=%g\n",svm_get_svr_probability(modell));
 		else
 		{
 			int *labels=(int *) malloc(nr_class*sizeof(int));
-			svm_get_labels(model,labels);
+			svm_get_labels(modell,labels);
 			prob_estimates = (double *) malloc(nr_class*sizeof(double));
-			fprintf(output,"labels");		
+			fprintf(output,"labels");
 			for(j=0;j<nr_class;j++)
 				fprintf(output," %d",labels[j]);
 			fprintf(output,"\n");
@@ -119,7 +119,7 @@ void predict(FILE *input, FILE *output)
 
 		if (predict_probability && (svm_type==C_SVC || svm_type==NU_SVC))
 		{
-			predict_label = svm_predict_probability(model,x,prob_estimates);
+			predict_label = svm_predict_probability(modell,x,prob_estimates);
 			fprintf(output,"%g",predict_label);
 			for(j=0;j<nr_class;j++)
 				fprintf(output," %g",prob_estimates[j]);
@@ -127,7 +127,7 @@ void predict(FILE *input, FILE *output)
 		}
 		else
 		{
-			predict_label = svm_predict(model,x);
+			predict_label = svm_predict(modell,x);
 			fprintf(output,"%g\n",predict_label);
 		}
 
@@ -167,7 +167,55 @@ void exit_with_help()
 	exit(1);
 }
 
-int main(int argc, char **argv)
+int recognition_process(void)
+{
+	FILE *input, *output;
+
+	input = fopen("full_weka_set_test","r");
+	if(input == NULL)
+	{
+		fprintf(stderr,"can't open input file %s\n","full_weka_set");
+		exit(1);
+	}
+
+	output = fopen("output","w");
+	if(output == NULL)
+	{
+		fprintf(stderr,"can't open output file %s\n","output");
+		exit(1);
+	}
+
+	if((modell=svm_load_model("full_weka_set.model"))==0)
+	{
+		fprintf(stderr,"can't open model file %s\n","full_weka_set");
+		exit(1);
+	}
+
+	x = (struct svm_node *) malloc(max_nr_attr*sizeof(struct svm_node));
+	if(predict_probability)
+	{
+		if(svm_check_probability_model(modell)==0)
+		{
+			fprintf(stderr,"Model does not support probabiliy estimates\n");
+			exit(1);
+		}
+	}
+	else
+	{
+		if(svm_check_probability_model(modell)!=0)
+			info("Model supports probability estimates, but disabled in prediction.\n");
+	}
+
+	predict(input,output);
+	svm_free_and_destroy_model(&modell);
+	free(x);
+	free(line);
+	fclose(input);
+	fclose(output);
+	return 0;
+}
+
+/*int main(int argc, char **argv)
 {
 	FILE *input, *output;
 	int i;
@@ -236,4 +284,4 @@ int main(int argc, char **argv)
 	fclose(input);
 	fclose(output);
 	return 0;
-}
+}*/
