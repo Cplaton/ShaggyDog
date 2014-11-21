@@ -58,7 +58,7 @@ FILE * open_learning_file(char * name) {
     FILE * fd;
     char fullPath[1024];
 
-    sprintf(fullPath,"%s%s%s%c","./Navdata",name,".txt",'\0');
+    sprintf(fullPath,"%s%s%c","./Sources/Navdata/",name,'\0');
 
     if ((fd = fopen(fullPath,"w+")) == NULL) {
         fprintf(stderr,"Impossible to open the file for collection the data\n");
