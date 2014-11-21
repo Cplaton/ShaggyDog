@@ -27,8 +27,8 @@
 *.i*86
 *.x86_64
 *.hex
-*openMinded/smartfox
-*openMinded/sym_smartfox_main
+**/smartfox/**
+**/sym_smartfox_main/**
 
 #Documents
 *.pdf
