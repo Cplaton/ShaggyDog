@@ -27,6 +27,8 @@
 #include "Navdata/database/bd_management.h"
 #include "utils.h"
 
+#include "Navdata/svm-train.h"
+
 #define RECORD_TIME 15 //(en s)
 
 //(en s)
@@ -424,8 +426,11 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                vp_os_mutex_unlock(&class_mutex);
 
 		insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az,class_id_aux);
+		
+		
 	   } else {
 		new_data_csv(csv,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az);  
+		// reconnaissance en ligne ici
 	   }
 	    
 	  }
@@ -496,6 +501,10 @@ specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen
 	 } else {
 		close_navdata_file(csv);
 	 }
+		// apprentissage ici
+		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL);
+		
+		
          printf("closed\n");
          isStopped = 1;
   }
