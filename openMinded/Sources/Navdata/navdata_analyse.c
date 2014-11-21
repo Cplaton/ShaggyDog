@@ -508,9 +508,18 @@ specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen
         close_learning_file(LearningBase);
         printf("ta maman\n");
 		disconnect_to_database();
+		// apprentissage ici
+		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL);
 	 } else {
 		close_navdata_file(csv);
 	 }
+<<<<<<< HEAD
+=======
+
+
+		recognition_process(NAME_DATA_TEST, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
+		
+>>>>>>> fa626ffb19c5e835a086e7ee06c101022bd8fd83
          printf("closed\n");
          isStopped = 1;
   }

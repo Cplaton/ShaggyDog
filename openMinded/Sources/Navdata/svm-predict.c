@@ -52,22 +52,24 @@ void predict(FILE *input, FILE *output)
 	int svm_type=svm_get_svm_type(modell);
 	int nr_class=svm_get_nr_class(modell);
 	double *prob_estimates=NULL;
-	int j;
-
+	int j,i;
+	int *labels;
+	double recog_values[50];
+	
 	if(predict_probability)
 	{
 		if (svm_type==NU_SVR || svm_type==EPSILON_SVR)
 			info("Prob. model for test data: target value = predicted value + z,\nz: Laplace distribution e^(-|z|/sigma)/(2sigma),sigma=%g\n",svm_get_svr_probability(modell));
 		else
 		{
-			int *labels=(int *) malloc(nr_class*sizeof(int));
+			labels=(int *) malloc(nr_class*sizeof(int));
 			svm_get_labels(modell,labels);
 			prob_estimates = (double *) malloc(nr_class*sizeof(double));
 			fprintf(output,"labels");
 			for(j=0;j<nr_class;j++)
 				fprintf(output," %d",labels[j]);
 			fprintf(output,"\n");
-			free(labels);
+			//free(labels);
 		}
 	}
 
@@ -80,6 +82,8 @@ void predict(FILE *input, FILE *output)
 		char *idx, *val, *label, *endptr;
 		int inst_max_index = -1; // strtol gives 0 if wrong format, and precomputed kernel has <index> start from 0
 
+		
+		
 		label = strtok(line," \t\n");
 		if(label == NULL) // empty line
 			exit_input_error(total+1);
@@ -133,6 +137,8 @@ void predict(FILE *input, FILE *output)
 		
 		// affiche le label
 		printf("%lf\n",predict_label);
+		// enregistrement des labels reconnus dans un tableau
+		recog_values[total] = predict_label;
 		
 		if(predict_label == target_label)
 			++correct;
@@ -144,6 +150,46 @@ void predict(FILE *input, FILE *output)
 		sumpt += predict_label*target_label;
 		++total;
 	}
+	
+	// traitement des labels reconnus
+	int * counters;
+	
+	
+	counters = (int*) malloc(sizeof(int)*nr_class);
+	if (counters == NULL)
+	{
+		printf("malloc rate");
+		exit(1);
+	}
+	
+	// compte le nombre d'apparitions pour chaque classe reconnue
+	for (j=0;j<nr_class-1;j++)
+	{
+		for (i=0;i<total-1;i++)
+		{
+			if (recog_values[i]==labels[j])
+			{
+				counters[j]++;
+			}
+		}
+	}
+	
+	int max = 0;
+	int recog_class;
+	for (j=0;j<nr_class-1;j++)
+	{
+		if (counters[j]>max)
+		{
+			max = counters[j];
+			recog_class = labels[j];
+		}
+	}
+	//free(labels);
+	//free(counters);
+	printf("Classe reconnue : %d\n",recog_class);
+	printf("Accuracy : %lf ", 100*((double)max)/((double)total));
+	
+	/*
 	if (svm_type==NU_SVR || svm_type==EPSILON_SVR)
 	{
 		info("Mean squared error = %g (regression)\n",error/total);
@@ -153,10 +199,10 @@ void predict(FILE *input, FILE *output)
 			);
 	}
 	else
-		info("Accuracy = %g%% (%d/%d) (classification)\n",
-			(double)correct/total*100,correct,total);
+		// info("Accuracy = %g%% (%d/%d) (classification)\n",
+		// 		(double)correct/total*100,correct,total);
 	if(predict_probability)
-		free(prob_estimates);
+		free(prob_estimates);*/
 }
 
 void exit_with_help()
