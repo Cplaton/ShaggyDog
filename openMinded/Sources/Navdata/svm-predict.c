@@ -120,7 +120,7 @@ void predict(FILE *input, FILE *output)
 		if (predict_probability && (svm_type==C_SVC || svm_type==NU_SVC))
 		{
 			predict_label = svm_predict_probability(modell,x,prob_estimates);
-			fprintf(output,"%g",predict_label);
+			fprintf(output,"%g",predict_label);		
 			for(j=0;j<nr_class;j++)
 				fprintf(output," %g",prob_estimates[j]);
 			fprintf(output,"\n");
@@ -130,7 +130,10 @@ void predict(FILE *input, FILE *output)
 			predict_label = svm_predict(modell,x);
 			fprintf(output,"%g\n",predict_label);
 		}
-
+		
+		// affiche le label
+		printf("%lf\n",predict_label);
+		
 		if(predict_label == target_label)
 			++correct;
 		error += (predict_label-target_label)*(predict_label-target_label);
@@ -167,27 +170,27 @@ void exit_with_help()
 	exit(1);
 }
 
-int recognition_process(void)
+int recognition_process(char* set_test, char* training_model, char* class_out)
 {
 	FILE *input, *output;
 
-	input = fopen("full_weka_set_test","r");
+	input = fopen(set_test,"r");
 	if(input == NULL)
 	{
-		fprintf(stderr,"can't open input file %s\n","full_weka_set");
+		fprintf(stderr,"can't open input file %s\n",set_test);
 		exit(1);
 	}
 
-	output = fopen("output","w");
+	output = fopen(class_out,"w");
 	if(output == NULL)
 	{
-		fprintf(stderr,"can't open output file %s\n","output");
+		fprintf(stderr,"can't open output file %s\n",class_out);
 		exit(1);
 	}
 
-	if((modell=svm_load_model("full_weka_set.model"))==0)
+	if((modell=svm_load_model(training_model))==0)
 	{
-		fprintf(stderr,"can't open model file %s\n","full_weka_set");
+		fprintf(stderr,"can't open model file %s\n",training_model);
 		exit(1);
 	}
 

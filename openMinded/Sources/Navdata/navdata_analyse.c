@@ -504,6 +504,7 @@ specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen
 		// apprentissage ici
 		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL);
 		
+		recognition_process(NAME_DATA_TEST, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
 		
          printf("closed\n");
          isStopped = 1;
