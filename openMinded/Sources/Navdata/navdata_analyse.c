@@ -27,8 +27,6 @@
 #include "Navdata/database/bd_management.h"
 #include "utils.h"
 
-#include "Navdata/svm-train.h"
-
 #define RECORD_TIME 15 //(en s)
 
 //(en s)
@@ -213,6 +211,10 @@ static vp_os_mutex_t class_mutex;
 int class_id = 0;
 int class_id_aux;
 
+int buff_counter;
+int file_number;
+char * shared_file_name;
+char * local_file_name;
 /**
  * @var     local_cmd
  * @brief   ?
@@ -392,7 +394,6 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
           if(safetyOn==4){
             fault_msg=diagnosis(1);
           }
-	  if(options.debug!=0){
 	  if(counter==0){
  	    av_alt = 0.0 ; 
  	    av_pitch = 0.0 ; 
@@ -426,15 +427,24 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                vp_os_mutex_unlock(&class_mutex);
 
 		insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az,class_id_aux);
-		
-		
 	   } else {
-		new_data_csv(csv,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az);  
-		// reconnaissance en ligne ici
-	   }
-	    
+           // ARCHI CRADO A REVOIR IMPERATIVEMENT !!!!!!!!!!!!!!
+        if (buff_counter == 0){
+            sprintf(local_file_name,"test%d",file_number);
+            csv = open_online_file(local_file_name);
+        }
+		new_data_learning(csv,0,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az); 
+        file_number++;
+        buff_counter++;
+        if (buff_counter == 9){
+            close_online_file(csv);
+            shared_file_name = local_file_name;
+	        buff_counter = 0;
+        }
+       }
 	  }
 	
+	  if(options.debug!=0){
             fprintf(logSFM,"sign: %d\n",fault_msg);
             fprintf(logSFM,"drone state: alt:%f pitch:%f roll:%f Vyaw:%f Vx:%f Vy:%f Vz:%f \n time:%u\n\n",
                     (float32_t)(nd->altitude)/1000,
@@ -501,11 +511,6 @@ specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen
 	 } else {
 		close_navdata_file(csv);
 	 }
-		// apprentissage ici
-		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL);
-		
-		recognition_process(NAME_DATA_TEST, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
-		
          printf("closed\n");
          isStopped = 1;
   }
