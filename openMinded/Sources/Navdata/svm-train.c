@@ -357,10 +357,10 @@ void read_problem(const char *filename)
 	fclose(fp);
 }
 
-int training_model_generation(void)
+int training_model_generation(char* training_set, char* training_model)
 {
-	char input_file_name[1024]="full_weka_set";
-	char model_file_name[1024]="full_weka_set.model";
+	char* input_file_name=training_set;
+	char* model_file_name=training_model;
 	const char *error_msg;
 
 	create_model();

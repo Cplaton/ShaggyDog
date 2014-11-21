@@ -18,6 +18,9 @@
 #define NAME_RESIDUE "residue"
 #define NAME_LOG "logSFM"
 
+#define NAME_TRAINING_SET "Sources/Navdata/full_weka_set"
+#define NAME_TRAINING_MODEL "Sources/Navdata/full_weka_set.model"
+
 /**
  * @enum        drone_state
  * @abstract	enum representing the possibles state of the drone.
