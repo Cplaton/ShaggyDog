@@ -20,6 +20,9 @@
 
 #define NAME_TRAINING_SET "Sources/Navdata/full_weka_set"
 #define NAME_TRAINING_MODEL "Sources/Navdata/full_weka_set.model"
+#define NAME_DATA_TEST "Sources/Navdata/full_weka_set_test"
+#define NAME_CLASSIFIER_OUT "Sources/Navdata/classifier_out"
+
 
 /**
  * @enum        drone_state

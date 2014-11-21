@@ -482,6 +482,7 @@ inline C_RESULT navdata_analyse_release( void )
 		// apprentissage ici
 		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL);
 		
+		recognition_process(NAME_DATA_TEST, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
 		
          printf("closed\n");
          isStopped = 1;
