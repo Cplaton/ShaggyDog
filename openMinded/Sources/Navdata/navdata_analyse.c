@@ -81,6 +81,12 @@ FILE * logSFM;
  **/
 FILE * csv;
 
+/**
+ * @var		LearningBase
+ * @brief	File in which the navdata would be stored in txt format (to send to libSVM) will be used as learning base and test sample for cross validation
+ **/
+FILE * LearningBase;
+
 /********************************SENSED VALUES************************************/
 
 /**
@@ -465,6 +471,10 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 /* Relinquish the local resources after the event loop exit */
 inline C_RESULT navdata_analyse_release( void )
 {
+
+    int nb_specimen;
+    int i_db;
+    struct augmented_navdata * specimen;
   if(options.debug!=0 && isStopped == 0){
          close_navdata_file(fr);
          close_navdata_file(fm);
@@ -475,6 +485,18 @@ inline C_RESULT navdata_analyse_release( void )
 	 //close_navdata_file(csv);
 
 	 if( BDD_ENABLED ){
+         //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
+       printf("ton papa\n"); 
+        LearningBase = open_learning_file("BaseApp");
+        specimen = get_values_from_db(0,-1,&nb_specimen);
+        printf("ta cousine\n");
+        for(i_db=0;i_db<nb_specimen;i_db++){
+            new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].roll,specimen[i_db].pitch,specimen[i_db].vyaw,specimen[i_db].vx,
+specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
+        }
+        printf("ta soeur\n");
+        close_learning_file(LearningBase);
+        printf("ta maman\n");
 		disconnect_to_database();
 	 } else {
 		close_navdata_file(csv);
