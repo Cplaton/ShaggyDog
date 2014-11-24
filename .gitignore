@@ -42,7 +42,7 @@
 *logSFM
 
 #????
-.goutputstream*
+**/.goutputstream/**
 
 # AR DRONE LIB
 **/ARDroneLib/**
