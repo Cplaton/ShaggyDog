@@ -539,16 +539,9 @@ specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen
 	 } else {
 		close_navdata_file(csv);
 	 }
-<<<<<<< HEAD
 		 recognition_process(&specimen_buffer[10], NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
          printf("closed\n");
          isStopped = 1;
-=======
-		int recog_class;
-		recog_class = recognition_process(NAME_DATA_TEST, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
-        printf("closed\n");
-        isStopped = 1;
->>>>>>> b4503d94bff23e3c5e7e222523f93df51230d134
   }
 
   vp_os_mutex_destroy(&state_mutex);

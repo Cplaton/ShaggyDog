@@ -40,19 +40,11 @@
 static vp_os_mutex_t class_mutex;
 
 DEFINE_THREAD_ROUTINE(mission, data) {
-<<<<<<< HEAD
 
 	int mission_nb = MISSION_SFS_2;
 
 
     printf("missionModeOn=%d\n",missionModeOn);
-=======
-	
-	int mission_nb = MISSION_SFS_2;
-	
-	
-    printf("missionModeOn=%d\n",missionModeOn);	
->>>>>>> b4503d94bff23e3c5e7e222523f93df51230d134
 	while(missionModeOn==0){
 
         //printf("c'est la déprime\n");
