@@ -85,6 +85,11 @@ FILE * csv;
  **/
 FILE * LearningBase;
 
+/**
+ * @var		tmp
+ * @brief	
+ **/
+FILE * tmp;
 /********************************SENSED VALUES************************************/
 
 /**
@@ -210,9 +215,10 @@ static vp_os_mutex_t class_mutex;
  **/
 int class_id = 0;
 int class_id_aux;
-
-int buff_counter;
-int file_number;
+specimen indiv ;
+specimen specimen_buffer[10];
+int buff_counter=0;
+int file_number=0;
 char * shared_file_name;
 char * local_file_name;
 /**
@@ -427,20 +433,38 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                vp_os_mutex_unlock(&class_mutex);
 
 		insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az,class_id_aux);
-	   } else {
+	   } 
            // ARCHI CRADO A REVOIR IMPERATIVEMENT !!!!!!!!!!!!!!
-        if (buff_counter == 0){
+       /* if (buff_counter == 0){
+            printf("j'ouvre fichier %d\n",file_number);
             sprintf(local_file_name,"test%d",file_number);
-            csv = open_online_file(local_file_name);
+            printf("%s\n", local_file_name);
+            tmp = open_online_file(local_file_name);
         }
-		new_data_learning(csv,0,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az); 
-        file_number++;
+		new_data_learning(tmp,0,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az); 
         buff_counter++;
         if (buff_counter == 9){
-            close_online_file(csv);
+           printf("Je ferme fichier\n");
+            close_online_file(tmp);
             shared_file_name = local_file_name;
+            file_number++;
 	        buff_counter = 0;
-        }
+        
+       }*/
+       indiv.pitch = av_pitch;
+       indiv.roll = av_roll;
+       indiv.vyaw = av_Vyaw;
+       indiv.vx = av_Vx;
+       indiv.vy = av_Vy;
+       indiv.vz = av_Vz;
+       indiv.ax = ax;
+       indiv.ay = ay;
+       indiv.az = az;
+       specimen_buffer[buff_counter]= indiv;
+       if(buff_counter == 9){
+        buff_counter = 0;
+       }else{
+           buff_counter++;
        }
 	  }
 	

@@ -62,4 +62,19 @@ float get_wifi_quality();
 extern int class_id;
 extern int file_number;
 extern char * shared_file_name;
+
+typedef struct {
+    float pitch;
+    float roll;
+    float vyaw;
+    float vx;
+    float vy;
+    float vz;
+    float ax;
+    float ay;
+    float az;
+}specimen;
+
+extern specimen specimen_buffer[10];
+ 
 #endif // _NAVDATA_H_
