@@ -40,17 +40,17 @@
 static vp_os_mutex_t class_mutex;
 
 DEFINE_THREAD_ROUTINE(mission, data) {
-	
-	int mission_nb = MISSION_SFS_1;
-	
-	
-    printf("missionModeOn=%d\n",missionModeOn);	
+
+	int mission_nb = MISSION_SFS_2;
+
+
+    printf("missionModeOn=%d\n",missionModeOn);
 	while(missionModeOn==0){
-  
+
         //printf("c'est la déprime\n");
         usleep(1000000);
     }
-		
+
 	switch (mission_nb) {
 
 		case MISSION_SFS_1 :
@@ -69,21 +69,21 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 			break;
 
 		case MISSION_WALL_2:
-			
+
 			mission_WALL_2();
 			break;
 
 		case MISSION_WALL_3:
-			
+
 			mission_WALL_3();
 			break;
 
 		case MISSION_WALL_4:
-			
+
 			mission_WALL_4();
 			break;
-	}	
-			
+	}
+
 return 0;
 
 }
@@ -111,18 +111,18 @@ void mission_SFS_1 () {
 				usleep(5000000);
 				vp_os_mutex_lock(&class_mutex);
    				class_id=1;
-  				vp_os_mutex_unlock(&class_mutex);							
+  				vp_os_mutex_unlock(&class_mutex);
 				usleep(5000000);
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
-				status = get_drone_state();				
+				status = get_drone_state();
 				if (status == FLYING){
 					etat = FORWARD_PITCH;
 					printf("Passage à l'état 2\n");
-				}		
+				}
 				break;
-			
-			case FORWARD_PITCH :			
-				
+
+			case FORWARD_PITCH :
+
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -136,7 +136,7 @@ void mission_SFS_1 () {
 				break;
 
 			case LEFT_ROLL :
-	
+
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
@@ -148,7 +148,7 @@ void mission_SFS_1 () {
 				}
 				break;
 
-			case BACKWARD_PITCH : 
+			case BACKWARD_PITCH :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -172,59 +172,59 @@ void mission_SFS_1 () {
 					etat = GAS_UP;
 					ancien_etat = RIGHT_ROLL;
 				}
-				break;	
+				break;
 
-			case GAS_UP : 
+			case GAS_UP :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = gas(0.4,2000000);	
+				command = gas(0.4,2000000);
 				if (command != 0) {
 					printf("Passage à l'état 7");
 					etat = LEFT_YAW;
 					ancien_etat = GAS_UP;
 				}
-				break;	
+				break;
 
 			case LEFT_YAW:
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = yaw(-1.0,2000000);	
+				command = yaw(-1.0,2000000);
 				if (command != 0) {
 					printf("Passage à l'état 8");
 					etat = GAS_DOWN;
 					ancien_etat = LEFT_YAW;
 				}
-				break;				
-			
+				break;
+
 			case GAS_DOWN:
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = gas(-0.4,2000000);	
+				command = gas(-0.4,2000000);
 				if (command != 0) {
 					printf("Passage à l'état 9");
 					etat = RIGHT_YAW;
 					ancien_etat = GAS_DOWN;
 				}
-				break;	
+				break;
 
 			case RIGHT_YAW:
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = yaw(1.0,2000000);	
+				command = yaw(1.0,2000000);
 				if (command != 0) {
 					printf("Passage à l'état 10");
 					etat = LAND_DRONE;
 					ancien_etat = RIGHT_YAW;
 				}
-				break;	
+				break;
 
 			case LAND_DRONE :
 
@@ -232,8 +232,8 @@ void mission_SFS_1 () {
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
 				landing();
-				break;					
-			case HOVER_DRONE : 
+				break;
+			case HOVER_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -241,9 +241,9 @@ void mission_SFS_1 () {
 				fin = hover(5000000);
 				if (fin == 1)
 					etat = ancien_etat + 1;
-				break;				
+				break;
 		}
-	}	
+	}
 
 }
 
@@ -256,7 +256,7 @@ void mission_SFS_2() {
 	commandType_t type;
 	int etat = TAKEOFF_DRONE;
 	vp_os_mutex_init(&class_mutex);
-	
+
 	while (1) {
 		switch (etat) {
 
@@ -268,17 +268,17 @@ void mission_SFS_2() {
 				usleep(5000000);
 				vp_os_mutex_lock(&class_mutex);
    				class_id=1;
-  				vp_os_mutex_unlock(&class_mutex);							
+  				vp_os_mutex_unlock(&class_mutex);
 				usleep(5000000);
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
-				status = get_drone_state();				
+				status = get_drone_state();
 				if (status == FLYING){
 					etat = FORWARD_PITCH;
-				}		
+				}
 				break;
-			
-			case FORWARD_PITCH :			
-				
+
+			case FORWARD_PITCH :
+
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -290,7 +290,7 @@ void mission_SFS_2() {
 				break;
 
 			case GAS_UP :
-	
+
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
@@ -300,7 +300,7 @@ void mission_SFS_2() {
 				}
 				break;
 
-			case HOVER_DRONE : 
+			case HOVER_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=1;
@@ -308,36 +308,36 @@ void mission_SFS_2() {
 				fin = hover(5000000);
 				if (fin == 1)
 					etat = LEFT_YAW;
-				break;	
+				break;
 
 			case LEFT_YAW:
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = yaw(-1.0,2000000);	
+				command = yaw(-1.0,2000000);
 				if (command != 0) {
 					etat = GAS_DOWN;
 				}
-				break;	
+				break;
 
 			case GAS_DOWN:
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = gas(-0.4,2000000);	
+				command = gas(-0.4,2000000);
 				if (command != 0) {
 					etat = RIGHT_YAW;
 				}
-				break;			
+				break;
 
 			case RIGHT_YAW:
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = yaw(1.0,2000000);	
+				command = yaw(1.0,2000000);
 				if (command != 0) {
 					etat = LAND_DRONE;
 				}
@@ -349,8 +349,8 @@ void mission_SFS_2() {
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
 				landing();
-				break;					
-						
+				break;
+
 		}
 	}
 
@@ -376,13 +376,13 @@ void mission_WALL_1() {
 				usleep(5000000);
 				vp_os_mutex_lock(&class_mutex);
    				class_id=1;
-  				vp_os_mutex_unlock(&class_mutex);							
+  				vp_os_mutex_unlock(&class_mutex);
 				usleep(5000000);
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
-				status = get_drone_state();				
+				status = get_drone_state();
 				if (status == FLYING){
 					etat = GAS_DOWN;
-				}		
+				}
 				break;
 
 			case GAS_DOWN:
@@ -390,13 +390,13 @@ void mission_WALL_1() {
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = gas(-0.4,1000000);	
+				command = gas(-0.4,1000000);
 				if (command != 0) {
 					etat = HOVER_DRONE;
 				}
 				break;
 
-			case HOVER_DRONE : 
+			case HOVER_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=1;
@@ -405,9 +405,9 @@ void mission_WALL_1() {
 				if (fin == 1)
 					etat = FORWARD_PITCH;
 				break;
-			
-			case FORWARD_PITCH :			
-				
+
+			case FORWARD_PITCH :
+
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -417,14 +417,14 @@ void mission_WALL_1() {
 					etat = LAND_DRONE;
 				}
 				break;
-				
+
 			case LAND_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
 				landing();
-				break;						
+				break;
 		}
 	}
 }
@@ -449,13 +449,13 @@ void mission_WALL_2() {
 				usleep(5000000);
 				vp_os_mutex_lock(&class_mutex);
    				class_id=1;
-  				vp_os_mutex_unlock(&class_mutex);							
+  				vp_os_mutex_unlock(&class_mutex);
 				usleep(5000000);
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
-				status = get_drone_state();				
+				status = get_drone_state();
 				if (status == FLYING){
 					etat = GAS_DOWN;
-				}		
+				}
 				break;
 
 			case GAS_DOWN:
@@ -463,13 +463,13 @@ void mission_WALL_2() {
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = gas(-0.4,1000000);	
+				command = gas(-0.4,1000000);
 				if (command != 0) {
 					etat = HOVER_DRONE;
 				}
 				break;
 
-			case HOVER_DRONE : 
+			case HOVER_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=1;
@@ -478,9 +478,9 @@ void mission_WALL_2() {
 				if (fin == 1)
 					etat = RIGHT_YAW;
 				break;
-			
-			case RIGHT_YAW :			
-				
+
+			case RIGHT_YAW :
+
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -490,14 +490,14 @@ void mission_WALL_2() {
 					etat = LAND_DRONE;
 				}
 				break;
-				
+
 			case LAND_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
 				landing();
-				break;						
+				break;
 		}
 	}
 }
@@ -522,13 +522,13 @@ void mission_WALL_3() {
 				usleep(5000000);
 				vp_os_mutex_lock(&class_mutex);
    				class_id=1;
-  				vp_os_mutex_unlock(&class_mutex);							
+  				vp_os_mutex_unlock(&class_mutex);
 				usleep(5000000);
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
-				status = get_drone_state();				
+				status = get_drone_state();
 				if (status == FLYING){
 					etat = GAS_DOWN;
-				}		
+				}
 				break;
 
 			case GAS_DOWN:
@@ -536,13 +536,13 @@ void mission_WALL_3() {
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = gas(-0.4,1000000);	
+				command = gas(-0.4,1000000);
 				if (command != 0) {
 					etat = HOVER_DRONE;
 				}
 				break;
 
-			case HOVER_DRONE : 
+			case HOVER_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=1;
@@ -551,9 +551,9 @@ void mission_WALL_3() {
 				if (fin == 1)
 					etat = BACKWARD_PITCH;
 				break;
-			
-			case BACKWARD_PITCH :			
-				
+
+			case BACKWARD_PITCH :
+
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -563,14 +563,14 @@ void mission_WALL_3() {
 					etat = LAND_DRONE;
 				}
 				break;
-				
+
 			case LAND_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
 				landing();
-				break;						
+				break;
 		}
 	}
 }
@@ -595,13 +595,13 @@ void mission_WALL_4() {
 				usleep(5000000);
 				vp_os_mutex_lock(&class_mutex);
    				class_id=1;
-  				vp_os_mutex_unlock(&class_mutex);							
+  				vp_os_mutex_unlock(&class_mutex);
 				usleep(5000000);
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
-				status = get_drone_state();				
+				status = get_drone_state();
 				if (status == FLYING){
 					etat = GAS_DOWN;
-				}		
+				}
 				break;
 
 			case GAS_DOWN:
@@ -609,13 +609,13 @@ void mission_WALL_4() {
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = gas(-0.4,1000000);	
+				command = gas(-0.4,1000000);
 				if (command != 0) {
 					etat = HOVER_DRONE;
 				}
 				break;
 
-			case HOVER_DRONE : 
+			case HOVER_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=1;
@@ -624,9 +624,9 @@ void mission_WALL_4() {
 				if (fin == 1)
 					etat = LEFT_YAW;
 				break;
-			
-			case LEFT_YAW :			
-				
+
+			case LEFT_YAW :
+
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
@@ -636,77 +636,77 @@ void mission_WALL_4() {
 					etat = LAND_DRONE;
 				}
 				break;
-				
+
 			case LAND_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
 				landing();
-				break;						
+				break;
 		}
 	}
 }
 
 
 float roll(float value, int us) {
-	
+
 	Inputs_t lastcommand;
 	commandType_t type;
 
 	apply_command(value, 0.0, 0.0, 0.0);
 	usleep(us);
 	get_command(&lastcommand, &type);
-	
+
 	return lastcommand.roll;
 }
 
 float pitch(float value, int us) {
-	
+
 	Inputs_t lastcommand;
 	commandType_t type;
 
 	apply_command(0.0, value, 0.0, 0.0);
 	usleep(us);
 	get_command(&lastcommand, &type);
-	
+
 	return lastcommand.pitch;
 }
 
 float yaw(float value, int us) {
-	
+
 	Inputs_t lastcommand;
 	commandType_t type;
 
 	apply_command(0.0, 0.0, value, 0.0);
 	usleep(us);
 	get_command(&lastcommand, &type);
-	
+
 	return lastcommand.Vyaw;
 }
 
 float gas(float value, int us) {
-	
+
 	Inputs_t lastcommand;
 	commandType_t type;
 
 	apply_command(0.0, 0.0, 0.0, value);
 	usleep(us);
 	get_command(&lastcommand, &type);
-	
+
 	return lastcommand.gas;
 }
 
 float hover(int us) {
-	
+
 	Inputs_t lastcommand;
 	commandType_t type;
 	int end = 0;
-	
+
 	hovering();
 	usleep(us);
 	get_command(&lastcommand, &type);
-	
+
 	if ((lastcommand.roll == 0.0) && (lastcommand.pitch == 0.0) && (lastcommand.Vyaw == 0.0) && (lastcommand.gas == 0.0)) {
 		end = 1;
 	}
