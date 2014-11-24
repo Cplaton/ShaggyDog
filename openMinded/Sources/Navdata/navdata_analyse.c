@@ -514,15 +514,7 @@ specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen
 	 } else {
 		close_navdata_file(csv);
 	 }
-<<<<<<< HEAD
-
-
 		recognition_process(NAME_DATA_TEST, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
-=======
-
-		recognition_process(NAME_DATA_TEST, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
-		
->>>>>>> ece493eb40fb7f3328f51a06c74d2ca5641efe22
          printf("closed\n");
          isStopped = 1;
   }
