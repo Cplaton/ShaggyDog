@@ -45,7 +45,11 @@ void exit_input_error(int line_num)
 	exit(1);
 }
 
+<<<<<<< HEAD
 int predict(specimen* buffer, FILE *output)
+=======
+int predict(FILE *input, FILE *output)
+>>>>>>> b4503d94bff23e3c5e7e222523f93df51230d134
 {
 	int correct = 0;
 	double error = 0;
@@ -57,6 +61,30 @@ int predict(specimen* buffer, FILE *output)
 	int j,i,l;
 	int *labels;
 	double recog_values[50];
+<<<<<<< HEAD
+=======
+	
+	if(predict_probability)
+	{
+		if (svm_type==NU_SVR || svm_type==EPSILON_SVR)
+			info("Prob. model for test data: target value = predicted value + z,\nz: Laplace distribution e^(-|z|/sigma)/(2sigma),sigma=%g\n",svm_get_svr_probability(modell));
+		else
+		{
+			labels=(int *) malloc(nr_class*sizeof(int));
+			svm_get_labels(modell,labels);
+			prob_estimates = (double *) malloc(nr_class*sizeof(double));
+			fprintf(output,"labels");
+			for(j=0;j<nr_class;j++)
+				fprintf(output," %d",labels[j]);
+			fprintf(output,"\n");
+			//free(labels);
+		}
+	}
+	
+	// pour avoir les labels
+	labels=(int *) malloc(nr_class*sizeof(int));
+	svm_get_labels(modell,labels);
+>>>>>>> b4503d94bff23e3c5e7e222523f93df51230d134
 
 	max_line_len = 1024;
 	line = (char *)malloc(max_line_len*sizeof(char));
@@ -128,7 +156,11 @@ int predict(specimen* buffer, FILE *output)
 	// compte le nombre d'apparitions pour chaque classe reconnue
 	for (j=0;j<nr_class;j++)
 	{
+<<<<<<< HEAD
 		for (i=0;i<l;i++)
+=======
+		for (i=0;i<total;i++)
+>>>>>>> b4503d94bff23e3c5e7e222523f93df51230d134
 		{
 			if (recog_values[i]==labels[j])
 			{
@@ -147,6 +179,7 @@ int predict(specimen* buffer, FILE *output)
 			recog_class = labels[j];
 		}
 	}
+<<<<<<< HEAD
 
 	//free(labels);
 	//free(counters);
@@ -154,6 +187,53 @@ int predict(specimen* buffer, FILE *output)
 	printf("Accuracy : %lf\n ", 100*((double)max)/((double)l));
 
     return(recog_class);
+=======
+	
+	/* --------- DEBUG ---------
+	printf("labels existants\n");
+	for (i=0;i<nr_class;i++){
+		printf("label %d : %d\n", i, labels[i]);
+	}
+	
+	printf("-------------------------\n");
+	
+	printf("tableau des valeurs reconnues\n");
+	for (i=0;i<total;i++){
+		printf("recog value %d : %lf\n", i, recog_values[i]);
+	}
+	
+	printf("-------------------------\n");
+	printf("Valeurs des compteurs\n");
+	for (i=0;i<nr_class;i++)
+	{
+		printf("counter %d : %d\n",i,counters[i]);
+	}
+	printf("nr_class : %d\n",nr_class);
+	printf("max : %d\n",max);
+	printf("total : %d\n",total);
+	
+	//free(labels);
+	//free(counters);
+	printf("Classe reconnue : %d\n",recog_class);
+	printf("Accuracy : %lf ", 100*((double)max)/((double)total));
+	*/
+	return recog_class;
+	
+	/*
+	if (svm_type==NU_SVR || svm_type==EPSILON_SVR)
+	{
+		info("Mean squared error = %g (regression)\n",error/total);
+		info("Squared correlation coefficient = %g (regression)\n",
+			((total*sumpt-sump*sumt)*(total*sumpt-sump*sumt))/
+			((total*sumpp-sump*sump)*(total*sumtt-sumt*sumt))
+			);
+	}
+	else
+		// info("Accuracy = %g%% (%d/%d) (classification)\n",
+		// 		(double)correct/total*100,correct,total);
+	if(predict_probability)
+		free(prob_estimates);*/
+>>>>>>> b4503d94bff23e3c5e7e222523f93df51230d134
 }
 
 void exit_with_help()
@@ -186,11 +266,30 @@ int recognition_process(specimen* buffer, char* training_model, char* class_out)
 	}
 
 	x = (struct svm_node *) malloc(max_nr_attr*sizeof(struct svm_node));
+<<<<<<< HEAD
 
     if(svm_check_probability_model(modell)!=0)
         info("Model supports probability estimates, but disabled in prediction.\n");
 
 	recog_class =predict(&buffer[10],output);
+=======
+	if(predict_probability)
+	{
+		if(svm_check_probability_model(modell)==0)
+		{
+			fprintf(stderr,"Model does not support probabiliy estimates\n");
+			exit(1);
+		}
+	}
+	else
+	{
+		if(svm_check_probability_model(modell)!=0)
+			info("Model supports probability estimates, but disabled in prediction.\n");
+	}
+	
+	int recog_class;
+	recog_class = predict(input,output);
+>>>>>>> b4503d94bff23e3c5e7e222523f93df51230d134
 	svm_free_and_destroy_model(&modell);
 	free(x);
 	free(line);
