@@ -42,7 +42,7 @@ void exit_input_error(int line_num)
 	exit(1);
 }
 
-void predict(FILE *input, FILE *output)
+int predict(FILE *input, FILE *output)
 {
 	int correct = 0;
 	int total = 0;
@@ -72,6 +72,10 @@ void predict(FILE *input, FILE *output)
 			//free(labels);
 		}
 	}
+	
+	// pour avoir les labels
+	labels=(int *) malloc(nr_class*sizeof(int));
+	svm_get_labels(modell,labels);
 
 	max_line_len = 1024;
 	line = (char *)malloc(max_line_len*sizeof(char));
@@ -169,9 +173,9 @@ void predict(FILE *input, FILE *output)
 	}
 	
 	// compte le nombre d'apparitions pour chaque classe reconnue
-	for (j=0;j<nr_class-1;j++)
+	for (j=0;j<nr_class;j++)
 	{
-		for (i=0;i<total-1;i++)
+		for (i=0;i<total;i++)
 		{
 			if (recog_values[i]==labels[j])
 			{
@@ -182,7 +186,7 @@ void predict(FILE *input, FILE *output)
 	
 	int max = 0;
 	int recog_class;
-	for (j=0;j<nr_class-1;j++)
+	for (j=0;j<nr_class;j++)
 	{
 		if (counters[j]>max)
 		{
@@ -191,10 +195,26 @@ void predict(FILE *input, FILE *output)
 		}
 	}
 	
+	/* --------- DEBUG ---------
+	printf("labels existants\n");
+	for (i=0;i<nr_class;i++){
+		printf("label %d : %d\n", i, labels[i]);
+	}
 	
+	printf("-------------------------\n");
+	
+	printf("tableau des valeurs reconnues\n");
+	for (i=0;i<total;i++){
+		printf("recog value %d : %lf\n", i, recog_values[i]);
+	}
+	
+	printf("-------------------------\n");
+	printf("Valeurs des compteurs\n");
+	for (i=0;i<nr_class;i++)
+	{
+		printf("counter %d : %d\n",i,counters[i]);
+	}
 	printf("nr_class : %d\n",nr_class);
-	printf("counter0 : %d\n",counters[0]);
-	printf("counter1 : %d\n",counters[1]);
 	printf("max : %d\n",max);
 	printf("total : %d\n",total);
 	
@@ -202,6 +222,8 @@ void predict(FILE *input, FILE *output)
 	//free(counters);
 	printf("Classe reconnue : %d\n",recog_class);
 	printf("Accuracy : %lf ", 100*((double)max)/((double)total));
+	*/
+	return recog_class;
 	
 	/*
 	if (svm_type==NU_SVR || svm_type==EPSILON_SVR)
@@ -268,14 +290,15 @@ int recognition_process(char* set_test, char* training_model, char* class_out)
 		if(svm_check_probability_model(modell)!=0)
 			info("Model supports probability estimates, but disabled in prediction.\n");
 	}
-
-	predict(input,output);
+	
+	int recog_class;
+	recog_class = predict(input,output);
 	svm_free_and_destroy_model(&modell);
 	free(x);
 	free(line);
 	fclose(input);
 	fclose(output);
-	return 0;
+	return recog_class;
 }
 
 /*int main(int argc, char **argv)
