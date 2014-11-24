@@ -162,6 +162,12 @@ void predict(FILE *input, FILE *output)
 		exit(1);
 	}
 	
+	// init counter
+	for (i=0;i<nr_class;i++)
+	{
+		counters[i]=0;
+	}
+	
 	// compte le nombre d'apparitions pour chaque classe reconnue
 	for (j=0;j<nr_class-1;j++)
 	{
@@ -184,6 +190,14 @@ void predict(FILE *input, FILE *output)
 			recog_class = labels[j];
 		}
 	}
+	
+	
+	printf("nr_class : %d\n",nr_class);
+	printf("counter0 : %d\n",counters[0]);
+	printf("counter1 : %d\n",counters[1]);
+	printf("max : %d\n",max);
+	printf("total : %d\n",total);
+	
 	//free(labels);
 	//free(counters);
 	printf("Classe reconnue : %d\n",recog_class);
