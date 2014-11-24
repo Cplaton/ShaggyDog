@@ -361,10 +361,10 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
          	initModel(&selectedNavdata,(float32_t)(nd->altitude)/1000, nd->psi/1000);
         	initFilters(&selectedNavdata);
            	isInit = 1;
+     		ff = open_navdata_file(NAME_FILTERED_DATA);
 		if(options.debug!=0){
       			fm = open_navdata_file(NAME_MODEL_DATA);
       			fr = open_navdata_file(NAME_REAL_DATA);
-      			ff = open_navdata_file(NAME_FILTERED_DATA);
       			fc = open_navdata_file("selectedNav");
       			fres = open_navdata_file("residue");
       			logSFM=openLogFile("logSFM");
@@ -488,12 +488,13 @@ inline C_RESULT navdata_analyse_release( void )
   if(options.debug!=0 && isStopped == 0){
          close_navdata_file(fr);
          close_navdata_file(fm);
-         close_navdata_file(ff);
          close_navdata_file(fc);
          close_navdata_file(fres);
          closeLogFile(logSFM);
 	 //close_navdata_file(csv);
-
+        }
+    if(isStopped == 0){
+     close_navdata_file(ff);
 	 if( BDD_ENABLED ){
          //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
        printf("ton papa\n"); 
@@ -513,13 +514,9 @@ specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen
 	 } else {
 		close_navdata_file(csv);
 	 }
-<<<<<<< HEAD
-=======
-
 
 		recognition_process(NAME_DATA_TEST, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
 		
->>>>>>> fa626ffb19c5e835a086e7ee06c101022bd8fd83
          printf("closed\n");
          isStopped = 1;
   }
