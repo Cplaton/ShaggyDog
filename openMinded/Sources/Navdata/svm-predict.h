@@ -15,6 +15,6 @@ struct s_specimen{
 
 extern specimen specimen_buffer[10];
 
-int recognition_process(specimen specimen_buffer[10], char* training_model, char *output);
+int recognition_process(specimen* buffer, char* training_model, char* class_out);
 
 #endif /* _PREDICT_H */

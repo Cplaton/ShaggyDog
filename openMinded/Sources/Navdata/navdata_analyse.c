@@ -460,15 +460,19 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 	        buff_counter = 0;
 
        }*/
-       indiv.pitch = av_pitch;
-       indiv.roll = av_roll;
-       indiv.vyaw = av_Vyaw;
-       indiv.vx = av_Vx;
-       indiv.vy = av_Vy;
-       indiv.vz = av_Vz;
-       indiv.ax = ax;
-       indiv.ay = ay;
-       indiv.az = az;
+	   
+	   //printf("pitch %lf\n",av_pitch);
+       indiv.pitch = norm_indiv(av_pitch,1);
+	   //printf("pitch norm %lf\n",indiv.pitch);
+
+       indiv.roll = norm_indiv(av_roll,2);
+       indiv.vyaw = norm_indiv(av_Vyaw,3);
+       indiv.vx = norm_indiv(av_Vx,4);
+       indiv.vy = norm_indiv(av_Vy,5);
+       indiv.vz = norm_indiv(av_Vz,6);
+       indiv.ax = norm_indiv(ax,7);
+       indiv.ay = norm_indiv(ay,8);
+       indiv.az = norm_indiv(az,9);
        specimen_buffer[buff_counter]= indiv;
 	   
        if(buff_counter == 9){
@@ -535,7 +539,7 @@ inline C_RESULT navdata_analyse_release( void )
          //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
        printf("ton papa\n");
         LearningBase = open_learning_file("BaseApp");
-        specimen = get_values_from_db(0,-1,&nb_specimen);
+        specimen = get_normed_values_from_db(0,-1,&nb_specimen);
         printf("ta cousine\n");
         for(i_db=0;i_db<nb_specimen;i_db++){
             new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].roll,specimen[i_db].pitch,specimen[i_db].vyaw,specimen[i_db].vx,

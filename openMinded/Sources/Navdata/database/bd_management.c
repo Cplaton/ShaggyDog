@@ -42,6 +42,17 @@ PGresult * res_bd_req;		// DB results informations
  **/
 PGconn *conn_bd;		// DB connection informations
 
+// variables necessaires pour normaliser en live
+float min_alt, max_alt;
+float min_pitch, max_pitch;
+float min_roll, max_roll;
+float min_vyaw, max_vyaw;
+float min_vx, max_vx;
+float min_vy, max_vy;
+float min_vz, max_vz;
+float min_ax, max_ax;
+float min_ay, max_ay;
+float min_az, max_az;
 
 static void exit_nicely()
 {
@@ -115,7 +126,31 @@ int connect_to_database()
 	
 	}
 	PQclear(res_bd_req);
-
+	
+	
+	// First get current fields limits 
+	min_alt = get_min("altitude", "BasicSensors");
+	max_alt = get_max("altitude", "BasicSensors");
+	min_pitch = get_min("pitch", "BasicSensors");
+	max_pitch = get_max("pitch", "BasicSensors");
+	min_roll = get_min("roll", "BasicSensors");
+	max_roll = get_max("roll", "BasicSensors");
+	min_vyaw = get_min("vyaw", "BasicSensors");
+	max_vyaw = get_max("vyaw", "BasicSensors");
+	min_vx = get_min("vx", "BasicSensors");
+	max_vx = get_max("vx", "BasicSensors");
+	min_vy = get_min("vy", "BasicSensors");
+	max_vy = get_max("vy", "BasicSensors");
+	min_vz = get_min("vz", "BasicSensors");
+	max_vz = get_max("vz", "BasicSensors");
+	min_ax = get_min("ax", "BasicSensors");
+	max_ax = get_max("ax", "BasicSensors");
+	min_ay = get_min("ay", "BasicSensors");
+	max_ay = get_max("ay", "BasicSensors");
+	min_az = get_min("az", "BasicSensors");
+	max_az = get_max("az", "BasicSensors");
+	
+	
 	// Finally return	
 	return 0;
 }
@@ -175,6 +210,60 @@ float get_min(char * columnName, char * tableName)
 float norm_value(float init, float min, float max)
 {
 	return (init - ((min+max)/2.0)) / ((max-min) / 2.0);
+}
+
+double norm_indiv(double init, int type){
+	float min = 0;
+	float max = 0;
+
+	switch(type)
+	{
+	case 0: //DATA_ALT: 
+		min = min_alt;
+		max = max_alt;
+	break;
+	case 1: //DATA_PITCH:
+		min = min_pitch;
+		max = max_pitch;
+	break;
+	case 2 : //DATA_ROLL:
+		min = min_roll;
+		max = max_roll;
+	break;
+	case 3: // DATA_VYAW:
+		min = min_vyaw;
+		max = max_vyaw;
+	break;
+	case 4: //DATA_VX:
+		min = min_vx;
+		max = max_vy;
+	break;
+	case 5: //DATA_VY:
+		min = min_vy;
+		max = max_vy;
+	break;
+	case 6 : //DATA_VZ:
+		min = min_vz;
+		max = max_vz;
+	break;
+	case 7: //DATA_AY:
+		min = min_ax;
+		max = max_ax;
+	break;
+	case 8 ://DATA_AZ:
+		min = min_ay;
+		max = max_ay;
+	break;
+	case 9 ://DATA_AZ:
+		min = min_az;
+		max = max_az;
+	break;
+	}
+	/*printf("min : %f\n",min);
+	printf("max : %f\n",max);*/
+	
+	return (double)norm_value((float)init,min,max);
+
 }
 
 struct augmented_navdata * get_values_from_db(int number, int flight_id, int * nb_res)
@@ -253,39 +342,29 @@ struct augmented_navdata * get_normed_values_from_db(int number, int flight_id, 
 
 	// Declarations 
 	struct augmented_navdata * data;
-	float min_alt, max_alt;
-	float min_pitch, max_pitch;
-	float min_roll, max_roll;
-	float min_vyaw, max_vyaw;
-	float min_vx, max_vx;
-	float min_vy, max_vy;
-	float min_vz, max_vz;
-	float min_ax, max_ax;
-	float min_ay, max_ay;
-	float min_az, max_az;
 	int i;
-
+	
 	// First get current fields limits 
-	min_alt = get_min("altitude", "Flight");
-	max_alt = get_max("altitude", "Flight");
-	min_pitch = get_min("pitch", "Flight");
-	max_pitch = get_max("pitch", "Flight");
-	min_roll = get_min("roll", "Flight");
-	max_roll = get_max("roll", "Flight");
-	min_vyaw = get_min("vyaw", "Flight");
-	max_vyaw = get_max("vyaw", "Flight");
-	min_vx = get_min("vx", "Flight");
-	max_vx = get_max("vx", "Flight");
-	min_vy = get_min("vy", "Flight");
-	max_vy = get_max("vy", "Flight");
-	min_vz = get_min("vz", "Flight");
-	max_vz = get_max("vz", "Flight");
-	min_ax = get_min("ax", "Flight");
-	max_ax = get_max("ax", "Flight");
-	min_ay = get_min("ay", "Flight");
-	max_ay = get_max("ay", "Flight");
-	min_az = get_min("az", "Flight");
-	max_az = get_max("az", "Flight");
+	min_alt = get_min("altitude", "BasicSensors");
+	max_alt = get_max("altitude", "BasicSensors");
+	min_pitch = get_min("pitch", "BasicSensors");
+	max_pitch = get_max("pitch", "BasicSensors");
+	min_roll = get_min("roll", "BasicSensors");
+	max_roll = get_max("roll", "BasicSensors");
+	min_vyaw = get_min("vyaw", "BasicSensors");
+	max_vyaw = get_max("vyaw", "BasicSensors");
+	min_vx = get_min("vx", "BasicSensors");
+	max_vx = get_max("vx", "BasicSensors");
+	min_vy = get_min("vy", "BasicSensors");
+	max_vy = get_max("vy", "BasicSensors");
+	min_vz = get_min("vz", "BasicSensors");
+	max_vz = get_max("vz", "BasicSensors");
+	min_ax = get_min("ax", "BasicSensors");
+	max_ax = get_max("ax", "BasicSensors");
+	min_ay = get_min("ay", "BasicSensors");
+	max_ay = get_max("ay", "BasicSensors");
+	min_az = get_min("az", "BasicSensors");
+	max_az = get_max("az", "BasicSensors");
 
 	// Then get DB values 
 	data = get_values_from_db(number, flight_id, nb_res);
