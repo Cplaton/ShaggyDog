@@ -56,26 +56,22 @@ int predict(specimen* buffer, FILE *output)
 	int j,i,l;
 	int *labels;
 	double recog_values[50];
-
+	double predict_label;
+	char *idx, *val, *label, *endptr;
+	int inst_max_index = -1; // strtol gives 0 if wrong format, and precomputed kernel has <index> start from 0
+		
 	// pour avoir les labels
 	labels=(int *) malloc(nr_class*sizeof(int));
 	svm_get_labels(modell,labels);
 
 	max_line_len = 1024;
-	line = (char *)malloc(max_line_len*sizeof(char));
-
+	x = (struct svm_node *) realloc(x,10*sizeof(struct svm_node));
+	
 	for(l=0;l<10;l++)
 	{
-		int i = 0;
-		double predict_label;
-		char *idx, *val, *label, *endptr;
-		int inst_max_index = -1; // strtol gives 0 if wrong format, and precomputed kernel has <index> start from 0
-
 		for(i=0;i<9;i++)
 		{
-            x = (struct svm_node *) malloc(10*sizeof(struct svm_node));
-			x[i].index = i;
-
+			x[i].index = i+1;
 			switch(i)
 			{
 			    case 0:x[i].value = buffer[l].pitch;
@@ -101,10 +97,7 @@ int predict(specimen* buffer, FILE *output)
 			}
 		}
         predict_label = svm_predict(modell,x);
-        fprintf(output,"%g\n",predict_label);
-
-		// affiche le label
-		printf("%lf\n",predict_label);
+		fprintf(output,"%g\n",predict_label);
 		// enregistrement des labels reconnus dans un tableau
 		recog_values[l] = predict_label;
 	}
@@ -150,9 +143,13 @@ int predict(specimen* buffer, FILE *output)
 
 	//free(labels);
 	//free(counters);
+	printf("nombre de classes : %d\n",nr_class);
 	printf("Classe reconnue : %d\n",recog_class);
 	printf("Accuracy : %lf\n ", 100*((double)max)/((double)l));
 
+	
+	
+	
 	/* --------- DEBUG ---------
 	printf("labels existants\n");
 	for (i=0;i<nr_class;i++){
@@ -181,6 +178,8 @@ int predict(specimen* buffer, FILE *output)
 	printf("Classe reconnue : %d\n",recog_class);
 	printf("Accuracy : %lf ", 100*((double)max)/((double)total));
 	*/
+	free(labels);
+	free(counters);
 	return recog_class;
 
 	/*
@@ -228,16 +227,13 @@ int recognition_process(specimen* buffer, char* training_model, char* class_out)
 		exit(1);
 	}
 
-	x = (struct svm_node *) malloc(max_nr_attr*sizeof(struct svm_node));
 
     if(svm_check_probability_model(modell)!=0)
         info("Model supports probability estimates, but disabled in prediction.\n");
 
-	recog_class =predict(&buffer[10],output);
+	recog_class =predict(&buffer,output);
 
 	svm_free_and_destroy_model(&modell);
-	free(x);
-	free(line);
 	fclose(output);
 	return recog_class;
 }

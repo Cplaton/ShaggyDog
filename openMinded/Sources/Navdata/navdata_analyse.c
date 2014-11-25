@@ -207,6 +207,13 @@ static vp_os_mutex_t wifi_mutex;
  **/
 static vp_os_mutex_t class_mutex;
 
+/**
+ * @var		buffer_diag_mutex
+ * @brief	Protect the drone's diagnosis buffer.
+ * @warning This mutex should be called before each call to specimen_buffer variable.
+ **/
+static vp_os_mutex_t buffer_diag_mutex;
+
 /********************************OTHER VARIABLES*******************************/
 
 /**
@@ -434,6 +441,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                vp_os_mutex_unlock(&class_mutex);
 
 		insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az,class_id_aux);
+		
 	   }
            // ARCHI CRADO A REVOIR IMPERATIVEMENT !!!!!!!!!!!!!!
        /* if (buff_counter == 0){
@@ -462,8 +470,11 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
        indiv.ay = ay;
        indiv.az = az;
        specimen_buffer[buff_counter]= indiv;
+	   
        if(buff_counter == 9){
         buff_counter = 0;
+		int i,l = 0;
+		recognition_process(&specimen_buffer, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
        }else{
            buff_counter++;
        }
@@ -539,7 +550,7 @@ specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen
 	 } else {
 		close_navdata_file(csv);
 	 }
-		 recognition_process(&specimen_buffer[10], NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
+		 
          printf("closed\n");
          isStopped = 1;
   }
