@@ -45,8 +45,8 @@ void exit_input_error(int line_num)
 	exit(1);
 }
 
-int predict(specimen* buffer, FILE *output)
-{
+int predict(specimen * buffer, FILE *output)
+{		
 	int correct = 0;
 	double error = 0;
 	double sump = 0, sumt = 0, sumpp = 0, sumtt = 0, sumpt = 0;
@@ -96,10 +96,13 @@ int predict(specimen* buffer, FILE *output)
 			    break;
 			}
 		}
+		
+		
         predict_label = svm_predict(modell,x);
 		fprintf(output,"%g\n",predict_label);
-		// enregistrement des labels reconnus dans un tableau
+		//enregistrement des labels reconnus dans un tableau
 		recog_values[l] = predict_label;
+		//printf("indiv %d : %lf \n",l, recog_values[l]);
 	}
 
 	// traitement des labels reconnus
@@ -141,11 +144,11 @@ int predict(specimen* buffer, FILE *output)
 		}
 	}
 
-	//free(labels);
-	//free(counters);
+	free(labels);
+	free(counters);
 	printf("nombre de classes : %d\n",nr_class);
 	printf("Classe reconnue : %d\n",recog_class);
-	printf("Accuracy : %lf\n ", 100*((double)max)/((double)l));
+	printf("Confiance : %lf\n ", 100*((double)max)/((double)l));
 
 	
 	
@@ -177,9 +180,8 @@ int predict(specimen* buffer, FILE *output)
 	//free(counters);
 	printf("Classe reconnue : %d\n",recog_class);
 	printf("Accuracy : %lf ", 100*((double)max)/((double)total));
+	//
 	*/
-	free(labels);
-	free(counters);
 	return recog_class;
 
 	/*
@@ -211,6 +213,8 @@ void exit_with_help()
 
 int recognition_process(specimen* buffer, char* training_model, char* class_out)
 {
+
+
 	FILE *output;
 	int recog_class;
 
@@ -231,7 +235,7 @@ int recognition_process(specimen* buffer, char* training_model, char* class_out)
     if(svm_check_probability_model(modell)!=0)
         info("Model supports probability estimates, but disabled in prediction.\n");
 
-	recog_class =predict(&buffer,output);
+	recog_class =predict(buffer,output);
 
 	svm_free_and_destroy_model(&modell);
 	fclose(output);

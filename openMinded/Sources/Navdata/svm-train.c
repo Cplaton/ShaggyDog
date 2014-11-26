@@ -121,11 +121,11 @@ void create_model(void)
 	param.svm_type = C_SVC;
 	param.kernel_type = RBF;
 	param.degree = 3;
-	param.gamma = 0;	// 1/num_features
+	param.gamma = 1/400;	// 1/num_features
 	param.coef0 = 0;
 	param.nu = 0.5;
 	param.cache_size = 100;
-	param.C = 5000;
+	param.C = 1;
 	param.eps = 1e-3;
 	param.p = 0.1;
 	param.shrinking = 1;
@@ -133,7 +133,7 @@ void create_model(void)
 	param.nr_weight = 0;
 	param.weight_label = NULL;
 	param.weight = NULL;
-	cross_validation = 5;
+	cross_validation = 0;
 }
 
 /*void parse_command_line(int argc, char **argv, char *input_file_name, char *model_file_name)
