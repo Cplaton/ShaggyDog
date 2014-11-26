@@ -209,7 +209,8 @@ float get_min(char * columnName, char * tableName)
 
 float norm_value(float init, float min, float max)
 {
-	return (init - ((min+max)/2.0)) / ((max-min) / 2.0);
+	//return (init - ((min+max)/2.0)) / ((max-min) / 2.0);
+	return ((init - min) / (max - min));
 }
 
 double norm_indiv(double init, int type){

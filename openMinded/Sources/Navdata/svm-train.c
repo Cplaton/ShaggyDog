@@ -121,7 +121,7 @@ void create_model(void)
 	param.svm_type = C_SVC;
 	param.kernel_type = RBF;
 	param.degree = 3;
-	param.gamma = 1/400;	// 1/num_features
+	param.gamma = 0;	// Si =0, calculé automatiquement = 1/num_features
 	param.coef0 = 0;
 	param.nu = 0.5;
 	param.cache_size = 100;

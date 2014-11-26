@@ -41,7 +41,7 @@ static vp_os_mutex_t class_mutex;
 
 DEFINE_THREAD_ROUTINE(mission, data) {
 
-	int mission_nb = MISSION_SFS_1;
+	int mission_nb = MISSION_SFS_2;
 
 
     printf("missionModeOn=%d\n",missionModeOn);
