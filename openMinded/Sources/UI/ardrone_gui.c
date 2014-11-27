@@ -7,14 +7,14 @@
 #include <stdio.h>
 #include <glib.h>
 
-DEFINE_THREAD_ROUTINE(th_gui, data) 
+DEFINE_THREAD_ROUTINE(th_gui, data)
 {
-  //int ret = 0;
-  gdk_threads_enter();
-  gtk_main();
- 	//while (gtk_events_pending()) {gtk_main_iteration ();}
-	//pthread_exit(&ret);	
-  gdk_threads_leave();
+	//int ret = 0;
+	gdk_threads_enter();
+	gtk_main();
+	//while (gtk_events_pending()) {gtk_main_iteration ();}
+	//pthread_exit(&ret);
+	gdk_threads_leave();
 
-  return (0);
+	return (0);
 }

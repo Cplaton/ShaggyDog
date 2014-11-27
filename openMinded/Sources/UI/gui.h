@@ -1,6 +1,6 @@
 #ifndef GUI_H_
 #define GUI_H_
- 
+
 #include <gtk/gtk.h>
 #include <gtk-2.0/gtk/gtk.h>
 #include <stdlib.h>
@@ -93,7 +93,7 @@ typedef struct gui
 	GtkWidget *checkButtonDebug;
 	GtkWidget *checkButtonDisableSSM;
 	GtkWidget *checkButtonMission;
-    /*-----boxes-----*/
+	/*-----boxes-----*/
 	GtkWidget *vboxCheckButton;
 	GtkWidget *hboxButtonFinish;
 	GtkWidget *vboxDebugGeneral;
@@ -129,8 +129,8 @@ typedef struct gui
 	GtkTooltips *tooltipsDisableSSM;
 	GtkTooltips *tooltipsSys;
 	GtkTooltips *tooltipsFile;
-    GtkTooltips *tooltipsMission;
-    /*-----colors-----*/
+	GtkTooltips *tooltipsMission;
+	/*-----colors-----*/
 	GdkColor color;
 	GdkColor RED_COLOR;
 	/*-----event box-----*/

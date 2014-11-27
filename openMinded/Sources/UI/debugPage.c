@@ -1,34 +1,34 @@
 #include "debugPage.h"
 extern gui_t *gui;
 
-void open_file_callback(GtkWidget* win){   	
+void open_file_callback(GtkWidget* win){
 	/*-----create a dialog to open a file selector-----*/
 	/*gui->dialogFile = gtk_file_chooser_dialog_new ("Open File",
-                                      GTK_WINDOW(gui->mainWindow),
-                                      GTK_FILE_CHOOSER_ACTION_OPEN,
-                                      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-                                      NULL);*/
+	                              GTK_WINDOW(gui->mainWindow),
+	                              GTK_FILE_CHOOSER_ACTION_OPEN,
+	                              GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	                              GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+	                              NULL);*/
 	/*-----open the selected file with gedit-----*/
 	/*if (gtk_dialog_run (GTK_DIALOG (gui->dialogFile)) == GTK_RESPONSE_ACCEPT) {
-    char *filename;
-		char t[50];
-    filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(gui->dialogFile));
-		sprintf(t,"%s%s","gedit ",filename);
-		system(t);
-   	g_free (filename);
-  }
-	gtk_widget_destroy (gui->dialogFile);   */
+	   char *filename;
+	        char t[50];
+	   filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(gui->dialogFile));
+	        sprintf(t,"%s%s","gedit ",filename);
+	        system(t);
+	   g_free (filename);
+	   }
+	   gtk_widget_destroy (gui->dialogFile);   */
 	if (system("gedit DataModel/logSFM &") != 0) {
-          fprintf(stderr,"Failed to open the log file \n");
-          perror(" ");
-        }
+		fprintf(stderr,"Failed to open the log file \n");
+		perror(" ");
+	}
 }
 
 void debugPage(){
 	/*-----Create a table of 8 rows and 6 lines-----*/
 	gui->tableDebugPage = gtk_table_new(6, 8, TRUE);
-  gtk_table_set_col_spacings(GTK_TABLE(gui->tableDebugPage), 10);
+	gtk_table_set_col_spacings(GTK_TABLE(gui->tableDebugPage), 10);
 
 	/*-----create labels-----*/
 	gui->labelDebugGeneral = gtk_label_new (NULL);
@@ -37,7 +37,7 @@ void debugPage(){
 	gtk_label_set_markup (GTK_LABEL (gui->labelDebugSignature),"<big><b>Signature : </b></big>");
 	gui->labelRoll = gtk_label_new ("Roll : ");
 	gui->labelVYaw = gtk_label_new ("Vyaw : ");
-	gui->labelPitch = gtk_label_new ("Pitch : ");	
+	gui->labelPitch = gtk_label_new ("Pitch : ");
 	gui->labelVx = gtk_label_new ("Vx : ");
 	gui->labelVy = gtk_label_new ("Vy : ");
 	gui->labelVz = gtk_label_new ("Vz : ");
@@ -91,7 +91,7 @@ void debugPage(){
 
 	/*-----create tooptips-----*/
 	gui->tooltipsFile = gtk_tooltips_new ();
-	gtk_tooltips_set_tip (gui->tooltipsFile,gui->imgFile ,"Click to open calculate file", NULL);
+	gtk_tooltips_set_tip (gui->tooltipsFile,gui->imgFile,"Click to open calculate file", NULL);
 
 	/*-----create event box to display images-----*/
 	gui->eventBoxImgFile = gtk_event_box_new ();
@@ -121,7 +121,7 @@ void debugPage(){
 	/*-----add imgFile to event box and set clicable-----*/
 	gtk_container_add (GTK_CONTAINER (gui->eventBoxImgFile), gui->imgFile);
 	gtk_widget_set_events (gui->eventBoxImgFile, GDK_BUTTON_PRESS_MASK);
-  gtk_signal_connect (GTK_OBJECT(gui->eventBoxImgFile),"button_press_event",GTK_SIGNAL_FUNC (open_file_callback), NULL);
+	gtk_signal_connect (GTK_OBJECT(gui->eventBoxImgFile),"button_press_event",GTK_SIGNAL_FUNC (open_file_callback), NULL);
 
 	/*-----complete vboxes-----*/
 	gtk_box_pack_start(GTK_BOX(gui->vboxDebugGeneral),gui->labelRollGeneral, FALSE, TRUE, 0);
@@ -174,7 +174,7 @@ void debugPage(){
 	gtk_table_attach_defaults(GTK_TABLE(gui->tableDebugPage), gui->valignDebugTextEntrySignature1,4,8,4,7);
 	gtk_table_attach_defaults(GTK_TABLE(gui->tableDebugPage), gui->labelSignatureState,6,8,4,5);
 	gtk_table_attach_defaults(GTK_TABLE(gui->tableDebugPage), gui->textEntrySignatureState,6,8,4,6);
-  gtk_table_attach_defaults(GTK_TABLE(gui->tableDebugPage), gui->imgSmartFox, 2,3,7,8);
+	gtk_table_attach_defaults(GTK_TABLE(gui->tableDebugPage), gui->imgSmartFox, 2,3,7,8);
 	gtk_table_attach_defaults(GTK_TABLE(gui->tableDebugPage), gui->labelSF, 1,8,7,8);
 	gtk_table_attach_defaults(GTK_TABLE(gui->tableDebugPage), gui->eventBoxImgFile, 5,6,3,4);
 

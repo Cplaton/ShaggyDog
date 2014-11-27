@@ -4,7 +4,7 @@ extern gui_t *gui;
 void diagnosisPage(){
 	/*-----Create a table of 8 rows and 6 lines-----*/
 	gui->tableDisgnosisPage = gtk_table_new(6, 8, TRUE);
-  gtk_table_set_col_spacings(GTK_TABLE(gui->tableDisgnosisPage), 10);
+	gtk_table_set_col_spacings(GTK_TABLE(gui->tableDisgnosisPage), 10);
 
 	/*----init color of frame-----*/
 	gdk_color_parse ("#AFAFAF", &(gui->color));
@@ -69,12 +69,12 @@ void diagnosisPage(){
 
 	/*-----add scroll bar to display fault text view------*/
 	gui->scrolledAlert = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (gui->scrolledAlert),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC); 
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (gui->scrolledAlert),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 	gtk_container_add (GTK_CONTAINER (gui->scrolledAlert),gui->textViewAlert);
 
 	/*-----add scroll bar to display emergency text view------*/
 	gui->scrolledEmergency = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (gui->scrolledEmergency),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC); 
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (gui->scrolledEmergency),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 	gtk_container_add (GTK_CONTAINER (gui->scrolledEmergency),gui->textViewEmergency);
 
 	/*-----set frames colors-----*/
@@ -115,7 +115,7 @@ void diagnosisPage(){
 	gtk_table_attach_defaults(GTK_TABLE(gui->tableDisgnosisPage), gui->labelIndicators,6,8,0,1);
 	gtk_table_attach_defaults(GTK_TABLE(gui->tableDisgnosisPage), gui->frameAlert,0,3,1,5);
 	gtk_table_attach_defaults(GTK_TABLE(gui->tableDisgnosisPage), gui->frameEmergency,3,6,1,5);
-  gtk_table_attach_defaults(GTK_TABLE(gui->tableDisgnosisPage), gui->imgSmartFox, 2,3,5,6);
+	gtk_table_attach_defaults(GTK_TABLE(gui->tableDisgnosisPage), gui->imgSmartFox, 2,3,5,6);
 	gtk_table_attach_defaults(GTK_TABLE(gui->tableDisgnosisPage), gui->labelSF, 1,8,5,6);
 	gtk_table_attach_defaults(GTK_TABLE(gui->tableDisgnosisPage), gui->valignIndicatorsLabel,6,7,1,5);
 	gtk_table_attach_defaults(GTK_TABLE(gui->tableDisgnosisPage), gui->valignIndicators,6,8,1,5);

@@ -19,28 +19,28 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 	int i;
 	float batteryLevel = 0.0, wifiLevel = 0.0;
 	gdk_color_parse ("red", &(gui->RED_COLOR));
-    vp_os_mutex_init(&mission_mutex);
-  if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSaturation))==TRUE){
+	vp_os_mutex_init(&mission_mutex);
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSaturation))==TRUE) {
 		options.saturation = 1;
 	}else{
 		options.saturation = 0;
 	}
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSys))==TRUE){
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSys))==TRUE) {
 		options.sysUrgenceExtreme = 1;
 	}else{
 		options.sysUrgenceExtreme = 0;
 	}
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSePoser))==TRUE){
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSePoser))==TRUE) {
 		options.sePoser = 1;
 	}else{
 		options.sePoser = 0;
 	}
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSMLimited))==TRUE){
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSMLimited))==TRUE) {
 		options.SMLimited = 1;
 	}else{
 		options.SMLimited = 0;
 	}
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonDebug))==TRUE){
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonDebug))==TRUE) {
 		options.debug = 1;
 		debugModeOn = 1;
 		if(isOpen != 1) {
@@ -55,18 +55,18 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 	}else{
 		options.debug = 0;
 	}
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonDisableSSM))==TRUE){
-		options.disableSSM = 1; 
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonDisableSSM))==TRUE) {
+		options.disableSSM = 1;
 	}else{
-		options.disableSSM = 0; 
+		options.disableSSM = 0;
 	}
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonMission))==TRUE){
-        options.debug = 1;
-        options.disableSSM = 1;
-        debugModeOn = 1;
-        //vp_os_mutex_lock(&mission_mutex);
-        missionModeOn = 1;
-        //vp_os_mutex_unlock(&mission_mutex);
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonMission))==TRUE) {
+		options.debug = 1;
+		options.disableSSM = 1;
+		debugModeOn = 1;
+		//vp_os_mutex_lock(&mission_mutex);
+		missionModeOn = 1;
+		//vp_os_mutex_unlock(&mission_mutex);
 		if(isOpen != 1) {
 			gui->frameNoteBook = gtk_frame_new (NULL);
 			gtk_container_set_border_width (GTK_CONTAINER (gui->frameNoteBook), 10);
@@ -76,11 +76,11 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 			gtk_widget_show_all(gui->frameNoteBook);
 			isOpen = 1;
 		}
-    }else{
-        //vp_os_mutex_lock(&mission_mutex);
-        missionModeOn = 0;
-        //vp_os_mutex_unlock(&mission_mutex);
-    }
+	}else{
+		//vp_os_mutex_lock(&mission_mutex);
+		missionModeOn = 0;
+		//vp_os_mutex_unlock(&mission_mutex);
+	}
 
 
 	/*-----switch the page to the next-----*/
@@ -103,25 +103,25 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 		if(prec_fault_msg != faultMsg && emergencyMsg == NO_EMERGENCY) {
 			displayAlertMsg(faultMsg);
 			prec_fault_msg = faultMsg;
-		
-			//In debug pages, text entries for drone's signature state	
+
+			//In debug pages, text entries for drone's signature state
 			if(debugModeOn ==1) {
-					readSignature(alarm);	
-					for(i=0;i<6;i++) {
-						switch(alarm[i]) {
-							case ALARM_N : 
-								sprintf(tabAlarm[i],"%s","Negatif");
-							break;
-							case ALARM_Z : 
-								sprintf(tabAlarm[i],"%s","Ok");
-							break;
-							case ALARM_P : 
-								sprintf(tabAlarm[i],"%s","Positif");
-							break;
-							default:
-								sprintf(tabAlarm[i],"%s","Inconnu");
-							break;
-						}
+				readSignature(alarm);
+				for(i=0; i<6; i++) {
+					switch(alarm[i]) {
+					case ALARM_N:
+						sprintf(tabAlarm[i],"%s","Negatif");
+						break;
+					case ALARM_Z:
+						sprintf(tabAlarm[i],"%s","Ok");
+						break;
+					case ALARM_P:
+						sprintf(tabAlarm[i],"%s","Positif");
+						break;
+					default:
+						sprintf(tabAlarm[i],"%s","Inconnu");
+						break;
+					}
 				}
 				gtk_entry_set_text(GTK_ENTRY(gui->textEntryRollSignature),tabAlarm[0]);
 				gtk_entry_set_text(GTK_ENTRY(gui->textEntryPitchSignature),tabAlarm[1]);
@@ -150,7 +150,7 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 		}
 
 		/*----get battery level-----*/
-		batteryLevel = get_battery_level();	
+		batteryLevel = get_battery_level();
 		sprintf(info,"%d%s",(int)batteryLevel,"%");
 		gtk_entry_set_text(GTK_ENTRY(gui->textEntryBattery),info);
 		if(batteryLevel < 20.0) {
@@ -158,39 +158,39 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 		}
 
 		/*-----get wifi-----*/
-		wifiLevel = get_wifi_quality();	
+		wifiLevel = get_wifi_quality();
 		sprintf(info,"%d",(int)wifiLevel);
 		gtk_entry_set_text(GTK_ENTRY(gui->textEntryWifi),info);
 
 		/*-----get drone flight state-----*/
 		droneState = get_drone_state();
 		switch (droneState) {
-			case 0 : 
-				sprintf(info,"%s","FLYING");
+		case 0:
+			sprintf(info,"%s","FLYING");
 			break;
-			case 1 : 
-				sprintf(info,"%s","LANDING");
+		case 1:
+			sprintf(info,"%s","LANDING");
 			break;
-			case 2 : 
-				sprintf(info,"%s","LANDED");
+		case 2:
+			sprintf(info,"%s","LANDED");
 			break;
-			case 3 : 
-				sprintf(info,"%s","TAKING_OFF");
+		case 3:
+			sprintf(info,"%s","TAKING_OFF");
 			break;
-			case 4 : 
-				sprintf(info,"%s","UNKNOWN_STATE");
+		case 4:
+			sprintf(info,"%s","UNKNOWN_STATE");
 			break;
-			default : 
-				sprintf(info,"%s","UNKNOWN_STATE");
+		default:
+			sprintf(info,"%s","UNKNOWN_STATE");
 			break;
 		}
 		if(debugModeOn == 1) {
 			gtk_entry_set_text(GTK_ENTRY(gui->textEntryFlightState),info);
-		}		
+		}
 		gtk_entry_set_text(GTK_ENTRY(gui->textEntryDroneS),info);
 		/*-----periode of 500ms-----*/
-		//usleep(500000);		
-		while (gtk_events_pending()) {gtk_main_iteration ();}
+		//usleep(500000);
+		while (gtk_events_pending()) {gtk_main_iteration (); }
 	}
 }
 
@@ -203,16 +203,16 @@ void configPage(){
 	char infoBullDebug[2000] = "Enable the user to see all informations dynamically on diagnosis and safety softwares (in the debug window) and create log files that register all information during execution";
 	char infoBullDisableSSM[2000] = "The application only detects error, the drone will not try to land or to get off detected obsatcles.";
 	char infoBullSys[2000] = "It will send a landing order if drone state is too dangerous,and any procedure could protect the drone. It may not work for high speeds.";
-    char infoBullMission[2000] = "It will start a mission for filling the database which it is used for the learning process";
+	char infoBullMission[2000] = "It will start a mission for filling the database which it is used for the learning process";
 
 	/*-----Create a table of 8 rows and 7 lines-----*/
 	gui->tableConfigPage = gtk_table_new(7, 8, TRUE);
-  gtk_table_set_col_spacings(GTK_TABLE(gui->tableConfigPage), 10);
+	gtk_table_set_col_spacings(GTK_TABLE(gui->tableConfigPage), 10);
 
 	/*-----create the labels-----*/
 	gui->labelConfigPageTop = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (gui->labelConfigPageTop),
-			"<b>Configure the following parameters to start the application</b>");
+	                      "<b>Configure the following parameters to start the application</b>");
 	gui->labelSF = gtk_label_new ("Copyright, all rights reserved by Lucas Engineering");
 
 	/*-----create check buttons ------*/
@@ -222,14 +222,14 @@ void configPage(){
 	gui->checkButtonSMLimited = gtk_check_button_new_with_label("Limited Smart Safety Mode");
 	gui->checkButtonDebug = gtk_check_button_new_with_label("Debug mode");
 	gui->checkButtonDisableSSM = gtk_check_button_new_with_label("Disable Smart Safety Mode");
-    gui->checkButtonMission = gtk_check_button_new_with_label("Mission for learning process");
+	gui->checkButtonMission = gtk_check_button_new_with_label("Mission for learning process");
 
 	/*-----create finish button-----*/
 	gui->buttonFinish = gtk_button_new_with_label("Finish");
-  gtk_widget_set_size_request(gui->buttonFinish, 90, 40);
+	gtk_widget_set_size_request(gui->buttonFinish, 90, 40);
 	/*-----add connect to finish button-----*/
 	gtk_signal_connect (GTK_OBJECT(gui->buttonFinish), "clicked",
-                        GTK_SIGNAL_FUNC (check_button_callback), NULL);
+	                    GTK_SIGNAL_FUNC (check_button_callback), NULL);
 
 	/*-----create tooltips-----*/
 	gui->tooltipsSaturation = gtk_tooltips_new ();
@@ -238,19 +238,19 @@ void configPage(){
 	gui->tooltipsDebug = gtk_tooltips_new ();
 	gui->tooltipsDisableSSM = gtk_tooltips_new ();
 	gui->tooltipsSys = gtk_tooltips_new ();
-    gui->tooltipsMission = gtk_tooltips_new ();
+	gui->tooltipsMission = gtk_tooltips_new ();
 
 	/*-----associate tooltips with its checkbutton-----*/
-	gtk_tooltips_set_tip (gui->tooltipsSePoser,gui->checkButtonSePoser ,infoBullSePoser, NULL);
+	gtk_tooltips_set_tip (gui->tooltipsSePoser,gui->checkButtonSePoser,infoBullSePoser, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsSMLimited, gui->checkButtonSMLimited,infoBullSMLimited, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsDebug, gui->checkButtonDebug,infoBullDebug, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsSys, gui->checkButtonSys,infoBullSys, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsDisableSSM, gui->checkButtonDisableSSM,infoBullDisableSSM, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsSaturation, gui->checkButtonSaturation,infoBullSaturation, NULL);
-    gtk_tooltips_set_tip (gui->tooltipsSaturation, gui->checkButtonSaturation,infoBullSaturation, NULL);
-    gtk_tooltips_set_tip (gui->tooltipsMission, gui->checkButtonMission,infoBullMission, NULL);
+	gtk_tooltips_set_tip (gui->tooltipsSaturation, gui->checkButtonSaturation,infoBullSaturation, NULL);
+	gtk_tooltips_set_tip (gui->tooltipsMission, gui->checkButtonMission,infoBullMission, NULL);
 
-    /*-----create smart fox image-----*/
+	/*-----create smart fox image-----*/
 	gui->pixbuf = gdk_pixbuf_new_from_file_at_size("smartfox-final.png",40,40,NULL);
 	gui->imgSmartFox = gtk_image_new_from_pixbuf(gui->pixbuf);
 
@@ -262,14 +262,14 @@ void configPage(){
 	gui->halignButtonFinish = gtk_alignment_new(0, 0, 0, 0);
 
 	/*-----add checkboxes to the vbox and set the size of 300*220-----*/
-  gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonSaturation);
+	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonSaturation);
 	gtk_widget_set_size_request(gui->vboxCheckButton,300,220);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonSys);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonSePoser);
 	//gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonSMLimited);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonDebug);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonDisableSSM);
-   	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonMission);
+	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonMission);
 
 	/*-----add finish button to haligh-----*/
 	gtk_container_add(GTK_CONTAINER(gui->halignButtonFinish), gui->buttonFinish);

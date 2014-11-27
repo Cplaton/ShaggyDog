@@ -11,93 +11,93 @@ void displayAlertMsg (fault_t msg) {
 
 	/*-----switch different fault_t message-----*/
 	switch (msg) {
-		case OBSTACLE_DEVANT :
-				sprintf(alertMsg,"%s","Obstacle in the front");
+	case OBSTACLE_DEVANT:
+		sprintf(alertMsg,"%s","Obstacle in the front");
 		break;
-		case OBSTACLE_ARRIERE :
-				sprintf(alertMsg,"%s","Obstacle at the rear");
+	case OBSTACLE_ARRIERE:
+		sprintf(alertMsg,"%s","Obstacle at the rear");
 		break;
-		case OBSTACLE_DROITE :
-				sprintf(alertMsg,"%s","Obstacle on the right");
+	case OBSTACLE_DROITE:
+		sprintf(alertMsg,"%s","Obstacle on the right");
 		break;
-		case OBSTACLE_GAUCHE :
-				sprintf(alertMsg,"%s","Obstacle on the left");
+	case OBSTACLE_GAUCHE:
+		sprintf(alertMsg,"%s","Obstacle on the left");
 		break;
-		case OBSTACLE_HAUT :
-				sprintf(alertMsg,"%s","Obstacle at the top");
+	case OBSTACLE_HAUT:
+		sprintf(alertMsg,"%s","Obstacle at the top");
 		break;
-		case OBSTACLE_BAS :
-				sprintf(alertMsg,"%s","Obstacle at the bottom");
+	case OBSTACLE_BAS:
+		sprintf(alertMsg,"%s","Obstacle at the bottom");
 		break;
-				case VENT_AVANT :
-				sprintf(alertMsg,"%s","Wind from the bottom");
+	case VENT_AVANT:
+		sprintf(alertMsg,"%s","Wind from the bottom");
 		break;
-		case VENT_ARRIERE :
-				sprintf(alertMsg,"%s","Wind from the back");
+	case VENT_ARRIERE:
+		sprintf(alertMsg,"%s","Wind from the back");
 		break;
-		case OBSTACLE_DROITE_AVANT :
-				sprintf(alertMsg,"%s","Obstacle on the front right");
+	case OBSTACLE_DROITE_AVANT:
+		sprintf(alertMsg,"%s","Obstacle on the front right");
 		break;
-		case OBSTACLE_DROITE_ARRIERE :
-				sprintf(alertMsg,"%s","Obstacle on the back right");
+	case OBSTACLE_DROITE_ARRIERE:
+		sprintf(alertMsg,"%s","Obstacle on the back right");
 		break;
-		case OBSTACLE_GAUCHE_ARRIERE :
-				sprintf(alertMsg,"%s","Obstacle on the back left");
+	case OBSTACLE_GAUCHE_ARRIERE:
+		sprintf(alertMsg,"%s","Obstacle on the back left");
 		break;
-		case OBSTACLE_GAUCHE_DEVANT :
-				sprintf(alertMsg,"%s","Obstacle on the front left");
+	case OBSTACLE_GAUCHE_DEVANT:
+		sprintf(alertMsg,"%s","Obstacle on the front left");
 		break;
-		case OBSTACLE_DEVANT_GAUCHE :
-				sprintf(alertMsg,"%s","Obstacle on the left front");
+	case OBSTACLE_DEVANT_GAUCHE:
+		sprintf(alertMsg,"%s","Obstacle on the left front");
 		break;
-		case OBSTACLE_DEVANT_DROITE :
-				sprintf(alertMsg,"%s","Obstacle on the right front");
+	case OBSTACLE_DEVANT_DROITE:
+		sprintf(alertMsg,"%s","Obstacle on the right front");
 		break;
-		case OBSTACLE_ARRIERE_DROITE :
-				sprintf(alertMsg,"%s","Obstacle on the right back");
+	case OBSTACLE_ARRIERE_DROITE:
+		sprintf(alertMsg,"%s","Obstacle on the right back");
 		break;
-		case OBSTACLE_ARRIERE_GAUCHE :
-				sprintf(alertMsg,"%s","Obstacle on the left back");
+	case OBSTACLE_ARRIERE_GAUCHE:
+		sprintf(alertMsg,"%s","Obstacle on the left back");
 		break;
-		case OBSTACLE_AVANT_DESSOUS :
-				sprintf(alertMsg,"%s","Obstacle on the bottom front");
+	case OBSTACLE_AVANT_DESSOUS:
+		sprintf(alertMsg,"%s","Obstacle on the bottom front");
 		break;
-		case OBSTACLE_ARRIERE_DESSOUS :
-				sprintf(alertMsg,"%s","Obstacle on the bottom back");
+	case OBSTACLE_ARRIERE_DESSOUS:
+		sprintf(alertMsg,"%s","Obstacle on the bottom back");
 		break;
-		case OBSTACLE_ARRIERE_DESSUS :
-				sprintf(alertMsg,"%s","Obstacle on the top back");
+	case OBSTACLE_ARRIERE_DESSUS:
+		sprintf(alertMsg,"%s","Obstacle on the top back");
 		break;
-		case OBSTACLE_AVANT_DESSUS :
-				sprintf(alertMsg,"%s","Obstacle top front");
+	case OBSTACLE_AVANT_DESSUS:
+		sprintf(alertMsg,"%s","Obstacle top front");
 		break;
-		case OBSTACLE_DESSOUS_DROITE :
-				sprintf(alertMsg,"%s","Obstacle on the right bottom");
+	case OBSTACLE_DESSOUS_DROITE:
+		sprintf(alertMsg,"%s","Obstacle on the right bottom");
 		break;
-		case OBSTACLE_DESSOUS_GAUCHE :
-				sprintf(alertMsg,"%s","Obstacle on the left bottom");
+	case OBSTACLE_DESSOUS_GAUCHE:
+		sprintf(alertMsg,"%s","Obstacle on the left bottom");
 		break;
-		case OBSTACLE_DESSUS_GAUCHE :
-				sprintf(alertMsg,"%s","Obstacle on the left top");
+	case OBSTACLE_DESSUS_GAUCHE:
+		sprintf(alertMsg,"%s","Obstacle on the left top");
 		break;
-		case OBSTACLE_DESSUS_DROIT :
-				sprintf(alertMsg,"%s","Obstacle on the right top");
+	case OBSTACLE_DESSUS_DROIT:
+		sprintf(alertMsg,"%s","Obstacle on the right top");
 		break;
-		case NO_FAULT :
-				sprintf(alertMsg,"%s","No obstacle");
+	case NO_FAULT:
+		sprintf(alertMsg,"%s","No obstacle");
 		break;
-		case UNKNOWN_FAULT:
-				sprintf(alertMsg,"%s","Unkown fault");
+	case UNKNOWN_FAULT:
+		sprintf(alertMsg,"%s","Unkown fault");
 		break;
-		default:
-				sprintf(alertMsg,"%s","No obstacle");
+	default:
+		sprintf(alertMsg,"%s","No obstacle");
 	}
 
 	msgTime = time(NULL);
-	if(debugModeOn == 1) 
-			gtk_entry_set_text(GTK_ENTRY(gui->textEntrySignatureState),alertMsg);
+	if(debugModeOn == 1)
+		gtk_entry_set_text(GTK_ENTRY(gui->textEntrySignatureState),alertMsg);
 	//strcat(alertMsg_tmp,alertMsg);
-	
+
 	/*-----insert message with colors into bufferAlert-----*/
 	sprintf(alertMsg_tmp,"%s%s%s\n\n",ctime(&msgTime),"    ",alertMsg);
 	gtk_text_buffer_get_end_iter(gui->bufferAlert, &(endAlert));
@@ -106,7 +106,7 @@ void displayAlertMsg (fault_t msg) {
 	}else{
 		gtk_text_buffer_insert_with_tags_by_name(gui->bufferAlert,&endAlert,alertMsg_tmp,-1,"normal_msg",NULL);
 	}
-	while (gtk_events_pending()) {gtk_main_iteration ();}
+	while (gtk_events_pending()) {gtk_main_iteration (); }
 }
 
 void displayEmergencyMsg (emergency_state em) {
@@ -116,45 +116,45 @@ void displayEmergencyMsg (emergency_state em) {
 	time_t msgTime;
 
 	switch (em) {
-		case NO_EMERGENCY : 
-			sprintf(alertMsg,"%s","No emergency\n");
+	case NO_EMERGENCY:
+		sprintf(alertMsg,"%s","No emergency\n");
 		break;
-		case GO_BACK : 
-			sprintf(alertMsg,"%s","Go back\n");
+	case GO_BACK:
+		sprintf(alertMsg,"%s","Go back\n");
 		break;
-		case GO_FORWARD : 
-			sprintf(alertMsg,"%s","Go forward\n");
+	case GO_FORWARD:
+		sprintf(alertMsg,"%s","Go forward\n");
 		break;
-		case GO_LEFT : 
-			sprintf(alertMsg,"%s","Go left\n");
+	case GO_LEFT:
+		sprintf(alertMsg,"%s","Go left\n");
 		break;
-		case GO_RIGHT : 
-			sprintf(alertMsg,"%s","Go right\n");
+	case GO_RIGHT:
+		sprintf(alertMsg,"%s","Go right\n");
 		break;
-		case GO_UP : 
-			sprintf(alertMsg,"%s","Go up\n");
+	case GO_UP:
+		sprintf(alertMsg,"%s","Go up\n");
 		break;
-		case GO_DOWN : 
-			sprintf(alertMsg,"%s","Go down\n");
+	case GO_DOWN:
+		sprintf(alertMsg,"%s","Go down\n");
 		break;
-		case E_STABILISATION : 
-			sprintf(alertMsg,"%s","Stabilisation\n");
+	case E_STABILISATION:
+		sprintf(alertMsg,"%s","Stabilisation\n");
 		break;
-		case LAND : 
-			sprintf(alertMsg,"%s","Land\n");
+	case LAND:
+		sprintf(alertMsg,"%s","Land\n");
 		break;
-		case E_VERIFICATION : 
-			sprintf(alertMsg,"%s","Verification\n");
+	case E_VERIFICATION:
+		sprintf(alertMsg,"%s","Verification\n");
 		break;
-		case VERIFICATION_FAILED : 
-			sprintf(alertMsg,"%s","Verification failed\n");
+	case VERIFICATION_FAILED:
+		sprintf(alertMsg,"%s","Verification failed\n");
 		break;
-		default:
-			sprintf(alertMsg,"%s","No emergency\n");
+	default:
+		sprintf(alertMsg,"%s","No emergency\n");
 	}
-		
+
 	msgTime = time(NULL);
-	
+
 	/*-----insert message with colors into bufferAlert-----*/
 	sprintf(alertMsg_tmp,"%s%s%s\n",ctime(&msgTime),"    ",alertMsg);
 	gtk_text_buffer_get_end_iter(gui->bufferEmergency, &(endEmergency));
@@ -163,6 +163,6 @@ void displayEmergencyMsg (emergency_state em) {
 	}else{
 		gtk_text_buffer_insert_with_tags_by_name(gui->bufferEmergency,&endEmergency,alertMsg_tmp,-1,"have_emergency",NULL);
 	}
-	while (gtk_events_pending()) {gtk_main_iteration ();}
+	while (gtk_events_pending()) {gtk_main_iteration (); }
 }
 

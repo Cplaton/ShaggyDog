@@ -16,7 +16,7 @@ else
    ARDRONE_TARGET_DIR=$(shell pwd)/../
 endif
 
-TARGET=smartfox
+TARGET=openMINDED
 
 # Used directories
 PG_INC=/usr/include/postgresql/
@@ -73,7 +73,7 @@ GENERIC_LIB_PATHS=-L$(GENERIC_TARGET_BINARIES_DIR) -L$(PG_LIB) -L$(DB_LIB_DIR) -
 GENERIC_LIBS=-lpc_ardrone -lgtk-x11-2.0 -lrt -lpq -lstdc++
 
 SDK_FLAGS+="USE_APP=yes"
-SDK_FLAGS+="APP_ID=smartfox"
+SDK_FLAGS+="APP_ID=openMINDED"
 
 # Transmit values to the PARROT Library makefile
 export GENERIC_CFLAGS
