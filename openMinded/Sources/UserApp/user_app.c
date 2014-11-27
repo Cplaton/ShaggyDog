@@ -1,7 +1,10 @@
-/*
- * user_app.c
- * 13/01/2014 - gayraudbenoit@gmail.com
- */
+/**
+ * @file    user_app.c
+ * @author  gayraudbenoit@gmail.com (Smartfox), modified by ShaggyDogs
+ * @brief   Contains all the functions used to send commands to the drone
+ * @version 2.0
+ * @date    January 2014 (last modified: Nov 2014)
+ **/
 #include <linux/input.h>
 #include <sys/types.h>
 #include <sys/stat.h>

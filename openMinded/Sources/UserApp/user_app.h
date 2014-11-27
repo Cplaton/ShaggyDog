@@ -1,7 +1,10 @@
-/* 
- * user_app.h 
- * 13/01/2014 - gayraudbenoit@gmail.com
- */
+/**
+ * @file    user_app.h
+ * @author  gayraudbenoit@gmail.com (Smartfox), modified by ShaggyDogs
+ * @brief   Contains all the functions used to send commands to the drone
+ * @version 2.0
+ * @date    January 2014 (last modified: Nov 2014)
+ **/
 #ifndef USER_APP_H__
 #define USER_APP_H__
 #include <linux/input.h>
@@ -9,22 +12,47 @@
 
 PROTO_THREAD_ROUTINE(th_user_app, data);
 
-/* to make the drone hovers over the floor*/
+/**
+ * @fn      hovering
+ * @brief   make the drone hovers over the floor
+ **/
 void hovering();
 
-/* to send a specifing command to the drone while it is flying */
+/**
+ * @fn      apply_command
+ * @brief   sends a specific command to the drone while it is flying
+ * @param   roll    the roll angle to set to the drone
+ * @param   pitch   the pitch angle to set to the drone
+ * @param   Vyaw    the yaw speed to set to the drone
+ * @param   gas     the gas to set to th drone motors
+ **/
 void apply_command(float roll, float pitch, float Vyaw, float gas);
 
-/* to make the drone lands */
+/**
+ * @fn      landing
+ * @brief   makes the drone lands 
+ **/
 void landing();
 
-/* to make the drone takes off */
+/**
+ * @fn      takeoff
+ * @brief   makes the drone takes off 
+ **/
 void takeoff();
 
-/* initialization function : reads the conf file */
+/**
+ * @fn      init_userapp
+ * @brief   initialize the user app by reading the configuration file 
+ * @param   keyboard_file       the conf file indicating wich key is used for each possible command
+ * @param   len                 size of the file
+ **/
 void init_userapp(char * keyboard_file, size_t len);
 
-/* extract the key that triggered the event and send the matching command to the drone */
+/**
+ * @fn      extract_key_event
+ * @brief   extract the key that triggered the event and send the matching command to the drone
+ * @param   ev      event that indicate wich key has been pressed
+ **/
 void extract_key_event(struct input_event * ev);
 
 /* ############################################################################################################## */
