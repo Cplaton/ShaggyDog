@@ -14,6 +14,17 @@
 #define OPENMINDE_BD_LIB 
 #define DEBUG_MODE 0
 
+#define DATA_ALT 0
+#define DATA_PITCH 1
+#define DATA_ROLL 2
+#define DATA_VYAW 3
+#define DATA_VX 4
+#define DATA_VY 5
+#define DATA_VZ 6
+#define DATA_AX 7
+#define DATA_AY 8
+#define DATA_AZ 9
+
 /**
  * @struct	augmented_navdata
  * @abstract	Struct representing the data of one sensor mesure as it's stored in the database.
@@ -73,6 +84,8 @@ float get_min(char * columnName, char * tableName);
  **/
  float norm_value(float init, float min, float max);
 
+double norm_indiv(double init, int type);
+ 
 /**
  * @brief	get values from the database
  * @param 	number	 	Limit for the number of values that should be getted, 0 if no limit

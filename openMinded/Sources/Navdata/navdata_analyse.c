@@ -26,6 +26,7 @@
 #include "Navdata/navdata_analyse.h"
 #include "Navdata/database/bd_management.h"
 #include "utils.h"
+#include "svm-predict.h"
 
 #define RECORD_TIME 15 //(en s)
 
@@ -79,6 +80,17 @@ FILE * logSFM;
  **/
 FILE * csv;
 
+/**
+ * @var		LearningBase
+ * @brief	File in which the navdata would be stored in txt format (to send to libSVM) will be used as learning base and test sample for cross validation
+ **/
+FILE * LearningBase;
+
+/**
+ * @var		tmp
+ * @brief
+ **/
+FILE * tmp;
 /********************************SENSED VALUES************************************/
 
 /**
@@ -195,6 +207,13 @@ static vp_os_mutex_t wifi_mutex;
  **/
 static vp_os_mutex_t class_mutex;
 
+/**
+ * @var		buffer_diag_mutex
+ * @brief	Protect the drone's diagnosis buffer.
+ * @warning This mutex should be called before each call to specimen_buffer variable.
+ **/
+static vp_os_mutex_t buffer_diag_mutex;
+
 /********************************OTHER VARIABLES*******************************/
 
 /**
@@ -204,7 +223,12 @@ static vp_os_mutex_t class_mutex;
  **/
 int class_id = 0;
 int class_id_aux;
+specimen indiv;
 
+int buff_counter=0;
+int file_number=0;
+char * shared_file_name;
+char * local_file_name;
 /**
  * @var     local_cmd
  * @brief   ?
@@ -285,7 +309,7 @@ int recordNumber = 0;
 void extract_drone_state(navdata_demo_t *);
 
 /* according to the last navdata received, refresh the drone battery level */
-void refresh_battery(navdata_demo_t *);	
+void refresh_battery(navdata_demo_t *);
 
 /* according to the last navdata received, refresh the drone wifi quality */
 void refresh_wifi_quality(navdata_wifi_t *);
@@ -296,7 +320,7 @@ void refresh_command();
 /*************************FUNCTION IMPLEMENTATIONs*******************************/
 
 /**
- * @brief   Initialize the analyse process 
+ * @brief   Initialize the analyse process
  * @param   data    data to analyse
  * @return  C_OK...(usefull)
  **/
@@ -305,23 +329,23 @@ inline C_RESULT navdata_analyse_init( void * data )
     vp_os_mutex_init(&state_mutex);
     vp_os_mutex_init(&battery_mutex);
     vp_os_mutex_init(&wifi_mutex);
-    
+
     if(mkdir("./DataModel", 0722) != 0)
     {
         perror("navdata_anayse_init");
     };
- 		
+
     return C_OK;
 }
 
 /**
- * @brief   Analyse the navdata and fill the files 
+ * @brief   Analyse the navdata and fill the files
  * @return  C_OK ...
  **/
 inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata )
 {
     static int counter = 0 ;
-    
+
     // navdata structures
     const navdata_demo_t *nd = &navdata->navdata_demo;
     const navdata_time_t *nt = &navdata->navdata_time;
@@ -332,7 +356,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
     Navdata_t filtered_drone_output;
     //Residue_t residues;
     static uint32_t time=0;
-        
+
     extract_drone_state(nd);
     refresh_battery(nd);
     refresh_wifi_quality(nw);
@@ -341,9 +365,9 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
     if (   (nd->ctrl_state >> 16) == CTRL_FLYING
         || (nd->ctrl_state >> 16) == CTRL_HOVERING
         || (nd->ctrl_state >> 16) ==  CTRL_TRANS_GOTOFIX) { // ready to receive data
- 
-    
-        extractDesiredNavdata(nd,&selectedNavdata); 
+
+
+        extractDesiredNavdata(nd,&selectedNavdata);
         refresh_command();
 
         if (!isInit) {
@@ -351,10 +375,10 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
          	initModel(&selectedNavdata,(float32_t)(nd->altitude)/1000, nd->psi/1000);
         	initFilters(&selectedNavdata);
            	isInit = 1;
+     		ff = open_navdata_file(NAME_FILTERED_DATA);
 		if(options.debug!=0){
       			fm = open_navdata_file(NAME_MODEL_DATA);
       			fr = open_navdata_file(NAME_REAL_DATA);
-      			ff = open_navdata_file(NAME_FILTERED_DATA);
       			fc = open_navdata_file("selectedNav");
       			fres = open_navdata_file("residue");
       			logSFM=openLogFile("logSFM");
@@ -370,8 +394,8 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			}
     		}
           }
-					
-          updateNavdata(&selectedNavdata, nd);          
+
+          updateNavdata(&selectedNavdata, nd);
           model(&local_cmd,&model_output);
           filters(&selectedNavdata,&filtered_drone_output);
           calcResidue(&model_output,&filtered_drone_output,&residues);
@@ -384,10 +408,9 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
           if(safetyOn==4){
             fault_msg=diagnosis(1);
           }
-	  if(options.debug!=0){
 	  if(counter==0){
- 	    av_alt = 0.0 ; 
- 	    av_pitch = 0.0 ; 
+ 	    av_alt = 0.0 ;
+ 	    av_pitch = 0.0 ;
  	    av_roll = 0.0 ;
  	    av_Vyaw = 0.0 ;
  	    av_Vx = 0.0 ;
@@ -418,32 +441,69 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                vp_os_mutex_unlock(&class_mutex);
 
 		insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az,class_id_aux);
-	   } else {
-		new_data_csv(csv,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az);  
+		
 	   }
-	    
+           // ARCHI CRADO A REVOIR IMPERATIVEMENT !!!!!!!!!!!!!!
+       /* if (buff_counter == 0){
+            printf("j'ouvre fichier %d\n",file_number);
+            sprintf(local_file_name,"test%d",file_number);
+            printf("%s\n", local_file_name);
+            tmp = open_online_file(local_file_name);
+        }
+		new_data_learning(tmp,0,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az);
+        buff_counter++;
+        if (buff_counter == 9){
+           printf("Je ferme fichier\n");
+            close_online_file(tmp);
+            shared_file_name = local_file_name;
+            file_number++;
+	        buff_counter = 0;
+
+       }*/
+	   
+	   //printf("pitch %lf\n",av_pitch);
+       indiv.pitch = norm_indiv(av_pitch,1);
+	   //printf("pitch norm %lf\n",indiv.pitch);
+
+       indiv.roll = norm_indiv(av_roll,2);
+       indiv.vyaw = norm_indiv(av_Vyaw,3);
+       indiv.vx = norm_indiv(av_Vx,4);
+       indiv.vy = norm_indiv(av_Vy,5);
+       indiv.vz = norm_indiv(av_Vz,6);
+       indiv.ax = norm_indiv(ax,7);
+       indiv.ay = norm_indiv(ay,8);
+       indiv.az = norm_indiv(az,9);
+       specimen_buffer[buff_counter]= indiv;
+	   
+       if(buff_counter == 9){
+        buff_counter = 0;
+		recognition_process(specimen_buffer, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
+       }else{
+           buff_counter++;
+       }
 	  }
-	
+
+	  if(options.debug!=0){
             fprintf(logSFM,"sign: %d\n",fault_msg);
             fprintf(logSFM,"drone state: alt:%f pitch:%f roll:%f Vyaw:%f Vx:%f Vy:%f Vz:%f \n time:%u\n\n",
                     (float32_t)(nd->altitude)/1000,
                     filtered_drone_output.pitch,
-                    filtered_drone_output.roll,                     
-                    filtered_drone_output.Vyaw, 
-                    filtered_drone_output.Vx, 
-                    filtered_drone_output.Vy, 
+                    filtered_drone_output.roll,
+                    filtered_drone_output.Vyaw,
+                    filtered_drone_output.Vx,
+                    filtered_drone_output.Vy,
                     filtered_drone_output.Vz,
                     time/1000);
 
-              new_data(fm, time, model_output.roll*1000, model_output.pitch*1000,						  
+              new_data(fm, time, model_output.roll*1000, model_output.pitch*1000,
                        model_output.Vyaw*1000,model_output.Vx*1000,model_output.Vy*1000,
                        model_output.Vz *1000);
               new_data(fr, nt->time , nd->phi/1000, nd->theta/1000, nd->psi/1000, nd->vx/1000,nd->vy/1000,nd->altitude);
               new_data(fc, time, selectedNavdata.roll*1000, selectedNavdata.pitch*1000,
-                       selectedNavdata.Vyaw*1000, selectedNavdata.Vx*1000, 
+                       selectedNavdata.Vyaw*1000, selectedNavdata.Vx*1000,
                        selectedNavdata.Vy*1000, selectedNavdata.Vz*1000);
               new_data(ff, time, filtered_drone_output.roll*1000, filtered_drone_output.pitch*1000,
-                       filtered_drone_output.Vyaw*1000, filtered_drone_output.Vx*1000, 
+                       filtered_drone_output.Vyaw*1000, filtered_drone_output.Vx*1000,
                        filtered_drone_output.Vy*1000, filtered_drone_output.Vz*1000);
               new_data(fres,time,residues.r_roll,residues.r_pitch,residues.r_Vyaw,residues.r_Vx,residues.r_Vy,residues.r_Vz);
              }
@@ -460,26 +520,46 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 /* Relinquish the local resources after the event loop exit */
 inline C_RESULT navdata_analyse_release( void )
 {
+
+    int nb_specimen;
+    int i_db;
+    struct augmented_navdata * specimen;
   if(options.debug!=0 && isStopped == 0){
          close_navdata_file(fr);
          close_navdata_file(fm);
-         close_navdata_file(ff);
          close_navdata_file(fc);
          close_navdata_file(fres);
          closeLogFile(logSFM);
 	 //close_navdata_file(csv);
-
+        }
+    if(isStopped == 0){
+     close_navdata_file(ff);
 	 if( BDD_ENABLED ){
+         //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
+       printf("ton papa\n");
+        LearningBase = open_learning_file("BaseApp");
+        specimen = get_normed_values_from_db(0,-1,&nb_specimen);
+        printf("ta cousine\n");
+        for(i_db=0;i_db<nb_specimen;i_db++){
+            new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].roll,specimen[i_db].pitch,specimen[i_db].vyaw,specimen[i_db].vx,
+specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
+        }
+        printf("ta soeur\n");
+        close_learning_file(LearningBase);
+        printf("ta maman\n");
 		disconnect_to_database();
+		// apprentissage ici
+		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL);
 	 } else {
 		close_navdata_file(csv);
 	 }
+		 
          printf("closed\n");
          isStopped = 1;
   }
 
   vp_os_mutex_destroy(&state_mutex);
-  vp_os_mutex_destroy(&battery_mutex);  
+  vp_os_mutex_destroy(&battery_mutex);
   vp_os_mutex_destroy(&wifi_mutex);
 
   gtk_main();
@@ -518,14 +598,14 @@ void refresh_battery(navdata_demo_t * nd) {
 
   vp_os_mutex_unlock(&battery_mutex);
 
-} 
+}
 
 /**
- * @brief   Gets the battery level in percentage 
+ * @brief   Gets the battery level in percentage
  * @return  The battery level in percentage
  **/
 float get_battery_level() {
-  
+
   float bat_level;
 
   vp_os_mutex_lock(&battery_mutex);
@@ -533,7 +613,7 @@ float get_battery_level() {
   vp_os_mutex_unlock(&battery_mutex);
 
   return bat_level;
- 
+
 }
 
 /**
@@ -566,13 +646,13 @@ void extract_drone_state(navdata_demo_t * nd) {
       drone_state = LANDED;
       break;
   }
-  
+
   vp_os_mutex_unlock(&state_mutex);
- 
+
 }
 
 /**
- * @brief   Gets the last drone state 
+ * @brief   Gets the last drone state
  * @return  The last drone state
  **/
 drone_state_t get_drone_state() {
@@ -592,7 +672,7 @@ drone_state_t get_drone_state() {
  * @param  nw      the wifi indicator received into a navdata
  **/
 void refresh_wifi_quality(navdata_wifi_t * nw) {
- 
+
   vp_os_mutex_lock(&wifi_mutex);
   wifi_link_quality = nw->link_quality;
   vp_os_mutex_unlock(&wifi_mutex);
@@ -604,7 +684,7 @@ void refresh_wifi_quality(navdata_wifi_t * nw) {
  * @return  the wifi link quality into float format
  **/
 float get_wifi_quality() {
- 
+
   float link_quality;
 
   vp_os_mutex_lock(&wifi_mutex);

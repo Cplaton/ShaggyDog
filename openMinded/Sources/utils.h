@@ -96,4 +96,61 @@ FILE * openLogFile(char * name);
 void closeLogFile(FILE * fd) ;
 
 
+/**
+ * @brief   Write a new line into CSV format into the transmetted file
+ * @param   fd      the file in wich the data would be inserted
+ * @param   classe  the class of the specimen to be stored
+ * @param   roll    the roll to be stored
+ * @param   pitch   the pitch to be stored
+ * @param   yaw     the yaw to be stored
+ * @param   vx      the x speed to be stored
+ * @param   vy      the y speed to be stored
+ * @param   vz      the z speed to be stored
+ * @param   ax      the x acceleration to be stored
+ * @param   ay      the y acceleration to be stored
+ * @param   az      the z acceleration to be stored
+ **/
+void new_data_learning(FILE * fd, int classe, float roll, float pitch, float yaw, float vx, float vy, float vz, float ax, float ay, float az);
+
+
+/**
+ * @brief   Opens in writing mode a new file for libSVM with the given name
+ * @param   name    Name of the file where the logs would be stored
+ * @return  The opened log file ready to be filled.
+ **/
+FILE * open_learning_file(char * name);
+
+/**
+ * @brief   Closes the tansmetted libSVM's learning base file
+ * @param   fd    The log file to be closed
+ **/
+void close_learning_file(FILE * fd);
+
+/**
+ * @brief   Opens in writing mode a new file for libSVM with the given name
+ * @param   name    Name of the file where the logs would be stored
+ * @return  The opened log file ready to be filled.
+ **/
+FILE * open_online_file(char * name);
+
+/**
+ * @brief   Write a new line into CSV format into the transmetted file
+ * @param   fd      the file in wich the data would be inserted
+ * @param   roll    the roll to be stored
+ * @param   pitch   the pitch to be stored
+ * @param   yaw     the yaw to be stored
+ * @param   vx      the x speed to be stored
+ * @param   vy      the y speed to be stored
+ * @param   vz      the z speed to be stored
+ * @param   ax      the x acceleration to be stored
+ * @param   ay      the y acceleration to be stored
+ * @param   az      the z acceleration to be stored
+ **/
+void new_data_online(FILE * fd, float roll, float pitch, float yaw, float vx, float vy, float vz, float ax, float ay, float az);
+
+/**
+ * @brief   Closes the tansmetted libSVM's online file
+ * @param   fd    The log file to be closed
+ **/
+void close_online_file(FILE * fd);
 #endif

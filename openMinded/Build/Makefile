@@ -29,7 +29,8 @@ GENERIC_BINARIES_SOURCE_DIR:=$(SRC_DIR)
 
 GENERIC_BINARIES_COMMON_SOURCE_FILES+=	\
    Navdata/navdata_analyse.c    	\
-   Navdata/classifier.c    	\
+   Navdata/svm-train.c	\
+   Navdata/svm-predict.c	\
    Navdata/svm.cpp \
    ardrone_move_cmd.c   		\
    disable_navdata_demo.c    		\
@@ -56,7 +57,7 @@ GENERIC_INCLUDES+=			\
 	$(PG_INC) 			\
 	$(SDK_PATH)/Soft/Common 	\
 	$(SDK_PATH)/Soft/Lib 		\
-	$(SVM_DIR) 		\
+	#$(SVM_DIR) 		\
 
 GENERIC_TARGET_BINARIES_PREFIX=
 

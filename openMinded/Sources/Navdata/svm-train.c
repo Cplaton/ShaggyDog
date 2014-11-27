@@ -6,9 +6,9 @@
 #include "svm.h"
 #define Malloc(type,n) (type *)malloc((n)*sizeof(type))
 
-void print_null(const char *s) {}
+//void print_null(const char *s) {}
 
-void exit_with_help()
+/*void exit_with_help()
 {
 	printf(
 	"Usage: svm-train [options] training_set_file [model_file]\n"
@@ -40,21 +40,17 @@ void exit_with_help()
 	"-q : quiet mode (no outputs)\n"
 	);
 	exit(1);
-}
+}*/
 
-void exit_input_error(int line_num)
+void exit_input_errors(int line_num)
 {
 	fprintf(stderr,"Wrong input format at line %d\n", line_num);
 	exit(1);
 }
 
-void parse_command_line(int argc, char **argv, char *input_file_name, char *model_file_name);
-void read_problem(const char *filename);
-void do_cross_validation();
-
 struct svm_parameter param;		// set by parse_command_line
-struct svm_problem prob;		// set by read_problem
-struct svm_model *model;
+struct svm_problem prob;		// set by _problem
+struct svm_model *modele;
 struct svm_node *x_space;
 int cross_validation;
 int nr_fold;
@@ -65,7 +61,7 @@ static int max_line_len;
 static char* readline(FILE *input)
 {
 	int len;
-	
+
 	if(fgets(line,max_line_len,input) == NULL)
 		return NULL;
 
@@ -78,45 +74,6 @@ static char* readline(FILE *input)
 			break;
 	}
 	return line;
-}
-
-int main(int argc, char **argv)
-{
-	char input_file_name[1024];
-	char model_file_name[1024];
-	const char *error_msg;
-
-	parse_command_line(argc, argv, input_file_name, model_file_name);
-	read_problem(input_file_name);
-	error_msg = svm_check_parameter(&prob,&param);
-
-	if(error_msg)
-	{
-		fprintf(stderr,"ERROR: %s\n",error_msg);
-		exit(1);
-	}
-
-	if(cross_validation)
-	{
-		do_cross_validation();
-	}
-	else
-	{
-		model = svm_train(&prob,&param);
-		if(svm_save_model(model_file_name,model))
-		{
-			fprintf(stderr, "can't save model to file %s\n", model_file_name);
-			exit(1);
-		}
-		svm_free_and_destroy_model(&model);
-	}
-	svm_destroy_param(&param);
-	free(prob.y);
-	free(prob.x);
-	free(x_space);
-	free(line);
-
-	return 0;
 }
 
 void do_cross_validation()
@@ -158,7 +115,28 @@ void do_cross_validation()
 	free(target);
 }
 
-void parse_command_line(int argc, char **argv, char *input_file_name, char *model_file_name)
+void create_model(void)
+{
+	// default values
+	param.svm_type = C_SVC;
+	param.kernel_type = RBF;
+	param.degree = 3;
+	param.gamma = 0;	// Si =0, calculé automatiquement = 1/num_features
+	param.coef0 = 0;
+	param.nu = 0.5;
+	param.cache_size = 100;
+	param.C = 1;
+	param.eps = 1e-3;
+	param.p = 0.1;
+	param.shrinking = 1;
+	param.probability = 0;
+	param.nr_weight = 0;
+	param.weight_label = NULL;
+	param.weight = NULL;
+	cross_validation = 0;
+}
+
+/*void parse_command_line(int argc, char **argv, char *input_file_name, char *model_file_name)
 {
 	int i;
 	void (*print_func)(const char*) = NULL;	// default printing to stdout
@@ -271,7 +249,7 @@ void parse_command_line(int argc, char **argv, char *input_file_name, char *mode
 			++p;
 		sprintf(model_file_name,"%s.model",p);
 	}
-}
+}*/
 
 // read in a problem (in svmlight format)
 
@@ -324,11 +302,11 @@ void read_problem(const char *filename)
 		prob.x[i] = &x_space[j];
 		label = strtok(line," \t\n");
 		if(label == NULL) // empty line
-			exit_input_error(i+1);
+			exit_input_errors(i+1);
 
 		prob.y[i] = strtod(label,&endptr);
 		if(endptr == label || *endptr != '\0')
-			exit_input_error(i+1);
+			exit_input_errors(i+1);
 
 		while(1)
 		{
@@ -341,14 +319,14 @@ void read_problem(const char *filename)
 			errno = 0;
 			x_space[j].index = (int) strtol(idx,&endptr,10);
 			if(endptr == idx || errno != 0 || *endptr != '\0' || x_space[j].index <= inst_max_index)
-				exit_input_error(i+1);
+				exit_input_errors(i+1);
 			else
 				inst_max_index = x_space[j].index;
 
 			errno = 0;
 			x_space[j].value = strtod(val,&endptr);
 			if(endptr == val || errno != 0 || (*endptr != '\0' && !isspace(*endptr)))
-				exit_input_error(i+1);
+				exit_input_errors(i+1);
 
 			++j;
 		}
@@ -378,3 +356,84 @@ void read_problem(const char *filename)
 
 	fclose(fp);
 }
+
+int training_model_generation(char* training_set, char* training_model)
+{
+	char* input_file_name=training_set;
+	char* model_file_name=training_model;
+	const char *error_msg;
+
+	create_model();
+
+	read_problem(input_file_name);
+	error_msg = svm_check_parameter(&prob,&param);
+
+	if(error_msg)
+	{
+		fprintf(stderr,"ERROR: %s\n",error_msg);
+		exit(1);
+	}
+
+	if(cross_validation)
+	{
+		do_cross_validation();
+	}
+	else
+	{
+		modele = svm_train(&prob,&param);
+		if(svm_save_model(model_file_name,modele))
+		{
+			fprintf(stderr, "can't save model to file %s\n", model_file_name);
+			exit(1);
+		}
+		svm_free_and_destroy_model(&modele);
+	}
+	svm_destroy_param(&param);
+	free(prob.y);
+	free(prob.x);
+	free(x_space);
+	free(line);
+
+	return 0;
+}
+
+/*int main(int argc, char **argv)
+{
+	char input_file_name[1024];
+	char model_file_name[1024];
+	const char *error_msg;
+
+	parse_command_line(argc, argv, input_file_name, model_file_name);
+	read_problem(input_file_name);
+	error_msg = svm_check_parameter(&prob,&param);
+
+	if(error_msg)
+	{
+		fprintf(stderr,"ERROR: %s\n",error_msg);
+		exit(1);
+	}
+
+	if(cross_validation)
+	{
+		do_cross_validation();
+	}
+	else
+	{
+		model = svm_train(&prob,&param);
+		if(svm_save_model(model_file_name,model))
+		{
+			fprintf(stderr, "can't save model to file %s\n", model_file_name);
+			exit(1);
+		}
+		svm_free_and_destroy_model(&model);
+	}
+	svm_destroy_param(&param);
+	free(prob.y);
+	free(prob.x);
+	free(x_space);
+	free(line);
+
+	return 0;
+}*/
+
+
