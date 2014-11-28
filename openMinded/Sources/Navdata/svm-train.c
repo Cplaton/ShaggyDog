@@ -76,14 +76,15 @@ static char* readline(FILE *input)
 	return line;
 }
 
-void do_cross_validation()
+double do_cross_validation()
 {
 	int i;
 	int total_correct = 0;
 	double total_error = 0;
 	double sumv = 0, sumy = 0, sumvv = 0, sumyy = 0, sumvy = 0;
 	double *target = Malloc(double,prob.l);
-
+    double accuracy;
+    printf("je suis dans do cross\n");
 	svm_cross_validation(&prob,&param,nr_fold,target);
 	if(param.svm_type == EPSILON_SVR ||
 	   param.svm_type == NU_SVR)
@@ -110,12 +111,18 @@ void do_cross_validation()
 		for(i=0;i<prob.l;i++)
 			if(target[i] == prob.y[i])
 				++total_correct;
+        if(prob.l!=0){
+            accuracy = 100.0*total_correct/prob.l ;
+        }else{
+            accuracy = -1.0;
+        }
 		printf("Cross Validation Accuracy = %g%%\n",100.0*total_correct/prob.l);
 	}
 	free(target);
+    return accuracy;
 }
 
-void create_model(int folds)
+void create_model(int folds, float gamma, float C)
 {
 	// default values
 	param.svm_type = C_SVC;
@@ -124,7 +131,7 @@ void create_model(int folds)
 	param.gamma = 0;	// Si =0, calculé automatiquement = 1/num_features
 	param.coef0 = 0;
 	param.nu = 0.5;
-	param.cache_size = 100;
+	param.cache_size = 40;
 	param.C = 1;
 	param.eps = 1e-3;
 	param.p = 0.1;
@@ -135,6 +142,46 @@ void create_model(int folds)
 	param.weight = NULL;
 	cross_validation = folds;
 }
+
+float * compute_parameters(char* training_set, int folds){
+ 
+    char* input_file_name=training_set;
+    const char *error_msg;
+    float gamma,C, gamma_aux,C_aux;
+    double aux, accuracy;
+    float * param_aux=malloc(16);
+
+    aux = 0.0;
+    C=1;
+    while(C<10){
+        gamma=1;
+        while(gamma<2000){
+            create_model(folds,1/gamma,C);
+            read_problem(input_file_name);
+            error_msg = svm_check_parameter(&prob,&param);
+            accuracy = do_cross_validation();
+                printf("gamma = %f\n",gamma);
+                printf("C = %f\n",C);
+            if(accuracy > aux){
+                aux=accuracy;
+                gamma_aux=gamma;
+                C_aux=C;
+                printf("\rAccuracy=%lf",aux);
+            }
+            else{
+                printf("\rBad Accuracy = %lf",accuracy);
+            }
+            gamma+=10;
+        }
+        C+=10;
+    }
+    printf("\n");
+    printf("final accuracy = %lf%%, C=%f, gamma=%f\n",aux,C_aux,gamma_aux);
+    param_aux[0]=gamma_aux;
+    param_aux[1]=C_aux;
+    return param_aux;
+}
+
 
 /*void parse_command_line(int argc, char **argv, char *input_file_name, char *model_file_name)
 {
@@ -362,11 +409,18 @@ int training_model_generation(char* training_set, char* training_model, int fold
 	char* input_file_name=training_set;
 	char* model_file_name=training_model;
 	const char *error_msg;
-
-	create_model(folds);
+    float * parameters;
+    double accuracy;
+    create_model(folds,0.001,1);
 
 	read_problem(input_file_name);
 	error_msg = svm_check_parameter(&prob,&param);
+
+    parameters = compute_parameters(training_set, folds);    
+    printf("gamma=%f C=%f\n",parameters[0],parameters[1]); 
+    create_model(0,parameters[0],parameters[1]);
+    printf("model créé\n");
+    free(parameters);
 
 	if(error_msg)
 	{
@@ -376,7 +430,7 @@ int training_model_generation(char* training_set, char* training_model, int fold
 
 	if(cross_validation)
 	{
-		do_cross_validation();
+		 accuracy = do_cross_validation();
 	}
 	else
 	{

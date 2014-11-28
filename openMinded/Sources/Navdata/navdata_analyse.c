@@ -540,8 +540,6 @@ inline C_RESULT navdata_analyse_release( void )
 		disconnect_to_database();
 		// apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
 		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10);
-
-		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,0);
 		} else {
 		close_navdata_file(csv);
 		}
