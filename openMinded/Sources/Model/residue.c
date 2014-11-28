@@ -100,7 +100,7 @@ extern Inputs_t sfm_cmd;
 extern Inputs_t local_cmd;
 extern FILE* logSFM;
 extern float32_t saveAltitude;
-options_t options={0,0,0,0,0,0};
+options_t options={0,0,0,0,0,0,0};
 
 Navdata_t saveRaw1 ;
 Navdata_t saveRaw2 ;

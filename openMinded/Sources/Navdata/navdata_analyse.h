@@ -62,5 +62,6 @@ float get_wifi_quality();
 extern int class_id;
 extern int file_number;
 extern char * shared_file_name;
+extern int BDD_ENABLED;
 
 #endif // _NAVDATA_H_

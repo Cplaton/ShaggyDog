@@ -427,7 +427,6 @@ int write_data_to_csv(char * csvFileName, int number, int flight_id, int should_
 	return 0; 
 }
 
-
 int start_new_flight()
 {
 

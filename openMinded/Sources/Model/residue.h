@@ -58,6 +58,7 @@ typedef struct _options_t {
 	unsigned char SMLimited;
 	unsigned char debug;
 	unsigned char disableSSM;
+	unsigned char mission;
 }options_t;
 
 

@@ -25,6 +25,7 @@
 #include "user_app.h"
 #include "ardrone_move_cmd.h"
 #include "Model/model.h"
+#include "Model/residue.h"
 
 #define MISSION_SFS_1 1
 #define MISSION_SFS_2 2
@@ -46,15 +47,15 @@
 #define HOVER_DRONE 11
 
 static vp_os_mutex_t class_mutex;
+extern options_t options;
 
 DEFINE_THREAD_ROUTINE(mission, data) {
 
 	int mission_nb = MISSION_SFS_2;
 
-
-    printf("missionModeOn=%d\n",missionModeOn);
-	while(missionModeOn==0){
-
+    printf("missionModeOn=%d\n",options.mission);
+	while(options.mission==0){
+		
         //printf("c'est la déprime\n");
         usleep(1000000);
     }
@@ -655,7 +656,6 @@ void mission_WALL_4() {
 		}
 	}
 }
-
 
 float roll(float value, int us) {
 
