@@ -98,8 +98,8 @@ int predict(specimen * buffer, FILE *output)
 		}
 		
         predict_label = svm_predict(modell,x);
-		printf("indiv : %g\n",predict_label);
-		fprintf(output,"%g\n",predict_label);
+		//printf("indiv : %g",predict_label);
+		//fprintf(output,"%g\n",predict_label);
 		//enregistrement des labels reconnus dans un tableau
 		recog_values[l] = predict_label;
 		//printf("indiv %d : %lf \n",l, recog_values[l]);

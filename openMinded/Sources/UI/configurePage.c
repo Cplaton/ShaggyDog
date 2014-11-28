@@ -81,6 +81,7 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 
 		//missionModeOn = 0;
 		options.mission = 0;
+        options.disableSSM = 1;
 	}
 
 

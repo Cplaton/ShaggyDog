@@ -115,7 +115,7 @@ void do_cross_validation()
 	free(target);
 }
 
-void create_model(void)
+void create_model(int folds)
 {
 	// default values
 	param.svm_type = C_SVC;
@@ -133,7 +133,7 @@ void create_model(void)
 	param.nr_weight = 0;
 	param.weight_label = NULL;
 	param.weight = NULL;
-	cross_validation = 0;
+	cross_validation = folds;
 }
 
 /*void parse_command_line(int argc, char **argv, char *input_file_name, char *model_file_name)
@@ -357,13 +357,13 @@ void read_problem(const char *filename)
 	fclose(fp);
 }
 
-int training_model_generation(char* training_set, char* training_model)
+int training_model_generation(char* training_set, char* training_model, int folds)
 {
 	char* input_file_name=training_set;
 	char* model_file_name=training_model;
 	const char *error_msg;
 
-	create_model();
+	create_model(folds);
 
 	read_problem(input_file_name);
 	error_msg = svm_check_parameter(&prob,&param);

@@ -452,7 +452,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				vp_os_mutex_lock(&class_mutex);
 				class_id_aux=class_id;
 				vp_os_mutex_unlock(&class_mutex);
-				printf("insert donnes\n");
+				//printf("\rinsert donnes");
 				insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az,class_id_aux);
 			}
 			//printf("pitch %lf\n",av_pitch);
@@ -530,20 +530,18 @@ inline C_RESULT navdata_analyse_release( void )
      close_navdata_file(ff);
 	 if( options.mission == 1 ){
          //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
-		printf("ton papa\n");
         LearningBase = open_learning_file("BaseApp");
         specimen = get_normed_values_from_db(0,-1,&nb_specimen);
-        printf("ta cousine\n");
         for(i_db=0;i_db<nb_specimen;i_db++){
             new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].roll,specimen[i_db].pitch,specimen[i_db].vyaw,specimen[i_db].vx,
 			specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
         }
-        printf("ta soeur\n");
         close_learning_file(LearningBase);
-        printf("ta maman\n");
 		disconnect_to_database();
-		// apprentissage ici
-		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL);
+		// apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
+		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10);
+
+		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,0);
 		} else {
 		close_navdata_file(csv);
 		}
