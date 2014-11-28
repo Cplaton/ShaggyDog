@@ -41,7 +41,7 @@ void diagnosisPage(){
 	gtk_label_set_markup (GTK_LABEL (gui->labelEmergency),"<big><b>Emergency : </b></big>");
 	gui->labelIndicators = gtk_label_new(NULL);
 	gtk_label_set_markup (GTK_LABEL (gui->labelIndicators),"<big><b>Indicators : </b></big>");
-	gui->labelSF = gtk_label_new ("Copyright, all rights reserved by Lucas Engineering");
+	gui->labelSF = gtk_label_new ("Open Source Project");
 	gui->labelBattery = gtk_label_new(NULL);
 	gtk_label_set_markup (GTK_LABEL (gui->labelBattery),"<b>Battery : </b>");
 	gui->labelWifi = gtk_label_new(NULL);

@@ -215,7 +215,7 @@ void configPage(){
 	gui->labelConfigPageTop = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (gui->labelConfigPageTop),
 	                      "<b>Configure the following parameters to start the application</b>");
-	gui->labelSF = gtk_label_new ("Copyright, all rights reserved by Lucas Engineering");
+	gui->labelSF = gtk_label_new ("Open Source Project");
 
 	/*-----create check buttons ------*/
 	gui->checkButtonSaturation = gtk_check_button_new_with_label("Saturation");
@@ -253,7 +253,7 @@ void configPage(){
 	gtk_tooltips_set_tip (gui->tooltipsMission, gui->checkButtonMission,infoBullMission, NULL);
 
 	/*-----create smart fox image-----*/
-	gui->pixbuf = gdk_pixbuf_new_from_file_at_size("smartfox-final.png",40,40,NULL);
+	gui->pixbuf = gdk_pixbuf_new_from_file_at_size("logo_OM.png",40,40,NULL);
 	gui->imgSmartFox = gtk_image_new_from_pixbuf(gui->pixbuf);
 
 	/*-----create vbox which contains all checkboxes -----*/

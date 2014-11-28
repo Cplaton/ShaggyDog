@@ -51,7 +51,7 @@ void debugPage(){
 	gui->labelVxGeneral = gtk_label_new ("Vx : ");
 	gui->labelVyGeneral = gtk_label_new ("Vy : ");
 	gui->labelVzGeneral = gtk_label_new ("Vz : ");
-	gui->labelSF = gtk_label_new ("Copyright, all rights reserved by Lucas Engineering");
+	gui->labelSF = gtk_label_new ("Open Source Project");
 
 	/*-----init smart fox images-----*/
 	gui->pixbuf = gdk_pixbuf_new_from_file_at_size("smartfox-final.png",40,40,NULL);

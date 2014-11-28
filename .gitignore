@@ -32,7 +32,7 @@
 
 #Documents
 *.pdf
-*.png
+#*.png
 *.jpg
 *.jpeg
 *.gif
