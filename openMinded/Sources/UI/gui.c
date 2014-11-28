@@ -29,7 +29,7 @@ void init_gui(int argc, char **argv)
 	gui->mainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_position(GTK_WINDOW(gui->mainWindow), GTK_WIN_POS_CENTER);
 	gtk_window_set_default_size(GTK_WINDOW(gui->mainWindow), 800, 620);
-	gtk_window_set_title(GTK_WINDOW(gui->mainWindow), "Smart Fox");
+	gtk_window_set_title(GTK_WINDOW(gui->mainWindow), "Open MINDED");
 	gtk_window_set_resizable(GTK_WINDOW(gui->mainWindow), TRUE);
 	gtk_container_set_border_width(GTK_CONTAINER(gui->mainWindow), 10);
 	/*-----close application when click on the "X"------*/
