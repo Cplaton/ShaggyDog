@@ -443,10 +443,10 @@ void mission_WALL_2() {
                 vp_os_mutex_unlock(&class_mutex);
 				fin = hover(2000000);
 				if (fin == 1)
-					etat = RIGHT_YAW;
+					etat = RIGHT_ROLL;
 				break;
 
-			case RIGHT_YAW :
+			case RIGHT_ROLL :
 
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
@@ -589,10 +589,10 @@ void mission_WALL_4() {
                 vp_os_mutex_unlock(&class_mutex);
 				fin = hover(2000000);
 				if (fin == 1)
-					etat = LEFT_YAW;
+					etat = LEFT_ROLL;
 				break;
 
-			case LEFT_YAW :
+			case LEFT_ROLL :
 
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
