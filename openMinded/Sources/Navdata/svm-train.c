@@ -53,8 +53,9 @@ struct svm_problem prob;		// set by _problem
 struct svm_model *modele;
 struct svm_node *x_space;
 int cross_validation;
-int nr_fold;
-
+int nr_fold,nb_indiv;
+FILE * base;
+FILE * matlab;
 static char *line = NULL;
 static int max_line_len;
 
@@ -85,7 +86,9 @@ double do_cross_validation()
 	double *target = Malloc(double,prob.l);
     double accuracy;
     printf("je suis dans do cross\n");
-	svm_cross_validation(&prob,&param,nr_fold,target);
+    printf("C=%d , Gamma=%f\n",param.C,param.gamma);
+    //usleep(1000000);
+    svm_cross_validation(&prob,&param,nr_fold,target);
 	if(param.svm_type == EPSILON_SVR ||
 	   param.svm_type == NU_SVR)
 	{
@@ -128,19 +131,25 @@ void create_model(int folds, float gamma, float C)
 	param.svm_type = C_SVC;
 	param.kernel_type = RBF;
 	param.degree = 3;
-	param.gamma = 0;	// Si =0, calculé automatiquement = 1/num_features
+	param.gamma = gamma;	// Si =0, calculé automatiquement = 1/num_features
 	param.coef0 = 0;
 	param.nu = 0.5;
 	param.cache_size = 40;
-	param.C = 1;
-	param.eps = 1e-3;
+	param.C = C;
+	param.eps = 0.001;
 	param.p = 0.1;
 	param.shrinking = 1;
 	param.probability = 0;
 	param.nr_weight = 0;
 	param.weight_label = NULL;
 	param.weight = NULL;
-	cross_validation = folds;
+    if(folds>1){
+	    cross_validation = 1;
+        nr_fold = folds;
+    }else{
+        cross_validation = 0;
+        nr_fold = 0 ;
+    }
 }
 
 float * compute_parameters(char* training_set, int folds){
@@ -150,31 +159,34 @@ float * compute_parameters(char* training_set, int folds){
     float gamma,C, gamma_aux,C_aux;
     double aux, accuracy;
     float * param_aux=malloc(16);
-
+    printf("dans compute, nb_indiv=%d",nb_indiv);
     aux = 0.0;
     C=1;
-    while(C<10){
+    //while(C<10){
         gamma=1;
-        while(gamma<2000){
-            create_model(folds,1/gamma,C);
+        while(gamma<nb_indiv){
+            create_model(folds,gamma,C);
             read_problem(input_file_name);
             error_msg = svm_check_parameter(&prob,&param);
             accuracy = do_cross_validation();
-                printf("gamma = %f\n",gamma);
-                printf("C = %f\n",C);
+//                printf("gamma = %f\n",gamma);
+//                printf("C = %f\n",C);
+            matlab = fopen("stats.m","w+");
+            fprintf(matlab,"%d %f;\n",gamma,accuracy);
+            fclose(matlab);
             if(accuracy > aux){
                 aux=accuracy;
                 gamma_aux=gamma;
                 C_aux=C;
-                printf("\rAccuracy=%lf",aux);
+//                printf("\rAccuracy=%lf",aux);
             }
-            else{
-                printf("\rBad Accuracy = %lf",accuracy);
-            }
-            gamma+=10;
+//            else{
+//                printf("\rBad Accuracy = %lf",accuracy);
+//            }
+            gamma++;
         }
-        C+=10;
-    }
+        //C+=10;
+    //}
     printf("\n");
     printf("final accuracy = %lf%%, C=%f, gamma=%f\n",aux,C_aux,gamma_aux);
     param_aux[0]=gamma_aux;
@@ -411,12 +423,24 @@ int training_model_generation(char* training_set, char* training_model, int fold
 	const char *error_msg;
     float * parameters;
     double accuracy;
-    create_model(folds,0.001,1);
-
+    char mot[8];
+    create_model(0,1,1);
+    base = fopen("./Sources/Navdata/BaseApp.model","r+");
+    printf("avant la recherche du nombre d'indiv\n");
+    while((fscanf(base,"%s %d",&mot,&nb_indiv))!=0){
+        //A COMPLETER
+        }
+    fclose(base);
+    printf("après la recherche du nombre d'indiv: nb indiv=%d\n",nb_indiv);
 	read_problem(input_file_name);
 	error_msg = svm_check_parameter(&prob,&param);
-
-    parameters = compute_parameters(training_set, folds);    
+    matlab = fopen("stats.m","w+");
+    fprintf(matlab,"accuracy = [");
+    fclose(matlab);
+    parameters = compute_parameters(training_set, folds);
+    matlab = fopen("stats.m","w+");
+    fprintf(matlab,"];");
+    fclose(matlab);
     printf("gamma=%f C=%f\n",parameters[0],parameters[1]); 
     create_model(0,parameters[0],parameters[1]);
     printf("model créé\n");
