@@ -10,6 +10,8 @@
 #include <linux/input.h>
 #include <VP_Api/vp_api_thread_helper.h> // api pour les threads
 
+ extern int modeReaction;
+
 PROTO_THREAD_ROUTINE(th_user_app, data);
 
 /**
@@ -73,6 +75,8 @@ void extract_key_event(struct input_event * ev);
 #define LANDING		KEY_L
 #define KILL		KEY_K
 #define CLASS_WALL  KEY_N
+#define MODE_REACTION KEY_R
+
 
 #define LOW_VELOCITY	0.3
 

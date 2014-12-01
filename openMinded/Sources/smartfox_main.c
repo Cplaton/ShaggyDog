@@ -34,6 +34,7 @@
 #include <Model/model.h>
 #include <Navdata/navdata_analyse.h>
 #include <UserApp/mission.h>
+#include <UserApp/reaction.h>
 
 /* ############# USER APPLICATION ############ */
 /* #### add here the .h files of your app #### */
@@ -71,6 +72,7 @@ C_RESULT ardrone_tool_init_custom(void)
   /* ## add here the statement that start the thread of your app ## */
   START_THREAD (th_user_app, NULL);
   START_THREAD (mission, NULL);
+  START_THREAD (reaction, NULL);
 
   return C_OK;
 }
@@ -131,5 +133,6 @@ BEGIN_THREAD_TABLE
   /* ## states the threads that you are creating  ## */
   THREAD_TABLE_ENTRY( th_user_app,20)
   THREAD_TABLE_ENTRY( mission, 30)
+  THREAD_TABLE_ENTRY( reaction, 35)
 END_THREAD_TABLE
 

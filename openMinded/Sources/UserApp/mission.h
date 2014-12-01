@@ -17,6 +17,18 @@
 #include "UI/configurePage.h"
 
 
+#define TAKEOFF_DRONE 1
+#define FORWARD_PITCH 2
+#define LEFT_ROLL 3
+#define BACKWARD_PITCH 4
+#define RIGHT_ROLL 5
+#define GAS_UP 6
+#define LEFT_YAW 7
+#define GAS_DOWN 8
+#define RIGHT_YAW 9
+#define LAND_DRONE 10
+#define HOVER_DRONE 11
+#define END_REACTION 12 
 /**
  * @fn      mission_SFS_1
  * @brief   Sends commands to the drone in order to do a mission. This mission is the first one used to learn the SFS situation
