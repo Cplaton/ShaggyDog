@@ -45,7 +45,7 @@ void exit_input_error(int line_num)
 	exit(1);
 }
 
-int predict(specimen * buffer, FILE *output)
+int predict(specimen * buffer)
 {		
 	int correct = 0;
 	double error = 0;
@@ -174,17 +174,9 @@ void exit_with_help()
 	exit(1);
 }
 
-int recognition_process(specimen* buffer, char* training_model, char* class_out)
+int recognition_process(specimen* buffer, char* training_model)
 {
-	FILE *output;
 	int recog_class;
-
-	output = fopen(class_out,"w");
-	if(output == NULL)
-	{
-		fprintf(stderr,"can't open output file %s\n",class_out);
-		exit(1);
-	}
 
 	if((modell=svm_load_model(training_model))==0)
 	{
@@ -192,13 +184,11 @@ int recognition_process(specimen* buffer, char* training_model, char* class_out)
 		exit(1);
 	}
 
-
     if(svm_check_probability_model(modell)!=0)
         info("Model supports probability estimates, but disabled in prediction.\n");
 
-	recog_class =predict(buffer,output);
+	recog_class =predict(buffer);
 
 	svm_free_and_destroy_model(&modell);
-	fclose(output);
 	return recog_class;
 }
