@@ -486,8 +486,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			if(buff_counter == 9){
 				buff_counter = 0;
 				printf("---");
-				recognition_process(specimen_buffer, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
-
+				recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
 			}else{
 				buff_counter++;
 			}
