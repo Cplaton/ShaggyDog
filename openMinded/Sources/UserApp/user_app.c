@@ -206,22 +206,22 @@ void extract_key_event(struct input_event * ev) {
       get_command(&lastcommand, &type);
       if(ev->value==1){
         if (lastcommand.pitch > 0) {
-          vp_os_mutex_lock(&class_mutex1);
+          vp_os_mutex_lock(&class_mutex);
           class_id=3;
           vp_os_mutex_unlock(&class_mutex);
         }
         else if (lastcommand.pitch < 0) {
-          vp_os_mutex_lock(&class_mutex1);
+          vp_os_mutex_lock(&class_mutex);
           class_id=2;
           vp_os_mutex_unlock(&class_mutex);
         }
         else if (lastcommand.roll > 0) {
-          vp_os_mutex_lock(&class_mutex1);
+          vp_os_mutex_lock(&class_mutex);
           class_id=4;
           vp_os_mutex_unlock(&class_mutex);
         }
-        else if (last.command.roll < 0) {
-          vp_os_mutex_lock(&class_mutex1);
+        else if (lastcommand.roll < 0) {
+          vp_os_mutex_lock(&class_mutex);
           class_id=5;
           vp_os_mutex_unlock(&class_mutex);
         }
