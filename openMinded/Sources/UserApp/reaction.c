@@ -26,12 +26,12 @@ DEFINE_THREAD_ROUTINE(reaction, data) {
 
 	while (1) {
 
-		if (modeReaction == 1)
+		if (modeReaction == 1) {
 
 			printf("Module de reaciton active\n");
 			avoid_front_wall();
 
-
+		}	
 	}
 
 	return 0;
