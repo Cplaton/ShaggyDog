@@ -242,9 +242,6 @@ int BDD_ENABLED = 0;
  **/
 int buff_counter=0;
 
-
-char * shared_file_name;
-char * local_file_name;
 /**
  * @var     local_cmd
  * @brief   ?
@@ -383,45 +380,44 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
         || (nd->ctrl_state >> 16) ==  CTRL_TRANS_GOTOFIX)
 	{ // ready to receive data
 
-
         extractDesiredNavdata(nd,&selectedNavdata);
         refresh_command();
 
         if (!isInit){
+
         	updateNavdata(&selectedNavdata, nd);
          	initModel(&selectedNavdata,(float32_t)(nd->altitude)/1000, nd->psi/1000);
         	initFilters(&selectedNavdata);
-			// get min and max from database
+
+			// get min and max from database to normalize recognition data
 			if(connect_to_database()!=0){
-				// ERROR
-			} else {
-				// start_new_flight();
+				printf("failed to connect database");
 			}
 			disconnect_to_database();
 			// fin get min and max
+
            	isInit = 1;
      		ff = open_navdata_file(NAME_FILTERED_DATA);
+
 			if(options.debug!=0){
+
 				fm = open_navdata_file(NAME_MODEL_DATA);
 				fr = open_navdata_file(NAME_REAL_DATA);
 				fc = open_navdata_file("selectedNav");
 				fres = open_navdata_file("residue");
 				logSFM=openLogFile("logSFM");
 
-
 				if( options.mission==1 ){
 					if(connect_to_database()!=0){
-						// ERROR
+						printf("failed to connect database");
 					}else{
 						printf("start flight\n");
 						start_new_flight();
 					}
-				} else {
-					csv = open_csv_file("WekaData");
 				}
     		}
 		}
-
+        //récupération et traitement des nouvelles data
 		updateNavdata(&selectedNavdata, nd);
 		model(&local_cmd,&model_output);
 		filters(&selectedNavdata,&filtered_drone_output);
@@ -429,12 +425,14 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 
 		alert_msg=residueAnalysis(&residues);
 		fault_msg=diagnosis(0);
+
 		if(options.disableSSM==0){
-		safetyOn=smartSafetyMode(fault_msg, &filtered_drone_output);
+            safetyOn=smartSafetyMode(fault_msg, &filtered_drone_output);
 		}
 		if(safetyOn==4){
-		fault_msg=diagnosis(1);
+            fault_msg=diagnosis(1);
 		}
+		//1 individu est constitué à partir de 10 jeux de donné
 		if(counter==0){
 			av_alt = 0.0 ;
 			av_pitch = 0.0 ;
@@ -447,6 +445,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			ay = filtered_drone_output.Vy ;
 			az = filtered_drone_output.Vz ;
 		}
+		//alt,pitch,roll,Vyaw,Velocity calculation
 		if(counter<9){
 			av_alt += (float32_t)(nd->altitude)/10000 ;
 			av_pitch += filtered_drone_output.pitch/10 ;
@@ -458,21 +457,22 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			counter++;
 		}
 		if(counter==9){
+		    //acceleration calculation
 			ax = (filtered_drone_output.Vx - ax)/50 ;
 			ay = (filtered_drone_output.Vy - ay)/50 ;
 			az = (filtered_drone_output.Vx - az)/50 ;
 			counter = 0 ;
+
+			//si mission active, on rempli la BD avec le nouvelle individu
 			if( options.mission == 1 ){
 				vp_os_mutex_lock(&class_mutex);
 				class_id_aux=class_id;
 				vp_os_mutex_unlock(&class_mutex);
-				//printf("\rinsert donnes");
 				insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az,class_id_aux);
 			}
-			//printf("pitch %lf\n",av_pitch);
-			indiv.pitch = norm_indiv(av_pitch,1);
-			//printf("pitch norm %lf\n",indiv.pitch);
 
+			//data normalization
+			indiv.pitch = norm_indiv(av_pitch,1);
 			indiv.roll = norm_indiv(av_roll,2);
 			indiv.vyaw = norm_indiv(av_Vyaw,3);
 			indiv.vx = norm_indiv(av_Vx,4);
@@ -481,8 +481,11 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			indiv.ax = norm_indiv(ax,7);
 			indiv.ay = norm_indiv(ay,8);
 			indiv.az = norm_indiv(az,9);
+
+			//current individu storage in a 10 indiv array in order to used the recognition on it
 			specimen_buffer[buff_counter]= indiv;
 
+            //if 10 individu are store, we launch the recognition process
 			if(buff_counter == 9){
 				buff_counter = 0;
 				printf("---");
@@ -492,7 +495,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			}
 		}
 
-
+        //write data in the log in case of debug state
 		if(options.debug!=0){
             fprintf(logSFM,"sign: %d\n",fault_msg);
             fprintf(logSFM,"drone state: alt:%f pitch:%f roll:%f Vyaw:%f Vx:%f Vy:%f Vz:%f \n time:%u\n\n",
@@ -527,46 +530,54 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 /* Relinquish the local resources after the event loop exit */
 inline C_RESULT navdata_analyse_release( void )
 {
-
     int nb_specimen;
     int i_db;
     struct augmented_navdata * specimen;
-  if(options.debug!=0 && isStopped == 0){
+
+    if(options.debug!=0 && isStopped == 0){
+
          close_navdata_file(fr);
          close_navdata_file(fm);
          close_navdata_file(fc);
          close_navdata_file(fres);
          closeLogFile(logSFM);
-	 //close_navdata_file(csv);
-        }
+    }
+
+    //Arret du drone
     if(isStopped == 0){
-     close_navdata_file(ff);
-	 if( options.mission == 1 ){
-         //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
-        LearningBase = open_learning_file("BaseApp");
-        specimen = get_normed_values_from_db(0,-1,&nb_specimen);
-        for(i_db=0;i_db<nb_specimen;i_db++){
-            new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].roll,specimen[i_db].pitch,specimen[i_db].vyaw,specimen[i_db].vx,
-			specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
-        }
-        close_learning_file(LearningBase);
-		disconnect_to_database();
-		// apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
-		training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
+
+        close_navdata_file(ff);
+        if( options.mission == 1 ){
+
+            //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
+            LearningBase = open_learning_file("BaseApp");
+            specimen = get_normed_values_from_db(0,-1,&nb_specimen);
+
+            //learning file filling
+            for(i_db=0;i_db<nb_specimen;i_db++){
+                new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].roll,specimen[i_db].pitch,specimen[i_db].vyaw,specimen[i_db].vx,
+                specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
+            }
+            close_learning_file(LearningBase);
+            disconnect_to_database();
+
+            // apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
+            training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
+
 		} else {
 		close_navdata_file(csv);
 		}
 
          printf("closed\n");
          isStopped = 1;
-  }
+    }
 
-  vp_os_mutex_destroy(&state_mutex);
-  vp_os_mutex_destroy(&battery_mutex);
-  vp_os_mutex_destroy(&wifi_mutex);
+    vp_os_mutex_destroy(&state_mutex);
+    vp_os_mutex_destroy(&battery_mutex);
+    vp_os_mutex_destroy(&wifi_mutex);
 
-  gtk_main();
-  return C_OK;
+    gtk_main();
+    return C_OK;
 }
 
 void extractDesiredNavdata(const navdata_demo_t * nd, Navdata_t *selectedNavdata) {
@@ -582,7 +593,6 @@ void extractDesiredNavdata(const navdata_demo_t * nd, Navdata_t *selectedNavdata
 
 // keep updated the data concerning current
 // motion command sent to the drone
-
 void refresh_command() {                        //PEPITE
 	commandType_t commandType;
 	get_command (&local_cmd , &commandType);
@@ -596,9 +606,7 @@ void refresh_command() {                        //PEPITE
 void refresh_battery(navdata_demo_t * nd) {
 
   vp_os_mutex_lock(&battery_mutex);
-
   drone_battery = nd->vbat_flying_percentage;
-
   vp_os_mutex_unlock(&battery_mutex);
 
 }
