@@ -85,9 +85,6 @@ double do_cross_validation()
 	double sumv = 0, sumy = 0, sumvv = 0, sumyy = 0, sumvy = 0;
 	double *target = Malloc(double,prob.l);
     double accuracy;
-    printf("je suis dans do cross\n");
-    printf("C=%d , Gamma=%f\n",param.C,param.gamma);
-    //usleep(1000000);
     svm_cross_validation(&prob,&param,nr_fold,target);
 	if(param.svm_type == EPSILON_SVR ||
 	   param.svm_type == NU_SVR)
@@ -164,14 +161,15 @@ float * compute_parameters(char* training_set, int folds){
     C=1;
     //while(C<10){
         gamma=1;
-        while(gamma<nb_indiv){
+        while(gamma<nb_indiv && accuracy < 97){
             create_model(folds,gamma,C);
             read_problem(input_file_name);
             error_msg = svm_check_parameter(&prob,&param);
             accuracy = do_cross_validation();
 //                printf("gamma = %f\n",gamma);
 //                printf("C = %f\n",C);
-            matlab = fopen("stats.m","w+");
+            //matlab = fopen("stats.m","w+");
+            //fseek(matlab,2,1);
             fprintf(matlab,"%d %f;\n",gamma,accuracy);
             fclose(matlab);
             if(accuracy > aux){
@@ -416,36 +414,26 @@ void read_problem(const char *filename)
 	fclose(fp);
 }
 
-int training_model_generation(char* training_set, char* training_model, int folds)
+int training_model_generation(char* training_set, char* training_model, int folds, int nb_specimen)
 {
 	char* input_file_name=training_set;
 	char* model_file_name=training_model;
 	const char *error_msg;
     float * parameters;
     double accuracy;
-    int pas_trouve=0;
-    char mot[8];
-    char mot_bis[8]="total_sv";
+    nb_indiv=nb_specimen;
+
     create_model(0,1,1);
-    base = fopen("./Sources/Navdata/BaseApp.model","r+");
-    printf("avant la recherche du nombre d'indiv\n");
-    while(pas_trouve==0){
-        fscanf(base,"%s %d",mot,&nb_indiv);
-        if (strcmp(mot_bis,mot)==0){
-            pas_trouve=1;
-        }
-    }
-    fclose(base);
-    printf("après la recherche du nombre d'indiv: nb indiv=%d\n",nb_indiv);
 	read_problem(input_file_name);
 	error_msg = svm_check_parameter(&prob,&param);
-    matlab = fopen("stats.m","w+");
-    fprintf(matlab,"accuracy = [");
-    fclose(matlab);
+ //   matlab = fopen("stats.m","w+");
+ //   fprintf(matlab,"accuracy = [");
+ //   fclose(matlab);
     parameters = compute_parameters(training_set, folds);
-    matlab = fopen("stats.m","w+");
-    fprintf(matlab,"];");
-    fclose(matlab);
+ //   matlab = fopen("stats.m","w+");
+ //   fseek(matlab,2,1);
+ //   fprintf(matlab,"];");
+ //   fclose(matlab);
     printf("gamma=%f C=%f\n",parameters[0],parameters[1]); 
     create_model(0,parameters[0],parameters[1]);
     printf("model créé\n");
