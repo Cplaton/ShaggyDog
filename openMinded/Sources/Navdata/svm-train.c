@@ -423,13 +423,18 @@ int training_model_generation(char* training_set, char* training_model, int fold
 	const char *error_msg;
     float * parameters;
     double accuracy;
+    int pas_trouve=0;
     char mot[8];
+    char mot_bis[8]="total_sv";
     create_model(0,1,1);
     base = fopen("./Sources/Navdata/BaseApp.model","r+");
     printf("avant la recherche du nombre d'indiv\n");
-    while((fscanf(base,"%s %d",&mot,&nb_indiv))!=0){
-        //A COMPLETER
+    while(pas_trouve==0){
+        fscanf(base,"%s %d",mot,&nb_indiv);
+        if (strcmp(mot_bis,mot)==0){
+            pas_trouve=1;
         }
+    }
     fclose(base);
     printf("après la recherche du nombre d'indiv: nb indiv=%d\n",nb_indiv);
 	read_problem(input_file_name);
