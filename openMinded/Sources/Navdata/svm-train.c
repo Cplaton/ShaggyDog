@@ -160,8 +160,8 @@ float * compute_parameters(char* training_set, int folds){
     aux = 0.0;
     C=1;
     //while(C<10){
-        gamma=1;
-        while(gamma<nb_indiv && accuracy < 97){
+        gamma=nb_indiv/6;
+        while(gamma<nb_indiv/3){
             create_model(folds,gamma,C);
             read_problem(input_file_name);
             error_msg = svm_check_parameter(&prob,&param);
@@ -170,8 +170,8 @@ float * compute_parameters(char* training_set, int folds){
 //                printf("C = %f\n",C);
             //matlab = fopen("stats.m","w+");
             //fseek(matlab,2,1);
-            fprintf(matlab,"%d %f;\n",gamma,accuracy);
-            fclose(matlab);
+//           fprintf(matlab,"%f %lf;\n",gamma,accuracy);
+          //  fclose(matlab);
             if(accuracy > aux){
                 aux=accuracy;
                 gamma_aux=gamma;

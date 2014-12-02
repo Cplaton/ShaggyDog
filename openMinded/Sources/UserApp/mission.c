@@ -39,7 +39,7 @@ extern options_t options;
 
 DEFINE_THREAD_ROUTINE(mission, data) {
 
-	int mission_nb = MISSION_WALL_1;
+	int mission_nb = MISSION_SFS_1;
 
     printf("missionModeOn=%d\n",options.mission);
 	while(options.mission==0){

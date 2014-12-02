@@ -204,23 +204,24 @@ void extract_key_event(struct input_event * ev) {
       break;
     case CLASS_WALL :
       get_command(&lastcommand, &type);
+      printf("Pitch = %f\n", lastcommand.pitch);
       if(ev->value==1){
-        if (lastcommand.pitch > 0) {
+        if (lastcommand.pitch > 0.0) {
           vp_os_mutex_lock(&class_mutex);
           class_id=3;
           vp_os_mutex_unlock(&class_mutex);
         }
-        else if (lastcommand.pitch < 0) {
+        else if (lastcommand.pitch < 0.0) {
           vp_os_mutex_lock(&class_mutex);
           class_id=2;
           vp_os_mutex_unlock(&class_mutex);
         }
-        else if (lastcommand.roll > 0) {
+        else if (lastcommand.roll > 0.0) {
           vp_os_mutex_lock(&class_mutex);
           class_id=4;
           vp_os_mutex_unlock(&class_mutex);
         }
-        else if (lastcommand.roll < 0) {
+        else if (lastcommand.roll < 0.0) {
           vp_os_mutex_lock(&class_mutex);
           class_id=5;
           vp_os_mutex_unlock(&class_mutex);
