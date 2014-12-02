@@ -223,12 +223,26 @@ static vp_os_mutex_t buffer_diag_mutex;
  **/
 int class_id = 0;
 int class_id_aux;
+
+/**
+ * @var     indiv
+ * @brief   Value used in recognition process
+ **/
 specimen indiv;
 
+/**
+ * @var     BDD_ENABLED
+ * @brief   BDD state
+ **/
 int BDD_ENABLED = 0;
 
+/**
+ * @var     buff_counter
+ * @brief   used to store 10 specimens in an array in order to recognize the situation
+ **/
 int buff_counter=0;
-int file_number=0;
+
+
 char * shared_file_name;
 char * local_file_name;
 /**
@@ -381,7 +395,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			if(connect_to_database()!=0){
 				// ERROR
 			} else {
-				// start_new_flight();	
+				// start_new_flight();
 			}
 			disconnect_to_database();
 			// fin get min and max
@@ -393,8 +407,8 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				fc = open_navdata_file("selectedNav");
 				fres = open_navdata_file("residue");
 				logSFM=openLogFile("logSFM");
-		
-			
+
+
 				if( options.mission==1 ){
 					if(connect_to_database()!=0){
 						// ERROR
@@ -468,17 +482,17 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			indiv.ay = norm_indiv(ay,8);
 			indiv.az = norm_indiv(az,9);
 			specimen_buffer[buff_counter]= indiv;
-	   
+
 			if(buff_counter == 9){
 				buff_counter = 0;
 				printf("---");
 				recognition_process(specimen_buffer, NAME_TRAINING_MODEL, NAME_CLASSIFIER_OUT);
-				
+
 			}else{
 				buff_counter++;
 			}
 		}
-		
+
 
 		if(options.debug!=0){
             fprintf(logSFM,"sign: %d\n",fault_msg);
@@ -543,7 +557,7 @@ inline C_RESULT navdata_analyse_release( void )
 		} else {
 		close_navdata_file(csv);
 		}
-		 
+
          printf("closed\n");
          isStopped = 1;
   }
