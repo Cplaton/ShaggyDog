@@ -34,18 +34,6 @@
 #define MISSION_WALL_3 5 //Backward
 #define MISSION_WALL_4 6 //Left
 
-#define TAKEOFF_DRONE 1
-#define FORWARD_PITCH 2
-#define LEFT_ROLL 3
-#define BACKWARD_PITCH 4
-#define RIGHT_ROLL 5
-#define GAS_UP 6
-#define LEFT_YAW 7
-#define GAS_DOWN 8
-#define RIGHT_YAW 9
-#define LAND_DRONE 10
-#define HOVER_DRONE 11
-
 static vp_os_mutex_t class_mutex;
 extern options_t options;
 
@@ -101,17 +89,14 @@ void mission_SFS_1 () {
 
 	drone_state_t status = get_drone_state();
 	float command;
-	float fin;
 	Inputs_t lastcommand;
 	commandType_t type;
 	int etat = TAKEOFF_DRONE;
-	int ancien_etat = TAKEOFF_DRONE;
 	vp_os_mutex_init(&class_mutex);
 
     while (1) {
 		switch (etat) {
 
-			printf("Etat %d\n", etat);
 			case TAKEOFF_DRONE :
 				vp_os_mutex_lock(&class_mutex);
    				class_id=0;
@@ -126,21 +111,17 @@ void mission_SFS_1 () {
 				status = get_drone_state();
 				if (status == FLYING){
 					etat = FORWARD_PITCH;
-					printf("Passage à l'état 2\n");
 				}
 				break;
 
 			case FORWARD_PITCH :
 
-				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
 				command = pitch(-0.2, 1000000);
 				if (command != 0) {
 					etat = LEFT_ROLL;
-					ancien_etat = FORWARD_PITCH;
-					printf("Passage à l'état 3\n");
 				}
 				break;
 
@@ -152,8 +133,6 @@ void mission_SFS_1 () {
 				command = roll(-0.2,1000000);
 				if (command != 0) {
 					etat = BACKWARD_PITCH;
-					printf("Passage à l'état 4\n");
-					ancien_etat = LEFT_ROLL;
 				}
 				break;
 
@@ -165,8 +144,6 @@ void mission_SFS_1 () {
 				command = pitch(0.2,1000000);
 				if (command != 0) {
 					etat = RIGHT_ROLL;
-					printf("Passage à l'état 5\n");
-					ancien_etat = BACKWARD_PITCH;
 				}
 				break;
 
@@ -177,9 +154,7 @@ void mission_SFS_1 () {
                 vp_os_mutex_unlock(&class_mutex);
 				command = roll(0.2,1000000);
 				if (command != 0) {
-					printf("Passage à l'état 6");
 					etat = GAS_UP;
-					ancien_etat = RIGHT_ROLL;
 				}
 				break;
 
@@ -190,9 +165,7 @@ void mission_SFS_1 () {
                 vp_os_mutex_unlock(&class_mutex);
 				command = gas(0.4,2000000);
 				if (command != 0) {
-					printf("Passage à l'état 7");
 					etat = LEFT_YAW;
-					ancien_etat = GAS_UP;
 				}
 				break;
 
@@ -203,9 +176,7 @@ void mission_SFS_1 () {
                 vp_os_mutex_unlock(&class_mutex);
 				command = yaw(-1.0,2000000);
 				if (command != 0) {
-					printf("Passage à l'état 8");
 					etat = GAS_DOWN;
-					ancien_etat = LEFT_YAW;
 				}
 				break;
 
@@ -216,9 +187,7 @@ void mission_SFS_1 () {
                 vp_os_mutex_unlock(&class_mutex);
 				command = gas(-0.4,2000000);
 				if (command != 0) {
-					printf("Passage à l'état 9");
 					etat = RIGHT_YAW;
-					ancien_etat = GAS_DOWN;
 				}
 				break;
 
@@ -229,9 +198,7 @@ void mission_SFS_1 () {
                 vp_os_mutex_unlock(&class_mutex);
 				command = yaw(1.0,2000000);
 				if (command != 0) {
-					printf("Passage à l'état 10");
 					etat = LAND_DRONE;
-					ancien_etat = RIGHT_YAW;
 				}
 				break;
 
@@ -241,15 +208,6 @@ void mission_SFS_1 () {
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
 				landing();
-				break;
-			case HOVER_DRONE :
-
-				vp_os_mutex_lock(&class_mutex);
-                class_id=0;
-                vp_os_mutex_unlock(&class_mutex);
-				fin = hover(5000000);
-				if (fin == 1)
-					etat = ancien_etat + 1;
 				break;
 		}
 	}
@@ -485,10 +443,10 @@ void mission_WALL_2() {
                 vp_os_mutex_unlock(&class_mutex);
 				fin = hover(2000000);
 				if (fin == 1)
-					etat = RIGHT_YAW;
+					etat = RIGHT_ROLL;
 				break;
 
-			case RIGHT_YAW :
+			case RIGHT_ROLL :
 
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);
@@ -631,10 +589,10 @@ void mission_WALL_4() {
                 vp_os_mutex_unlock(&class_mutex);
 				fin = hover(2000000);
 				if (fin == 1)
-					etat = LEFT_YAW;
+					etat = LEFT_ROLL;
 				break;
 
-			case LEFT_YAW :
+			case LEFT_ROLL :
 
 				//void apply_command(roll, pitch, yaw, gas)
 				vp_os_mutex_lock(&class_mutex);

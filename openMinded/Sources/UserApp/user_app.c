@@ -19,6 +19,7 @@
 #include "user_app.h"
 
 static vp_os_mutex_t class_mutex;
+int modeReaction;
 
 /*to stop diagnosis app*/
 void kill();
@@ -208,6 +209,11 @@ void extract_key_event(struct input_event * ev) {
         class_id=0;
         vp_os_mutex_unlock(&class_mutex);}
       break;
+    case MODE_REACTION :
+      if (ev->value==1) {
+         hovering();
+         modeReaction = 1;
+      }
     default : ;
       
       
