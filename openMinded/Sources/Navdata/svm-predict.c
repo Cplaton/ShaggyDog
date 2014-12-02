@@ -18,26 +18,7 @@ int max_nr_attr = 64;
 struct svm_model* modell;
 int predict_probability=0;
 
-static char *line = NULL;
 static int max_line_len;
-
-static char* readline(FILE *input)
-{
-	int len;
-
-	if(fgets(line,max_line_len,input) == NULL)
-		return NULL;
-
-	while(strrchr(line,'\n') == NULL)
-	{
-		max_line_len *= 2;
-		line = (char *) realloc(line,max_line_len);
-		len = (int) strlen(line);
-		if(fgets(line+len,max_line_len-len,input) == NULL)
-			break;
-	}
-	return line;
-}
 
 void exit_input_error(int line_num)
 {
@@ -47,19 +28,12 @@ void exit_input_error(int line_num)
 
 int predict(specimen * buffer)
 {		
-	int correct = 0;
-	double error = 0;
-	double sump = 0, sumt = 0, sumpp = 0, sumtt = 0, sumpt = 0;
-	int svm_type=svm_get_svm_type(modell);
 	int nr_class=svm_get_nr_class(modell);
-	double *prob_estimates=NULL;
 	int j,i,l;
 	int *labels;
 	double recog_values[50];
 	double predict_label;
-	char *idx, *val, *label, *endptr;
-	int inst_max_index = -1; // strtol gives 0 if wrong format, and precomputed kernel has <index> start from 0
-		
+	
 	// pour avoir les labels
 	labels=(int *) malloc(nr_class*sizeof(int));
 	svm_get_labels(modell,labels);
@@ -129,7 +103,7 @@ int predict(specimen * buffer)
 	}
 
 	int max = 0;
-	int recog_class;
+	int recog_class = 0;
 	for (j=0;j<nr_class;j++)
 	{
 		if (counters[j]>max)
@@ -146,21 +120,6 @@ int predict(specimen * buffer)
 	printf("Confiance : %lf\n ", 100*((double)max)/((double)l));
 
 	return recog_class;
-
-	/*
-	if (svm_type==NU_SVR || svm_type==EPSILON_SVR)
-	{
-		info("Mean squared error = %g (regression)\n",error/total);
-		info("Squared correlation coefficient = %g (regression)\n",
-			((total*sumpt-sump*sumt)*(total*sumpt-sump*sumt))/
-			((total*sumpp-sump*sump)*(total*sumtt-sumt*sumt))
-			);
-	}
-	else
-		// info("Accuracy = %g%% (%d/%d) (classification)\n",
-		// 		(double)correct/total*100,correct,total);
-	if(predict_probability)
-		free(prob_estimates);*/
 }
 
 void exit_with_help()
