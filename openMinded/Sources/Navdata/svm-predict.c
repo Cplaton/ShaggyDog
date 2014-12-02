@@ -98,13 +98,8 @@ int predict(specimen * buffer, FILE *output)
 		}
 		
         predict_label = svm_predict(modell,x);
-		//printf("indiv : %g",predict_label);
-		//fprintf(output,"%g\n",predict_label);
-		//enregistrement des labels reconnus dans un tableau
 		recog_values[l] = predict_label;
-		//printf("indiv %d : %lf \n",l, recog_values[l]);
 	}
-
 	// traitement des labels reconnus
 	int * counters;
 
@@ -150,38 +145,6 @@ int predict(specimen * buffer, FILE *output)
 	printf("Classe reconnue : %d\n",recog_class);
 	printf("Confiance : %lf\n ", 100*((double)max)/((double)l));
 
-	
-	
-	
-	/* --------- DEBUG ---------
-	printf("labels existants\n");
-	for (i=0;i<nr_class;i++){
-		printf("label %d : %d\n", i, labels[i]);
-	}
-
-	printf("-------------------------\n");
-
-	printf("tableau des valeurs reconnues\n");
-	for (i=0;i<total;i++){
-		printf("recog value %d : %lf\n", i, recog_values[i]);
-	}
-
-	printf("-------------------------\n");
-	printf("Valeurs des compteurs\n");
-	for (i=0;i<nr_class;i++)
-	{
-		printf("counter %d : %d\n",i,counters[i]);
-	}
-	printf("nr_class : %d\n",nr_class);
-	printf("max : %d\n",max);
-	printf("total : %d\n",total);
-
-	//free(labels);
-	//free(counters);
-	printf("Classe reconnue : %d\n",recog_class);
-	printf("Accuracy : %lf ", 100*((double)max)/((double)total));
-	//
-	*/
 	return recog_class;
 
 	/*
@@ -213,8 +176,6 @@ void exit_with_help()
 
 int recognition_process(specimen* buffer, char* training_model, char* class_out)
 {
-
-
 	FILE *output;
 	int recog_class;
 
@@ -241,74 +202,3 @@ int recognition_process(specimen* buffer, char* training_model, char* class_out)
 	fclose(output);
 	return recog_class;
 }
-
-/*int main(int argc, char **argv)
-{
-	FILE *input, *output;
-	int i;
-	// parse options
-	for(i=1;i<argc;i++)
-	{
-		if(argv[i][0] != '-') break;
-		++i;
-		switch(argv[i-1][1])
-		{
-			case 'b':
-				predict_probability = atoi(argv[i]);
-				break;
-			case 'q':
-				info = &print_null;
-				i--;
-				break;
-			default:
-				fprintf(stderr,"Unknown option: -%c\n", argv[i-1][1]);
-				exit_with_help();
-		}
-	}
-
-	if(i>=argc-2)
-		exit_with_help();
-
-	input = fopen(argv[i],"r");
-	if(input == NULL)
-	{
-		fprintf(stderr,"can't open input file %s\n",argv[i]);
-		exit(1);
-	}
-
-	output = fopen(argv[i+2],"w");
-	if(output == NULL)
-	{
-		fprintf(stderr,"can't open output file %s\n",argv[i+2]);
-		exit(1);
-	}
-
-	if((model=svm_load_model(argv[i+1]))==0)
-	{
-		fprintf(stderr,"can't open model file %s\n",argv[i+1]);
-		exit(1);
-	}
-
-	x = (struct svm_node *) malloc(max_nr_attr*sizeof(struct svm_node));
-	if(predict_probability)
-	{
-		if(svm_check_probability_model(model)==0)
-		{
-			fprintf(stderr,"Model does not support probabiliy estimates\n");
-			exit(1);
-		}
-	}
-	else
-	{
-		if(svm_check_probability_model(model)!=0)
-			info("Model supports probability estimates, but disabled in prediction.\n");
-	}
-
-	predict(input,output);
-	svm_free_and_destroy_model(&model);
-	free(x);
-	free(line);
-	fclose(input);
-	fclose(output);
-	return 0;
-}*/
