@@ -13,8 +13,13 @@ struct s_specimen{
     float az;
 }typedef specimen;
 
+struct s_predict_results{
+	int confidence;
+	int predict_class;
+}typedef predict_results;
+
 extern specimen specimen_buffer[10];
 
-int recognition_process(specimen* buffer, char* training_model);
+predict_results recognition_process(specimen* buffer, char* training_model);
 
 #endif /* _PREDICT_H */

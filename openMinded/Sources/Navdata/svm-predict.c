@@ -26,8 +26,9 @@ void exit_input_error(int line_num)
 	exit(1);
 }
 
-int predict(specimen * buffer)
+predict_results predict(specimen * buffer)
 {		
+	predict_results res;
 	int nr_class=svm_get_nr_class(modell);
 	int j,i,l;
 	int *labels;
@@ -119,7 +120,10 @@ int predict(specimen * buffer)
 	printf("Classe reconnue : %d\n",recog_class);
 	printf("Confiance : %lf\n ", 100*((double)max)/((double)l));
 
-	return recog_class;
+	res.predict_class = recog_class;
+	res.confidence = (int)100*((double)max)/((double)l);
+	
+	return res;
 }
 
 void exit_with_help()
@@ -133,10 +137,9 @@ void exit_with_help()
 	exit(1);
 }
 
-int recognition_process(specimen* buffer, char* training_model)
+predict_results recognition_process(specimen* buffer, char* training_model)
 {
-	int recog_class;
-
+	predict_results res;
 	if((modell=svm_load_model(training_model))==0)
 	{
 		fprintf(stderr,"can't open model file %s\n",training_model);
@@ -146,8 +149,8 @@ int recognition_process(specimen* buffer, char* training_model)
     if(svm_check_probability_model(modell)!=0)
         info("Model supports probability estimates, but disabled in prediction.\n");
 
-	recog_class =predict(buffer);
+	res =predict(buffer);
 
 	svm_free_and_destroy_model(&modell);
-	return recog_class;
+	return res;
 }
