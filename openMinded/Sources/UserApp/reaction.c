@@ -20,12 +20,13 @@
 #include "reaction.h"
 
 static vp_os_mutex_t class_mutex;
-
+static vp_os_mutex_t reaction_mutex;
 
 DEFINE_THREAD_ROUTINE(reaction, data) {
 
 	while (1) {
 
+		usleep(100);
 		if (modeReaction == 1) {
 
 			printf("Module de reaciton active\n");
@@ -43,7 +44,7 @@ void avoid_front_wall () {
 	float fin;
 	int etat = BACKWARD_PITCH;
 	vp_os_mutex_init(&class_mutex);
-	while (1) {
+	while (modeReaction == 1) {
 		switch (etat) {
 
 			case BACKWARD_PITCH :
@@ -69,8 +70,9 @@ void avoid_front_wall () {
 				break;
 			
 			case END_REACTION :
-				
+				vp_os_mutex_lock(&reaction_mutex);
 				modeReaction = 0;
+				vp_os_mutex_unlock(&reaction_mutex);
 				break;	
 		}
 	}
@@ -109,8 +111,9 @@ void avoid_left_wall () {
 				break;
 			
 			case END_REACTION :
-				
+				vp_os_mutex_lock(&reaction_mutex);
 				modeReaction = 0;
+				vp_os_mutex_unlock(&reaction_mutex);
 				break;	
 		}
 	}
