@@ -49,7 +49,7 @@ struct augmented_navdata {
 /**
  * @brief       Disconnect properly the program from the database
  */
-static void exit_nicely();
+void exit_nicely();
 
 
 /**
