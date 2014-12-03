@@ -206,14 +206,6 @@ static vp_os_mutex_t wifi_mutex;
  * @warning This mutex should be called before each call to class_id variable.
  **/
 static vp_os_mutex_t class_mutex;
-
-/**
- * @var		buffer_diag_mutex
- * @brief	Protect the drone's diagnosis buffer.
- * @warning This mutex should be called before each call to specimen_buffer variable.
- **/
-static vp_os_mutex_t buffer_diag_mutex;
-
 /********************************OTHER VARIABLES*******************************/
 
 /**
