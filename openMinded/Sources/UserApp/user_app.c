@@ -19,6 +19,8 @@
 #include "user_app.h"
 
 static vp_os_mutex_t class_mutex;
+static vp_os_mutex_t reaction_mutex;
+
 int modeReaction;
 
 /*to stop diagnosis app*/
@@ -38,6 +40,7 @@ DEFINE_THREAD_ROUTINE(th_user_app, data)
   int fd;
 
   vp_os_mutex_init(&class_mutex);
+  vp_os_mutex_init(&reaction_mutex);
 
   printf("STARTING USER APP................. \n");
  
@@ -236,7 +239,9 @@ void extract_key_event(struct input_event * ev) {
     case MODE_REACTION :
       if (ev->value==1) {
          hovering();
+         vp_os_mutex_lock(&reaction_mutex);
          modeReaction = 1;
+         vp_os_mutex_unlock(&reaction_mutex);
       }
     default : ;
       
