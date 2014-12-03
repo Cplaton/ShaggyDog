@@ -19,6 +19,9 @@
 #include "Model/model.h"
 #include "reaction.h"
 
+#include "../UI/displayMsg.h"
+#include "../Model/residue.h" // pour l'acces a la structure utilisee dans les messages
+
 #define FRONT_WALL 2
 #define BACK_WALL  3
 #define RIGHT_WALL 4
@@ -84,6 +87,7 @@ void avoid_front_wall () {
 				vp_os_mutex_lock(&reaction_mutex);
 				modeReaction = 0;
 				vp_os_mutex_unlock(&reaction_mutex);
+				displayEmergencyMsg(NO_EMERGENCY);
 				break;	
 		}
 	}
@@ -220,13 +224,22 @@ void check_situation () {
 			vp_os_mutex_lock(&reaction_mutex);
 			modeReaction = 1;
 			vp_os_mutex_unlock(&reaction_mutex);
+			
+			displayAlertMsg(OBSTACLE_DEVANT);
+			displayEmergencyMsg(GO_BACK);
+			
 			avoid_front_wall();
+			
 			break;
 
 		case BACK_WALL:
 			vp_os_mutex_lock(&reaction_mutex);
 			modeReaction = 1;
 			vp_os_mutex_unlock(&reaction_mutex);
+			
+			displayAlertMsg(OBSTACLE_ARRIERE);
+			displayEmergencyMsg(GO_FORWARD);
+			
 			avoid_back_wall();
 			break;
 
@@ -234,13 +247,21 @@ void check_situation () {
 			vp_os_mutex_lock(&reaction_mutex);
 			modeReaction = 1;
 			vp_os_mutex_unlock(&reaction_mutex);
+			
+			displayAlertMsg(OBSTACLE_DROITE);
+			displayEmergencyMsg(GO_LEFT);
+			
 			avoid_right_wall();
 			break;
 
 		case LEFT_WALL:
 			vp_os_mutex_lock(&reaction_mutex);
 			modeReaction = 1;
-			vp_os_mutex_unlock(&reaction_mutex);		
+			vp_os_mutex_unlock(&reaction_mutex);
+
+			displayAlertMsg(OBSTACLE_GAUCHE);
+			displayEmergencyMsg(GO_RIGHT);
+			
 			avoid_left_wall();
 			break;		
 
