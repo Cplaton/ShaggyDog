@@ -54,7 +54,7 @@ float min_ax, max_ax;
 float min_ay, max_ay;
 float min_az, max_az;
 
-static void exit_nicely()
+void exit_nicely()
 {
 	PQfinish(conn_bd);
 	//exit(1);
