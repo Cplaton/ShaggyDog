@@ -96,14 +96,14 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 		//affect emergency message
 		readEmergency(&emergencyMsg);
 		if(prec_emergency_msg != emergencyMsg) {
-			displayEmergencyMsg(emergencyMsg);
+			//displayEmergencyMsg(emergencyMsg);
 			prec_emergency_msg = emergencyMsg;
 		}
 
 		//affect fault message
 		readFault(&faultMsg);
 		if(prec_fault_msg != faultMsg && emergencyMsg == NO_EMERGENCY) {
-			displayAlertMsg(faultMsg);
+			//displayAlertMsg(faultMsg);
 			prec_fault_msg = faultMsg;
 
 			//In debug pages, text entries for drone's signature state

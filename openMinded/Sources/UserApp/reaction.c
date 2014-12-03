@@ -27,7 +27,7 @@
 #define RIGHT_WALL 4
 #define LEFT_WALL  5
 
-#define Mode_Reaction_Active 0
+#define Mode_Reaction_Active 1
 
 static vp_os_mutex_t class_mutex;
 static vp_os_mutex_t reaction_mutex;
