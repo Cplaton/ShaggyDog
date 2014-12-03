@@ -20,8 +20,6 @@
 
 #define NAME_TRAINING_SET "Sources/Navdata/BaseApp"
 #define NAME_TRAINING_MODEL "Sources/Navdata/BaseApp.model"
-#define NAME_DATA_TEST "Sources/Navdata/full_weka_set_test"
-#define NAME_CLASSIFIER_OUT "Sources/Navdata/classifier_out"
 
 
 /**
@@ -62,6 +60,5 @@ float get_wifi_quality();
 extern int class_id;
 extern int file_number;
 extern char * shared_file_name;
-extern int BDD_ENABLED;
 
 #endif // _NAVDATA_H_

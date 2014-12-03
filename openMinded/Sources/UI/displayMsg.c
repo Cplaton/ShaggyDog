@@ -87,7 +87,7 @@ void displayAlertMsg (fault_t msg) {
 		sprintf(alertMsg,"%s","No obstacle");
 		break;
 	case UNKNOWN_FAULT:
-		sprintf(alertMsg,"%s","Unkown fault");
+		sprintf(alertMsg,"%s","Unknown fault");
 		break;
 	default:
 		sprintf(alertMsg,"%s","No obstacle");

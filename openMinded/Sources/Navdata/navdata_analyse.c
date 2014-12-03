@@ -222,11 +222,6 @@ int class_id_aux;
  **/
 specimen indiv;
 
-/**
- * @var     BDD_ENABLED
- * @brief   BDD state
- **/
-int BDD_ENABLED = 0;
 
 /**
  * @var     buff_counter

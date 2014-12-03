@@ -53,8 +53,8 @@ void debugPage(){
 	gui->labelVzGeneral = gtk_label_new ("Vz : ");
 	gui->labelSF = gtk_label_new ("Open Source Project");
 
-	/*-----init smart fox images-----*/
-	gui->pixbuf = gdk_pixbuf_new_from_file_at_size("smartfox-final.png",40,40,NULL);
+	/*-----init openMINDED images-----*/
+	gui->pixbuf = gdk_pixbuf_new_from_file_at_size("logo_OM.png",40,40,NULL);
 	gui->imgSmartFox = gtk_image_new_from_pixbuf(gui->pixbuf);
 	gui->pixbufFile = gdk_pixbuf_new_from_file_at_size("open_file.jpg",40,40,NULL);
 	gui->imgFile = gtk_image_new_from_pixbuf(gui->pixbufFile);

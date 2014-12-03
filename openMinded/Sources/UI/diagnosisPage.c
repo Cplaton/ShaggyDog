@@ -9,8 +9,8 @@ void diagnosisPage(){
 	/*----init color of frame-----*/
 	gdk_color_parse ("#AFAFAF", &(gui->color));
 
-	/*-----get smart fox image-----*/
-	gui->pixbuf = gdk_pixbuf_new_from_file_at_size("smartfox-final.png",40,40,NULL);
+	/*-----get openMINDED image-----*/
+	gui->pixbuf = gdk_pixbuf_new_from_file_at_size("logo_OM.png",40,40,NULL);
 	gui->imgSmartFox = gtk_image_new_from_pixbuf(gui->pixbuf);
 
 	/*-----create frames-----*/
