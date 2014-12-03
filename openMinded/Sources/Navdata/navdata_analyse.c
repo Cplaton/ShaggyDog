@@ -27,13 +27,13 @@
 #include "Navdata/database/bd_management.h"
 #include "utils.h"
 #include "svm-predict.h"
+#include "svm-train.h"
 
 #define RECORD_TIME 15 //(en s)
 
 //(en s)
 #define RECORD_TIME 15
 
-// #define BDD_ENABLED 1
 
 /********************************FILEs************************************/
 
@@ -319,13 +319,13 @@ int recordNumber = 0;
 /*************************FUNCTION DECLARATIONs********************************/
 
 /* according to the last navdata received, resfresh the drone state */
-void extract_drone_state(navdata_demo_t *);
+void extract_drone_state(const navdata_demo_t *); // GGGFÖFGEOHFEOHDFFDH
 
 /* according to the last navdata received, refresh the drone battery level */
-void refresh_battery(navdata_demo_t *);
+void refresh_battery(const navdata_demo_t *);
 
 /* according to the last navdata received, refresh the drone wifi quality */
-void refresh_wifi_quality(navdata_wifi_t *);
+void refresh_wifi_quality(const navdata_wifi_t *);
 
 void extractDesiredNavdata(const navdata_demo_t * nd, Navdata_t *selectedNavdata);
 void refresh_command();
@@ -489,7 +489,11 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			if(buff_counter == 9){
 				buff_counter = 0;
 				printf("---");
-				recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
+				predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
+				vp_os_mutex_lock(&class_mutex);
+				class_id = res_pred.predict_class;
+				vp_os_mutex_unlock(&class_mutex);
+				
 			}else{
 				buff_counter++;
 			}
@@ -563,6 +567,8 @@ inline C_RESULT navdata_analyse_release( void )
 
             // apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
             training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
+			
+			
 
 		} else {
 		close_navdata_file(csv);
@@ -603,7 +609,7 @@ void refresh_command() {                        //PEPITE
  * @brief   Refresh the battery indicator from the last navdata received
  * @param   nd      The last navdata packet received
  **/
-void refresh_battery(navdata_demo_t * nd) {
+void refresh_battery(const navdata_demo_t * nd) {
 
   vp_os_mutex_lock(&battery_mutex);
   drone_battery = nd->vbat_flying_percentage;
@@ -631,7 +637,7 @@ float get_battery_level() {
  * @brief   Extracts the drone state from a given navdata and update global variable with it's value
  * @param   nd     The last navdata received
  **/
-void extract_drone_state(navdata_demo_t * nd) {
+void extract_drone_state(const navdata_demo_t * nd) {
 
   vp_os_mutex_lock(&state_mutex);
 
@@ -682,7 +688,7 @@ drone_state_t get_drone_state() {
  * @brief  refresh the wifi quality indicator from the last navdata received,
  * @param  nw      the wifi indicator received into a navdata
  **/
-void refresh_wifi_quality(navdata_wifi_t * nw) {
+void refresh_wifi_quality(const navdata_wifi_t * nw) {
 
   vp_os_mutex_lock(&wifi_mutex);
   wifi_link_quality = nw->link_quality;

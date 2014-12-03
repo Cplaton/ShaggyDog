@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include "svm.h"
+#include "svm-train.h"
 #define Malloc(type,n) (type *)malloc((n)*sizeof(type))
 
 void read_problem(const char *filename);
