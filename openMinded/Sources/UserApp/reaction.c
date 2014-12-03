@@ -19,6 +19,13 @@
 #include "Model/model.h"
 #include "reaction.h"
 
+#define FRONT_WALL 2
+#define BACK_WALL  3
+#define RIGHT_WALL 4
+#define LEFT_WALL  5
+
+#define Mode_Reaction_Active 0
+
 static vp_os_mutex_t class_mutex;
 static vp_os_mutex_t reaction_mutex;
 
@@ -27,12 +34,16 @@ DEFINE_THREAD_ROUTINE(reaction, data) {
 	while (1) {
 
 		usleep(100);
+		/*
 		if (modeReaction == 1) {
 
 			printf("Module de reaciton active\n");
 			avoid_front_wall();
 
-		}	
+		}
+		*/
+		if (Mode_Reaction_Active == 1)
+			check_situation();	
 	}
 
 	return 0;
@@ -197,6 +208,42 @@ void avoid_right_wall () {
 				modeReaction = 0;
 				break;	
 		}
+	}
+
+}
+
+void check_situation () {
+
+	switch(class_id) {
+
+		case FRONT_WALL:
+			vp_os_mutex_lock(&reaction_mutex);
+			modeReaction = 1;
+			vp_os_mutex_unlock(&reaction_mutex);
+			avoid_front_wall();
+			break;
+
+		case BACK_WALL:
+			vp_os_mutex_lock(&reaction_mutex);
+			modeReaction = 1;
+			vp_os_mutex_unlock(&reaction_mutex);
+			avoid_back_wall();
+			break;
+
+		case RIGHT_WALL:
+			vp_os_mutex_lock(&reaction_mutex);
+			modeReaction = 1;
+			vp_os_mutex_unlock(&reaction_mutex);
+			avoid_right_wall();
+			break;
+
+		case LEFT_WALL:
+			vp_os_mutex_lock(&reaction_mutex);
+			modeReaction = 1;
+			vp_os_mutex_unlock(&reaction_mutex);		
+			avoid_left_wall();
+			break;		
+
 	}
 
 }
