@@ -16,6 +16,7 @@ void avoid_front_wall();
 void avoid_left_wall();
 void avoid_back_wall();
 void avoid_right_wall();
+void check_situation();
 
 
 #endif
