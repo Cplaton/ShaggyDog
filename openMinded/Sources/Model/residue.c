@@ -601,7 +601,7 @@ unsigned char smartSafetyMode(fault_t fault, Navdata_t * droneState){
 			}
 			break;
 
-		case VERIFICATION://if there are no faults the drone is going to wait a period of time to receive more commands if there is still an error the drone is going to land
+		case VERIFICATION: //if there are no faults the drone is going to wait a period of time to receive more commands if there is still an error the drone is going to land
 			emergency = E_VERIFICATION;
 			if(fault!=NO_FAULT){
 					emergency = VERIFICATION_FAILED;

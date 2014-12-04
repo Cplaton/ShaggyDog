@@ -261,12 +261,14 @@ void training_model_generation(char* training_set, char* training_model, int fol
     double accuracy;
     nb_indiv=nb_specimen;
 
-    create_model(0,1,1);
-	read_problem(input_file_name);
-	error_msg = svm_check_parameter(&prob,&param);
+    //create_model(0,1,1);
+	//read_problem(input_file_name);
+	//error_msg = svm_check_parameter(&prob,&param);
     parameters = compute_parameters(training_set, folds);
     printf("gamma=%f C=%f\n",parameters[0],parameters[1]); 
     create_model(0,parameters[0],parameters[1]);
+	read_problem(input_file_name);
+	error_msg = svm_check_parameter(&prob,&param);
     printf("model créé\n");
     free(parameters);
 

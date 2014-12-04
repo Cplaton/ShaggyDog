@@ -456,33 +456,34 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				class_id_aux=class_id;
 				vp_os_mutex_unlock(&class_mutex);
 				insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az,class_id_aux);
-			}
-
-			//data normalization
-			indiv.pitch = norm_indiv(av_pitch,1);
-			indiv.roll = norm_indiv(av_roll,2);
-			indiv.vyaw = norm_indiv(av_Vyaw,3);
-			indiv.vx = norm_indiv(av_Vx,4);
-			indiv.vy = norm_indiv(av_Vy,5);
-			indiv.vz = norm_indiv(av_Vz,6);
-			indiv.ax = norm_indiv(ax,7);
-			indiv.ay = norm_indiv(ay,8);
-			indiv.az = norm_indiv(az,9);
-
-			//current individu storage in a 10 indiv array in order to used the recognition on it
-			specimen_buffer[buff_counter]= indiv;
-
-            //if 10 individu are store, we launch the recognition process
-			if(buff_counter == 9){
-				buff_counter = 0;
-				printf("---");
-				predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
-				vp_os_mutex_lock(&class_mutex);
-				class_id = res_pred.predict_class;
-				vp_os_mutex_unlock(&class_mutex);
-				
 			}else{
-				buff_counter++;
+
+				//data normalization
+				indiv.pitch = norm_indiv(av_pitch,1);
+				indiv.roll = norm_indiv(av_roll,2);
+				indiv.vyaw = norm_indiv(av_Vyaw,3);
+				indiv.vx = norm_indiv(av_Vx,4);
+				indiv.vy = norm_indiv(av_Vy,5);
+				indiv.vz = norm_indiv(av_Vz,6);
+				indiv.ax = norm_indiv(ax,7);
+				indiv.ay = norm_indiv(ay,8);
+				indiv.az = norm_indiv(az,9);
+
+				//current individu storage in a 10 indiv array in order to used the recognition on it
+				specimen_buffer[buff_counter]= indiv;
+
+				//if 10 individu are store, we launch the recognition process
+				if(buff_counter == 9){
+					buff_counter = 0;
+					
+					predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
+					vp_os_mutex_lock(&class_mutex);
+					class_id = res_pred.predict_class;
+					vp_os_mutex_unlock(&class_mutex);
+					
+				}else{
+					buff_counter++;
+				}
 			}
 		}
 
