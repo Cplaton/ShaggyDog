@@ -8,38 +8,24 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <linux/input.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
-
 #include "mission.h"
-#include "smartfox_api.h"
-#include "user_app.h"
-#include "ardrone_move_cmd.h"
-#include "Model/model.h"
-#include "Model/residue.h"
+#include <string.h>
 
-#define MISSION_SFS_1 1
-#define MISSION_SFS_2 2
-#define MISSION_WALL_1 3 //Forward
-#define MISSION_WALL_2 4 //Right
-#define MISSION_WALL_3 5 //Backward
-#define MISSION_WALL_4 6 //Left
+#define MISSION_SFS_1  "MISSION_SFS_1"
+#define MISSION_SFS_2  "MISSION_SFS_2"
+#define MISSION_WALL_1 "MISSION_WALL_1" //Forward
+#define MISSION_WALL_2 "MISSION_WALL_2" //Right
+#define MISSION_WALL_3 "MISSION_WALL_3" //Backward
+#define MISSION_WALL_4 "MISSION_WALL_4" //Left
 
 static vp_os_mutex_t class_mutex;
 extern options_t options;
 
+char * mission_select_list[6]= {"MISSION_SFS_1", "MISSION_SFS_2", "MISSION_WALL_1", "MISSION_WALL_2", "MISSION_WALL_3", "MISSION_WALL_4"};
+
+
 DEFINE_THREAD_ROUTINE(mission, data) {
 
-	int mission_nb = MISSION_WALL_1;
 
     printf("missionModeOn=%d\n",options.mission);
 	while(options.mission==0){
@@ -48,38 +34,20 @@ DEFINE_THREAD_ROUTINE(mission, data) {
         usleep(1000000);
     }
 
-	switch (mission_nb) {
+    if (strcmp(select_mission, MISSION_SFS_1) == 0)
+		mission_SFS_1();
+	if (strcmp(select_mission, MISSION_SFS_2) == 0)	
+		mission_SFS_2();
+	if (strcmp(select_mission, MISSION_WALL_1) == 0)	
+		mission_WALL_1();
+	if (strcmp(select_mission, MISSION_WALL_2) == 0)
+		mission_WALL_2();
+	if (strcmp(select_mission, MISSION_WALL_3) == 0)
+		mission_WALL_3();
+	if (strcmp(select_mission, MISSION_WALL_4) == 0)
+		mission_WALL_4();
 
-		case MISSION_SFS_1 :
-
-			mission_SFS_1();
-			break;
-
-		case MISSION_SFS_2 :
-
-			mission_SFS_2();
-			break;
-
-		case MISSION_WALL_1 :
-
-			mission_WALL_1();
-			break;
-
-		case MISSION_WALL_2:
-
-			mission_WALL_2();
-			break;
-
-		case MISSION_WALL_3:
-
-			mission_WALL_3();
-			break;
-
-		case MISSION_WALL_4:
-
-			mission_WALL_4();
-			break;
-	}
+	
 
 return 0;
 
