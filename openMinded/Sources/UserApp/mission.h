@@ -10,12 +10,24 @@
 #define MISSION_H
 
 #include <linux/input.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <unistd.h>
+
 #include <VP_Api/vp_api_thread_helper.h> // api pour les threads
 #include "Navdata/navdata_analyse.h"
 #include "Model/model.h"
 #include "Model/residue.h"
 #include "UI/configurePage.h"
-
+#include "smartfox_api.h"
+#include "user_app.h"
+#include "ardrone_move_cmd.h"
 
 #define TAKEOFF_DRONE 1
 #define FORWARD_PITCH 2
@@ -29,6 +41,8 @@
 #define LAND_DRONE 10
 #define HOVER_DRONE 11
 #define END_REACTION 12 
+
+extern char * mission_select_list[6];
 /**
  * @fn      mission_SFS_1
  * @brief   Sends commands to the drone in order to do a mission. This mission is the first one used to learn the SFS situation
