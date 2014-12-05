@@ -52,7 +52,9 @@ double do_cross_validation()
 	double sumv = 0, sumy = 0, sumvv = 0, sumyy = 0, sumvy = 0;
 	double *target = Malloc(double,prob.l);
     double accuracy = 0;
+    printf("svm.cpp, je t'appelle!\n");
     svm_cross_validation(&prob,&param,nr_fold,target);
+    printf("svm.cpp, je te quitte!\n");
 	if(param.svm_type == EPSILON_SVR ||
 	   param.svm_type == NU_SVR)
 	{
@@ -83,7 +85,7 @@ double do_cross_validation()
         }else{
             accuracy = -1.0;
         }
-		printf("Cross Validation Accuracy = %g%%\n",100.0*total_correct/prob.l);
+//		printf("Cross Validation Accuracy = %g%%\n",100.0*total_correct/prob.l);
 	}
 	free(target);
     return accuracy;

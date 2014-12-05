@@ -220,8 +220,8 @@ int class_id_aux;
  * @var     indiv
  * @brief   Value used in recognition process
  **/
-specimen indiv;
-
+//specimen indiv;
+specimen specimen_buffer[10];
 
 /**
  * @var     buff_counter
@@ -332,7 +332,7 @@ inline C_RESULT navdata_analyse_init( void * data )
 
     if(mkdir("./DataModel", 0722) != 0)
     {
-        perror("navdata_anayse_init");
+        perror("navdata_analyse_init");
     };
 
     return C_OK;
@@ -384,11 +384,11 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			// fin get min and max
 
            	isInit = 1;
-     		ff = open_navdata_file(NAME_FILTERED_DATA);
 
 			if(options.debug!=0){
 
 				fm = open_navdata_file(NAME_MODEL_DATA);
+     		    ff = open_navdata_file(NAME_FILTERED_DATA);
 				fr = open_navdata_file(NAME_REAL_DATA);
 				fc = open_navdata_file("selectedNav");
 				fres = open_navdata_file("residue");
@@ -459,6 +459,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			}else{
 
 				//data normalization
+                specimen indiv;
 				indiv.pitch = norm_indiv(av_pitch,1);
 				indiv.roll = norm_indiv(av_roll,2);
 				indiv.vyaw = norm_indiv(av_Vyaw,3);
@@ -476,8 +477,8 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				if(buff_counter == 9){
 					buff_counter = 0;
 					
-					predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
 					vp_os_mutex_lock(&class_mutex);
+					predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
 					class_id = res_pred.predict_class;
 					vp_os_mutex_unlock(&class_mutex);
 					
@@ -531,6 +532,7 @@ inline C_RESULT navdata_analyse_release( void )
          close_navdata_file(fr);
          close_navdata_file(fm);
          close_navdata_file(fc);
+        close_navdata_file(ff);
          close_navdata_file(fres);
          closeLogFile(logSFM);
     }
@@ -538,7 +540,6 @@ inline C_RESULT navdata_analyse_release( void )
     //Arret du drone
     if(isStopped == 0){
 
-        close_navdata_file(ff);
         if( options.mission == 1 ){
 
             //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
@@ -558,9 +559,7 @@ inline C_RESULT navdata_analyse_release( void )
 			
 			
 
-		} else {
-		close_navdata_file(csv);
-		}
+		} 
 
          printf("closed\n");
          isStopped = 1;

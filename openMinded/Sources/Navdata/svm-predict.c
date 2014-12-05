@@ -10,7 +10,7 @@ int print_null(const char *s,...) {return 0;}
 
 static int (*info)(const char *fmt,...) = &printf;
 
-specimen specimen_buffer[10];
+//specimen specimen_buffer[10];
 
 struct svm_node *x;
 int max_nr_attr = 64;
@@ -35,7 +35,7 @@ predict_results predict(specimen * buffer)
 	double recog_values[50];
 	double predict_label;
 	
-	printf("dans predict\n");
+//	printf("dans predict\n");
 	// pour avoir les labels
 	labels=(int *) malloc(nr_class*sizeof(int));
 	svm_get_labels(modell,labels);
@@ -43,7 +43,7 @@ predict_results predict(specimen * buffer)
 	
 	max_line_len = 1024;
 	x = (struct svm_node *) realloc(x,10*sizeof(struct svm_node));
-	printf("apres realloc\n");
+//	printf("apres realloc\n");
 	for(l=0;l<10;l++) // pour parcourir le tableau de structure
 	{
 		for(i=0;i<9;i++) // pour parcourir la structure
@@ -73,9 +73,9 @@ predict_results predict(specimen * buffer)
 			    break;
 			}
 		}
-		printf("apres tableau\n");
+//		printf("apres tableau\n");
         predict_label = svm_predict(modell,x);
-		printf("apres call svm predict(modell,x)\n");
+//		printf("apres call svm predict(modell,x)\n");
 		recog_values[l] = predict_label;
 	}
 	// traitement des labels reconnus

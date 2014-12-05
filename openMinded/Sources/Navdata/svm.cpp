@@ -2213,7 +2213,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 
 				if(param->probability)
 					svm_binary_svc_probability(&sub_prob,param,weighted_C[i],weighted_C[j],probA[p],probB[p]);
-
+                
 				f[p] = svm_train_one(&sub_prob,param,weighted_C[i],weighted_C[j]);
 				for(k=0;k<ci;k++)
 					if(!nonzero[si+k] && fabs(f[p].alpha[k]) > 0)
@@ -2358,7 +2358,6 @@ void svm_cross_validation(const svm_problem *prob, const svm_parameter *param, i
 		int *label = NULL;
 		int *count = NULL;
 		svm_group_classes(prob,&nr_class,&label,&start,&count,perm);
-
 		// random shuffle and then data grouped by fold using the array perm
 		int *fold_count = Malloc(int,nr_fold);
 		int c;
@@ -2522,6 +2521,7 @@ double svm_predict_values(const svm_model *model, const svm_node *x, double* dec
 		int nr_class = model->nr_class;
 		int l = model->l;
 		
+     //   printf("dans svm predict value\n");
 		double *kvalue = Malloc(double,l);
 		for(i=0;i<l;i++)
 			kvalue[i] = Kernel::k_function(x,model->SV[i],model->param);
@@ -2582,7 +2582,8 @@ double svm_predict(const svm_model *model, const svm_node *x)
 	   model->param.svm_type == EPSILON_SVR ||
 	   model->param.svm_type == NU_SVR)
 		dec_values = Malloc(double, 1);
-	else 
+	else
+    //    printf("dans svm predict\n");
 		dec_values = Malloc(double, nr_class*(nr_class-1)/2);
 	double pred_result = svm_predict_values(model, x, dec_values);
 	free(dec_values);

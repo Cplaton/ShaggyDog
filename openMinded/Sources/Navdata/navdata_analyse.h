@@ -58,7 +58,7 @@ float get_wifi_quality();
  *          This value is setted by an expert function (in mission file) and is then written in the database.
  **/
 extern int class_id;
-extern int file_number;
-extern char * shared_file_name;
-
+//extern int file_number;
+//extern char * shared_file_name;
+//
 #endif // _NAVDATA_H_

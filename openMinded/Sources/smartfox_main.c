@@ -67,7 +67,7 @@ C_RESULT ardrone_tool_init_custom(void)
   START_THREAD( th_move_cmd, (void *)&current_command );
   START_THREAD( th_dis_navdata_demo,NULL);
   START_THREAD( th_gui, NULL);
-
+  
   /* ####################### USER APPLICATION ##################### */
   /* ## add here the statement that start the thread of your app ## */
   START_THREAD (th_user_app, NULL);
@@ -125,7 +125,7 @@ void stop_request() {
 /* Implementing thread table in which you add routines of your application and those provided by the SDK */
 BEGIN_THREAD_TABLE
   THREAD_TABLE_ENTRY( ardrone_control, 20 )
-  THREAD_TABLE_ENTRY( navdata_update, 10 )
+  THREAD_TABLE_ENTRY( navdata_update, 40 )
   THREAD_TABLE_ENTRY( th_move_cmd, 10 ) 
   THREAD_TABLE_ENTRY( th_dis_navdata_demo, 20 )
   THREAD_TABLE_ENTRY( th_gui,20)
