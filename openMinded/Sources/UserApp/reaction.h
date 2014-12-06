@@ -9,6 +9,7 @@
 #include "Model/residue.h"
 #include "UI/configurePage.h"
 
+extern int enable_openMinded_safety_mode;
 
 PROTO_THREAD_ROUTINE(reaction, data);
 

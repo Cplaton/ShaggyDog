@@ -307,6 +307,13 @@ void check_button_callback(GtkWidget *widget, gpointer data){
         options.disableSSM = 1;
         start_flight();
 	}
+
+    // open Minded Safety Mode checkbox management
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonReaction))==TRUE) {
+        enable_openMinded_safety_mode = 1;
+    }else{
+        enable_openMinded_safety_mode = 0;
+    }
 }
 
 void start_flight(){
@@ -450,6 +457,7 @@ void configPage(){
 	char infoBullDisableSSM[2000] = "The application only detects error, the drone will not try to land or to get off detected obsatcles.";
 	char infoBullSys[2000] = "It will send a landing order if drone state is too dangerous,and any procedure could protect the drone. It may not work for high speeds.";
 	char infoBullMission[2000] = "It will start a mission for filling the database which it is used for the learning process";
+    char infoBullReaction[2000] = "It will activate the openMinded Safety Mode";
 
 	/*-----Create a table of 8 rows and 7 lines-----*/
 	gui->tableConfigPage = gtk_table_new(7, 8, TRUE);
@@ -469,6 +477,7 @@ void configPage(){
 	gui->checkButtonDebug = gtk_check_button_new_with_label("Debug mode");
 	gui->checkButtonDisableSSM = gtk_check_button_new_with_label("Disable Smart Safety Mode");
 	gui->checkButtonMission = gtk_check_button_new_with_label("Mission for learning process");
+    gui->checkButtonReaction = gtk_check_button_new_with_label("Enable openMinded Safety Mode");
 
 	/*-----create finish button-----*/
 	gui->buttonFinish = gtk_button_new_with_label("Finish");
@@ -495,6 +504,7 @@ void configPage(){
 	gtk_tooltips_set_tip (gui->tooltipsSaturation, gui->checkButtonSaturation,infoBullSaturation, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsSaturation, gui->checkButtonSaturation,infoBullSaturation, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsMission, gui->checkButtonMission,infoBullMission, NULL);
+    gtk_tooltips_set_tip (gui->tooltipsReaction, gui->checkButtonReaction, infoBullReaction, NULL);
 
 	/*-----create smart fox image-----*/
 	gui->pixbuf = gdk_pixbuf_new_from_file_at_size("logo_OM.png",40,40,NULL);
@@ -516,6 +526,7 @@ void configPage(){
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonDebug);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonDisableSSM);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonMission);
+    gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonReaction);
 
 	/*-----add finish button to haligh-----*/
 	gtk_container_add(GTK_CONTAINER(gui->halignButtonFinish), gui->buttonFinish);

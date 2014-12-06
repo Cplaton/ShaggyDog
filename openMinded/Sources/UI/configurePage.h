@@ -6,6 +6,7 @@
 #include "debugPage.h"
 #include "Navdata/navdata_analyse.h"
 #include "UserApp/mission.h"
+#include "UserApp/reaction.h"
 
 void configPage();
 extern int missionModeOn;

@@ -27,7 +27,7 @@
 #define RIGHT_WALL 4
 #define LEFT_WALL  5
 
-#define Mode_Reaction_Active 1
+int enable_openMinded_safety_mode = 0;
 
 static vp_os_mutex_t class_mutex;
 static vp_os_mutex_t reaction_mutex;
@@ -45,7 +45,7 @@ DEFINE_THREAD_ROUTINE(reaction, data) {
 
 		}
 		*/
-		if (Mode_Reaction_Active == 1)
+		if (enable_openMinded_safety_mode == 1)
 			check_situation();	
 	}
 
