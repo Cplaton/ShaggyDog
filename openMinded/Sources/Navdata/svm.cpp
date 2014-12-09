@@ -569,7 +569,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		{
 			counter = min(l,1000);
 			if(shrinking) do_shrinking();
-			info(".");
+			// info(".");
 		}
 
 		int i,j;
@@ -579,7 +579,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			reconstruct_gradient();
 			// reset active set size and check
 			active_size = l;
-			info("*");
+			// info("*");
 			if(select_working_set(i,j)!=0)
 				break;
 			else
@@ -735,7 +735,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			// reconstruct the whole gradient to calculate objective value
 			reconstruct_gradient();
 			active_size = l;
-			info("*");
+			// info("*");
 		}
 		fprintf(stderr,"\nWARNING: reaching max number of iterations\n");
 	}
@@ -944,7 +944,7 @@ void Solver::do_shrinking()
 		unshrink = true;
 		reconstruct_gradient();
 		active_size = l;
-		info("*");
+		// info("*");
 	}
 
 	for(i=0;i<active_size;i++)
