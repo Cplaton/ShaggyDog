@@ -168,7 +168,7 @@ void chooseMission(){
     
     
     
-    for(i=0; i<5; i++){
+    for(i=0; i<6; i++){
     
         /* Ajout d'un nouvel element dans le magasin. */
         gtk_list_store_append (p_model, & iter);

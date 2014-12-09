@@ -109,9 +109,9 @@ void avoid_left_wall () {
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = roll(0.2, 10000000);
+				command = roll(0.2, 1000000);
 				if (command != 0) {
-					etat = LAND_DRONE;
+					etat = HOVER_DRONE;
 				}
 				break;
 
@@ -150,9 +150,9 @@ void avoid_back_wall () {
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = pitch(-0.2, 10000000);
+				command = pitch(-0.2, 1000000);
 				if (command != 0) {
-					etat = LAND_DRONE;
+					etat = HOVER_DRONE;
 				}
 				break;
 
@@ -191,7 +191,7 @@ void avoid_right_wall () {
 				vp_os_mutex_lock(&class_mutex);
                 class_id=0;
                 vp_os_mutex_unlock(&class_mutex);
-				command = roll(-0.2, 10000000);
+				command = roll(-0.2, 1000000);
 				if (command != 0) {
 					etat = LAND_DRONE;
 				}
@@ -204,7 +204,7 @@ void avoid_right_wall () {
                 vp_os_mutex_unlock(&class_mutex);
 				fin = hover(2000000);
 				if (fin == 1)
-					etat = END_REACTION;
+					etat = HOVER_DRONE;
 				break;
 			
 			case END_REACTION :
