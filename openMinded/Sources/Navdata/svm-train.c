@@ -52,9 +52,7 @@ double do_cross_validation()
 	double sumv = 0, sumy = 0, sumvv = 0, sumyy = 0, sumvy = 0;
 	double *target = Malloc(double,prob.l);
     double accuracy = 0;
-    printf("svm.cpp, je t'appelle!\n");
     svm_cross_validation(&prob,&param,nr_fold,target);
-    printf("svm.cpp, je te quitte!\n");
 	if(param.svm_type == EPSILON_SVR ||
 	   param.svm_type == NU_SVR)
 	{
@@ -126,7 +124,6 @@ float * compute_parameters(char* training_set, int folds){
 	float gamma_aux = 0.0;
     double aux, accuracy;
     float * param_aux=malloc(16);
-    printf("dans compute, nb_indiv=%d",nb_indiv);
     aux = 0.0;
     C=1;
         gamma=nb_indiv/6;
