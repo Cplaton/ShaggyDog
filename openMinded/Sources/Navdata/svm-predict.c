@@ -46,7 +46,7 @@ predict_results predict(specimen * buffer)
 //	printf("apres realloc\n");
 	for(l=0;l<10;l++) // pour parcourir le tableau de structure
 	{
-		for(i=0;i<9;i++) // pour parcourir la structure
+		for(i=0;i<10;i++) // pour parcourir la structure
 		{
 			x[i].index = i+1;
 			switch(i)
