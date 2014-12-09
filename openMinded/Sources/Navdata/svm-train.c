@@ -138,6 +138,7 @@ float * compute_parameters(char* training_set, int folds){
                 C_aux=C;
             }
             gamma++;
+			printf("\r%f %%",gamma/(nb_indiv/3)*100);
         }
     printf("\n");
     printf("final accuracy = %lf%%, C=%f, gamma=%f\n",aux,C_aux,gamma_aux);
