@@ -220,9 +220,9 @@ void check_selected_mission_id(GtkWidget *widget, gpointer data){
     
 
     
-         // delete the dialog
+        // delete the dialog
     
-    
+        options.mission = 1;
         // start the mission
         start_flight();
     }    
@@ -301,10 +301,10 @@ void check_button_callback(GtkWidget *widget, gpointer data){
             
             // Ask the user to select it's mission
             chooseMission();
+            
 		}
 	}else{
-		options.mission = 0;
-        options.disableSSM = 1;
+	    options.mission = 0;
         start_flight();
 	}
 
@@ -332,7 +332,7 @@ void start_flight(){
     
     gdk_color_parse ("red", &(gui->RED_COLOR));
     printf("----Start flight function\n");
-    options.mission = 1;
+//    options.mission = 1;
 
 
 

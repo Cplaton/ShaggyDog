@@ -471,8 +471,9 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				indiv.az = norm_indiv(az,9);
 
 				//current individu storage in a 10 indiv array in order to used the recognition on it
+                vp_os_mutex_lock(&class_mutex);
 				specimen_buffer[buff_counter]= indiv;
-
+                vp_os_mutex_unlock(&class_mutex);
 				//if 10 individu are store, we launch the recognition process
 				if(buff_counter == 9){
 					buff_counter = 0;
