@@ -43,16 +43,27 @@ PGresult * res_bd_req;		// DB results informations
 PGconn *conn_bd;		// DB connection informations
 
 // variables necessaires pour normaliser en live
-float min_alt, max_alt;
-float min_pitch, max_pitch;
-float min_roll, max_roll;
-float min_vyaw, max_vyaw;
-float min_vx, max_vx;
-float min_vy, max_vy;
-float min_vz, max_vz;
-float min_ax, max_ax;
-float min_ay, max_ay;
-float min_az, max_az;
+float min_alt = 0.0;
+float max_alt = 10.0;
+float min_pitch = 0.0;
+float max_pitch = 5.6;
+float min_roll = -6.0;
+float max_roll = 6.0;
+float min_vyaw = -160;
+float max_vyaw = 300;
+float min_vx = -0.3;
+float max_vx = 0.6;
+float min_vy = -6.0;
+float max_vy = 6.0;
+float min_vz = -6.0;
+float max_vz = 6.0;
+float min_ax = -0.03;
+float max_ax = 0.007;
+float min_ay = -0.000378;
+float max_ay = 0.0077;
+float min_az = -0.03;
+float max_az = 0.015;
+
 
 void exit_nicely()
 {
@@ -127,8 +138,10 @@ int connect_to_database()
 	}
 	PQclear(res_bd_req);
 	
-	
-	// First get current fields limits 
+/*
+    // First get current fields limits
+    printf("min pitch:\t%f", min_pitch);
+    printf("min pitch:\t%f", max_pitch);
 	min_alt = get_min("altitude", "BasicSensors");
 	max_alt = get_max("altitude", "BasicSensors");
 	min_pitch = get_min("pitch", "BasicSensors");
@@ -149,7 +162,28 @@ int connect_to_database()
 	max_ay = get_max("ay", "BasicSensors");
 	min_az = get_min("az", "BasicSensors");
 	max_az = get_max("az", "BasicSensors");
-	
+    
+    
+    
+    printf("min pitch:\t%f", min_pitch);
+    printf("max pitch:\t%f", max_pitch);
+    printf("min roll:\t%f", min_roll);
+    printf("max roll:\t%f", max_roll);
+    printf("min vyaw:\t%f", min_vyaw);
+    printf("max vyaw:\t%f", max_vyaw);
+    printf("min vx:\t%f", min_vx);
+    printf("max vx:\t%f", max_vx);
+    printf("min vy:\t%f", min_vy);
+    printf("max vy:\t%f", max_vy);
+    printf("min vz:\t%f", min_vz);
+    printf("max vz:\t%f", max_vz);
+    printf("min ax:\t%f", min_ax);
+    printf("max ax:\t%f", max_ax);
+    printf("min ay:\t%f", min_ay);
+    printf("max ay:\t%f", max_ay);
+    printf("min az:\t%f", min_az);
+    printf("max az:\t%f", max_az);
+*/	
 	
 	// Finally return	
 	return 0;
@@ -344,7 +378,7 @@ struct augmented_navdata * get_normed_values_from_db(int number, int flight_id, 
 	// Declarations 
 	struct augmented_navdata * data;
 	int i;
-	
+	/*
 	// First get current fields limits 
 	min_alt = get_min("altitude", "BasicSensors");
 	max_alt = get_max("altitude", "BasicSensors");
@@ -366,6 +400,7 @@ struct augmented_navdata * get_normed_values_from_db(int number, int flight_id, 
 	max_ay = get_max("ay", "BasicSensors");
 	min_az = get_min("az", "BasicSensors");
 	max_az = get_max("az", "BasicSensors");
+	*/
 
 	// Then get DB values 
 	data = get_values_from_db(number, flight_id, nb_res);
@@ -392,7 +427,7 @@ struct augmented_navdata * get_normed_values_from_db(int number, int flight_id, 
 
 int write_data_to_csv(char * csvFileName, int number, int flight_id, int should_norm)
 {
-    /*
+ /*   
 	// Declarations 
 	struct augmented_navdata * data;
 	int nb_res;

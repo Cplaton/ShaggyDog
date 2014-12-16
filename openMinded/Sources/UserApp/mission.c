@@ -220,18 +220,7 @@ void mission_SFS_2() {
                 vp_os_mutex_unlock(&class_mutex);
 				command = pitch(-0.2, 1000000);
 				if (command != 0) {
-					etat = GAS_UP;
-				}
-				break;
-
-			case GAS_UP :
-
-				vp_os_mutex_lock(&class_mutex);
-                class_id=0;
-                vp_os_mutex_unlock(&class_mutex);
-				command = gas(0.4,2000000);
-				if (command != 0) {
-					etat = HOVER_DRONE;
+					etat = LEFT_YAW;
 				}
 				break;
 
@@ -242,7 +231,7 @@ void mission_SFS_2() {
                 vp_os_mutex_unlock(&class_mutex);
 				fin = hover(5000000);
 				if (fin == 1)
-					etat = LEFT_YAW;
+					etat = RIGHT_YAW;
 				break;
 
 			case LEFT_YAW:
@@ -252,18 +241,7 @@ void mission_SFS_2() {
                 vp_os_mutex_unlock(&class_mutex);
 				command = yaw(-1.0,2000000);
 				if (command != 0) {
-					etat = GAS_DOWN;
-				}
-				break;
-
-			case GAS_DOWN:
-
-				vp_os_mutex_lock(&class_mutex);
-                class_id=0;
-                vp_os_mutex_unlock(&class_mutex);
-				command = gas(-0.4,2000000);
-				if (command != 0) {
-					etat = RIGHT_YAW;
+					etat = HOVER_DRONE;
 				}
 				break;
 
