@@ -75,7 +75,6 @@ void extract_key_event(struct input_event * ev);
 #define LANDING		KEY_L
 #define KILL		KEY_K
 #define CLASS_WALL  KEY_N
-#define MODE_REACTION KEY_R
 
 
 #define LOW_VELOCITY	0.3

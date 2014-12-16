@@ -236,18 +236,9 @@ void extract_key_event(struct input_event * ev) {
         class_id=0;
         vp_os_mutex_unlock(&class_mutex);}
       break;
-    case MODE_REACTION :
-      if (ev->value==1) {
-         hovering();
-         vp_os_mutex_lock(&reaction_mutex);
-         modeReaction = 1;
-         vp_os_mutex_unlock(&reaction_mutex);
-      }
-    default : ;
-      
-      
-  }
 
+    default : ;   
+  }
 }
 
 /* to make the drone hovers over the floor*/

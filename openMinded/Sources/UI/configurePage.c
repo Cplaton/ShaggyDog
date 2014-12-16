@@ -37,16 +37,16 @@ int isOpen = 0;
 int missionModeOn = 0;
 
 /**
- * @var     options
+ * @var     opt
  * @brief   informations that are sent to the rest of the program to indicate what have been selected via the gui.
  **/
-options_t options;
+options_t opt;
 
 /**
  * @var     selectMissionDialog
  * @brief   informations that are sent to the rest of the program to indicate what have been selected via the gui.
  **/
-GtkComboBox *selectMissionDialog;
+GtkWidget *selectMissionDialog;
 
 /**
  * @fn      check_selected_mission_id
@@ -55,6 +55,7 @@ GtkComboBox *selectMissionDialog;
  * @brief   manage the
  */
 void check_selected_mission_id(GtkWidget *widget, gpointer data);
+void close_mission_popup(GtkWidget *widget, gpointer data);
 
 GtkWidget *comboMission;
 GList *listMission = NULL;
@@ -196,9 +197,20 @@ void chooseMission(){
     gtk_signal_connect_object(GTK_OBJECT(Bouton), "clicked", (GtkSignalFunc)check_selected_mission_id, NULL);
     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(selectMissionDialog)->action_area), Bouton , TRUE, TRUE, 0);
     
+    gtk_signal_connect_object(GTK_OBJECT(selectMissionDialog), "closed", (GtkSignalFunc)close_mission_popup, NULL);
+
     gtk_widget_show(Bouton);
 
 }
+
+
+
+void close_mission_popup(GtkWidget *widget, gpointer data){
+
+    printf("He alors, choisit une mession mes couilles!\n");
+}
+
+
 
 /**
  * @fn      check_selected_mission_id
@@ -210,7 +222,7 @@ void check_selected_mission_id(GtkWidget *widget, gpointer data){
     printf("----Check selected mission id\n");
     
     // get the mission number
-    combo_data_st index =  get_active_data(comboMission);
+    combo_data_st index =  get_active_data((GtkComboBox *)comboMission);
     printf("----mission id %s\n", index.p_text);
     if (index.p_text != NULL) {
         select_mission = index.p_text;
@@ -222,7 +234,7 @@ void check_selected_mission_id(GtkWidget *widget, gpointer data){
     
         // delete the dialog
     
-        options.mission = 1;
+        opt.mission = 1;
         // start the mission
         start_flight();
     }    
@@ -235,35 +247,38 @@ void check_selected_mission_id(GtkWidget *widget, gpointer data){
  * @brief   manage the click on the finish button of the main page
  */
 void check_button_callback(GtkWidget *widget, gpointer data){
+
+    opt.disableSSM = 1;
+
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSaturation))==TRUE) {
-		options.saturation = 1;
+		opt.saturation = 1;
 	}else{
-		options.saturation = 0;
+		opt.saturation = 0;
 	}
     
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSys))==TRUE) {
-		options.sysUrgenceExtreme = 1;
+		opt.sysUrgenceExtreme = 1;
 	}else{
-		options.sysUrgenceExtreme = 0;
+		opt.sysUrgenceExtreme = 0;
 	}
     
     // Emergency landing button management
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSePoser))==TRUE) {
-		options.sePoser = 1;
+		opt.sePoser = 1;
 	}else{
-		options.sePoser = 0;
+		opt.sePoser = 0;
 	}
     
     //
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonSMLimited))==TRUE) {
-		options.SMLimited = 1;
+		opt.SMLimited = 1;
 	}else{
-		options.SMLimited = 0;
+		opt.SMLimited = 0;
 	}
     
     // Debug Mode management
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonDebug))==TRUE) {
-		options.debug = 1;
+		opt.debug = 1;
 		debugModeOn = 1;
 		if(isOpen != 1) {
 			gui->frameNoteBook = gtk_frame_new (NULL);
@@ -275,20 +290,12 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 			isOpen = 1;
 		}
 	}else{
-		options.debug = 0;
-	}
-    
-    // Disable Smartfox Safety Mode management
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonDisableSSM))==TRUE) {
-		options.disableSSM = 1;
-	}else{
-		options.disableSSM = 0;
+		opt.debug = 0;
 	}
     
     // Mission checkbox management
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonMission))==TRUE) {
-		options.debug = 1;
-		options.disableSSM = 1;
+		opt.debug = 1;
         debugModeOn = 1;
 		if(isOpen != 1) {
 			gui->frameNoteBook = gtk_frame_new (NULL);
@@ -304,7 +311,7 @@ void check_button_callback(GtkWidget *widget, gpointer data){
             
 		}
 	}else{
-	    options.mission = 0;
+	    opt.mission = 0;
         start_flight();
 	}
 
@@ -332,7 +339,7 @@ void start_flight(){
     
     gdk_color_parse ("red", &(gui->RED_COLOR));
     printf("----Start flight function\n");
-//    options.mission = 1;
+//    opt.mission = 1;
 
 
 
@@ -340,7 +347,7 @@ void start_flight(){
     gtk_notebook_next_page(GTK_NOTEBOOK(gui->notebook));
     
     /*------write in the option structure-----*/
-    writeOpt(&options);
+    writeOpt(&opt);
     
     /*-----begin the display of alerts-----*/
     while (stop==0) {
@@ -454,7 +461,6 @@ void configPage(){
 	char infoBullSePoser[2000] = "The drone will land if an error is detected (if not activated, first try an automatic emergency procedure)";
 	char infoBullSMLimited[2000] = "Emergency procedures are not activated for minor faults (ie: top obstacle and bottom obstacle)";
 	char infoBullDebug[2000] = "Enable the user to see all informations dynamically on diagnosis and safety softwares (in the debug window) and create log files that register all information during execution";
-	char infoBullDisableSSM[2000] = "The application only detects error, the drone will not try to land or to get off detected obsatcles.";
 	char infoBullSys[2000] = "It will send a landing order if drone state is too dangerous,and any procedure could protect the drone. It may not work for high speeds.";
 	char infoBullMission[2000] = "It will start a mission for filling the database which it is used for the learning process";
     char infoBullReaction[2000] = "It will activate the openMinded Safety Mode";
@@ -475,7 +481,6 @@ void configPage(){
 	gui->checkButtonSePoser = gtk_check_button_new_with_label("Landing");
 	gui->checkButtonSMLimited = gtk_check_button_new_with_label("Limited Smart Safety Mode");
 	gui->checkButtonDebug = gtk_check_button_new_with_label("Debug mode");
-	gui->checkButtonDisableSSM = gtk_check_button_new_with_label("Disable Smart Safety Mode");
 	gui->checkButtonMission = gtk_check_button_new_with_label("Mission for learning process");
     gui->checkButtonReaction = gtk_check_button_new_with_label("Enable openMinded Safety Mode");
 
@@ -491,7 +496,6 @@ void configPage(){
 	gui->tooltipsSePoser = gtk_tooltips_new ();
 	gui->tooltipsSMLimited = gtk_tooltips_new ();
 	gui->tooltipsDebug = gtk_tooltips_new ();
-	gui->tooltipsDisableSSM = gtk_tooltips_new ();
 	gui->tooltipsSys = gtk_tooltips_new ();
 	gui->tooltipsMission = gtk_tooltips_new ();
 
@@ -500,7 +504,6 @@ void configPage(){
 	gtk_tooltips_set_tip (gui->tooltipsSMLimited, gui->checkButtonSMLimited,infoBullSMLimited, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsDebug, gui->checkButtonDebug,infoBullDebug, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsSys, gui->checkButtonSys,infoBullSys, NULL);
-	gtk_tooltips_set_tip (gui->tooltipsDisableSSM, gui->checkButtonDisableSSM,infoBullDisableSSM, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsSaturation, gui->checkButtonSaturation,infoBullSaturation, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsSaturation, gui->checkButtonSaturation,infoBullSaturation, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsMission, gui->checkButtonMission,infoBullMission, NULL);
@@ -524,7 +527,6 @@ void configPage(){
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonSePoser);
 	//gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonSMLimited);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonDebug);
-	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonDisableSSM);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonMission);
     gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonReaction);
 
