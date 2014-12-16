@@ -2440,6 +2440,7 @@ void svm_cross_validation(const svm_problem *prob, const svm_parameter *param, i
 		   (param->svm_type == C_SVC || param->svm_type == NU_SVC))
 		{
 			double *prob_estimates=Malloc(double,svm_get_nr_class(submodel));
+
 			for(j=begin;j<end;j++)
 				target[perm[j]] = svm_predict_probability(submodel,prob->x[perm[j]],prob_estimates);
 			free(prob_estimates);
@@ -2447,6 +2448,7 @@ void svm_cross_validation(const svm_problem *prob, const svm_parameter *param, i
 		else
 			for(j=begin;j<end;j++)
 				target[perm[j]] = svm_predict(submodel,prob->x[perm[j]]);
+    
 		svm_free_and_destroy_model(&submodel);
 		free(subprob.x);
 		free(subprob.y);
@@ -2578,6 +2580,10 @@ double svm_predict(const svm_model *model, const svm_node *x)
 {
 	int nr_class = model->nr_class;
 	double *dec_values;
+/*    for(int i = 0;i<10;i++){
+        printf("%d:%lf ",x[i].index,x[i].value);
+    }
+    printf("\n");*/
 	if(model->param.svm_type == ONE_CLASS ||
 	   model->param.svm_type == EPSILON_SVR ||
 	   model->param.svm_type == NU_SVR)
@@ -2585,8 +2591,12 @@ double svm_predict(const svm_model *model, const svm_node *x)
 	else
     //    printf("dans svm predict\n");
 		dec_values = Malloc(double, nr_class*(nr_class-1)/2);
+   /* for(int i=0;i<nr_class*(nr_class-1)/2;i++){
+        printf("dec_values: %lf\n",dec_values[i]);
+    }*/
 	double pred_result = svm_predict_values(model, x, dec_values);
 	free(dec_values);
+    /*printf("Je trouve: %lf\n",pred_result);*/
 	return pred_result;
 }
 
