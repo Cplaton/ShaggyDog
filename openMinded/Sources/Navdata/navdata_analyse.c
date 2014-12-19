@@ -469,6 +469,25 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				indiv.ay = norm_indiv(ay,8);
 				indiv.az = norm_indiv(az,9);
 				
+				
+
+				//current individu storage in a 10 indiv array in order to used the recognition on it
+                vp_os_mutex_lock(&class_mutex);
+				specimen_buffer[buff_counter]= indiv;
+                vp_os_mutex_unlock(&class_mutex);
+				//if 10 individu are store, we launch the recognition process
+				if(buff_counter == 9){
+					buff_counter = 0;
+					
+					vp_os_mutex_lock(&class_mutex);
+					predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
+					class_id = res_pred.predict_class;
+					vp_os_mutex_unlock(&class_mutex);
+					
+				}else{
+					buff_counter++;
+				}
+				
 				//write data in the log in case of debug state
 				if(options.debug!=0){
 					fprintf(logSFM,"%d 1:%f 2:%f 3:%f 4:%f 5:%f 6:%f 7:%f 8:%f 9:%f\n",
@@ -497,23 +516,6 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 					new_data(fres,time,residues.r_roll,residues.r_pitch,residues.r_Vyaw,residues.r_Vx,residues.r_Vy,residues.r_Vz);
 					*/
 				}	
-
-				//current individu storage in a 10 indiv array in order to used the recognition on it
-                vp_os_mutex_lock(&class_mutex);
-				specimen_buffer[buff_counter]= indiv;
-                vp_os_mutex_unlock(&class_mutex);
-				//if 10 individu are store, we launch the recognition process
-				if(buff_counter == 9){
-					buff_counter = 0;
-					
-					vp_os_mutex_lock(&class_mutex);
-					predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
-					class_id = res_pred.predict_class;
-					vp_os_mutex_unlock(&class_mutex);
-					
-				}else{
-					buff_counter++;
-				}
 			}
 		}
 
