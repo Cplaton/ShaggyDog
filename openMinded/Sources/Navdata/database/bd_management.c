@@ -453,7 +453,7 @@ int write_data_to_csv(char * csvFileName, int number, int flight_id, int should_
 	// Then write each values into the CSV file
 	for(i=0; i<nb_res; i++)
 	{
-		new_data_csv(csv, data[i].alt, data[i].pitch, data[i].roll, data[i].vyaw, data[i].vx, data[i].vy, data[i].vy, data[i].vz, data[i].ax, data[i].ay, data[i].az, data[i].class_id);
+		new_data_csv(csv, data[i].alt, data[i].pitch, data[i].roll, data[i].vyaw, data[i].vx, data[i].vy, data[i].vz, data[i].ax, data[i].ay, data[i].az, data[i].class_id);
 	}
 
 	// Finally, close the file

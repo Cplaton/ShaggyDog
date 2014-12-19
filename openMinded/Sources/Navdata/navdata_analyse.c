@@ -433,7 +433,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			az = filtered_drone_output.Vz ;
 		}
 		//alt,pitch,roll,Vyaw,Velocity calculation
-		if(counter<9){
+		if(counter<=9){
 			av_alt += (float32_t)(nd->altitude)/10000 ;
 			av_pitch += filtered_drone_output.pitch/10 ;
 			av_roll += filtered_drone_output.roll/10 ;
@@ -443,7 +443,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			av_Vz += filtered_drone_output.Vz/10 ;
 			counter++;
 		}
-		if(counter==9){
+		if(counter==10){
 		    //acceleration calculation
 			ax = (filtered_drone_output.Vx - ax)/50 ;
 			ay = (filtered_drone_output.Vy - ay)/50 ;
@@ -570,7 +570,7 @@ inline C_RESULT navdata_analyse_release( void )
          close_navdata_file(fr);
          close_navdata_file(fm);
          close_navdata_file(fc);
-        close_navdata_file(ff);
+         close_navdata_file(ff);
          close_navdata_file(fres);
          closeLogFile(logSFM);
     }

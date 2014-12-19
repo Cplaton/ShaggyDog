@@ -84,24 +84,24 @@ FILE * open_online_file(char * name) {
     return fd;
 }
 
-void new_data_learning(FILE * fd, int classe, float roll, float pitch, float yaw, float vx, float vy, float vz, float ax, float ay, float az) {
+void new_data_learning(FILE * fd, int classe, float pitch, float roll, float yaw, float vx, float vy, float vz, float ax, float ay, float az) {
 
-    fprintf(fd,"%d 1:%f 2:%f 3:%f 4:%f 5:%f 6:%f 7:%f 8:%f 9:%f \n", classe, roll,pitch,yaw,vx,vy,vz,ax,ay,az);
+    fprintf(fd,"%d 1:%f 2:%f 3:%f 4:%f 5:%f 6:%f 7:%f 8:%f 9:%f \n", classe, pitch,roll,yaw,vx,vy,vz,ax,ay,az);
 }
 
-void new_data_csv(FILE * fd, float alt, float roll, float pitch, float yaw, float vx, float vy, float vz, float ax, float ay, float az) {
+void new_data_csv(FILE * fd, float alt, float pitch, float roll, float yaw, float vx, float vy, float vz, float ax, float ay, float az) {
 
-    fprintf(fd,"%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",alt,roll,pitch,yaw,vx,vy,vz,ax,ay,az);
+    fprintf(fd,"%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",alt,pitch,roll,yaw,vx,vy,vz,ax,ay,az);
 }
 
-void new_data_online(FILE * fd, float roll, float pitch, float yaw, float vx, float vy, float vz, float ax, float ay, float az) {
+void new_data_online(FILE * fd, float pitch, float roll, float yaw, float vx, float vy, float vz, float ax, float ay, float az) {
 
-    fprintf(fd,"%f,%f,%f,%f,%f,%f,%f,%f,%f\n",roll,pitch,yaw,vx,vy,vz,ax,ay,az);
+    fprintf(fd,"%f,%f,%f,%f,%f,%f,%f,%f,%f\n",pitch,roll,yaw,vx,vy,vz,ax,ay,az);
 }
 
-void new_data(FILE * fd, uint32_t timestamp, float roll, float pitch, float yaw, float vx, float vy, float vz) {
+void new_data(FILE * fd, uint32_t timestamp, float pitch, float roll, float yaw, float vx, float vy, float vz) {
 	
-    fprintf(fd,"%u %f %f %f %f %f %f;\n",timestamp/1000,roll,pitch,yaw,vx,vy,vz);
+    fprintf(fd,"%u %f %f %f %f %f %f;\n",timestamp/1000,pitch,roll,yaw,vx,vy,vz);
 }
 
 
