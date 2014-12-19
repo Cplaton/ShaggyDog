@@ -72,6 +72,7 @@ void mission_SFS_1 () {
 				takeoff();
 				usleep(5000000);
 				vp_os_mutex_lock(&class_mutex);
+                                printf("Changement d'etat\n");
    				class_id=1;
   				vp_os_mutex_unlock(&class_mutex);
 				usleep(5000000);
