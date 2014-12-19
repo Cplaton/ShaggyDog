@@ -313,7 +313,7 @@ alert_t residueAnalysis(Residue_t * residue){
 	}
 
 	if(options.debug!=0){
-		fprintf(logSFM,"[residue Analysis] R:%d, P:%d, Y:%d, Vx:%d, Vy:%d, Vz:%d\n",alarm[0],alarm[1],alarm[2],alarm[3],alarm[4],alarm[5]);//writes the value of the residue (P,N,Z) in the log file
+		//fprintf(logSFM,"[residue Analysis] R:%d, P:%d, Y:%d, Vx:%d, Vy:%d, Vz:%d\n",alarm[0],alarm[1],alarm[2],alarm[3],alarm[4],alarm[5]);//writes the value of the residue (P,N,Z) in the log file
 	}
 	return result;
 }
@@ -437,7 +437,7 @@ fault_t diagnosis (unsigned char reset){
 	}
 	currentFault=signatureAnalysis(detected);
 	if(options.debug != 0){
-		fprintf(logSFM,"CurrentFault : %d\n",currentFault);
+		//fprintf(logSFM,"CurrentFault : %d\n",currentFault);
 	}
 	return currentFault;
 }

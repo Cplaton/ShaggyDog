@@ -457,7 +457,6 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				vp_os_mutex_unlock(&class_mutex);
 				insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az,class_id_aux);
 			}else{
-
 				//data normalization
                 specimen indiv;
 				indiv.pitch = norm_indiv(av_pitch,1);
@@ -469,6 +468,35 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				indiv.ax = norm_indiv(ax,7);
 				indiv.ay = norm_indiv(ay,8);
 				indiv.az = norm_indiv(az,9);
+				
+				//write data in the log in case of debug state
+				if(options.debug!=0){
+					fprintf(logSFM,"%d 1:%f 2:%f 3:%f 4:%f 5:%f 6:%f 7:%f 8:%f 9:%f\n",
+                    class_id,
+					indiv.pitch,
+					indiv.roll,
+					indiv.vyaw,
+					indiv.vx,
+					indiv.vy,
+					indiv.vz,
+					indiv.ax,
+					indiv.ay,
+					indiv.az);
+					
+					/*
+					new_data(fm, time, model_output.roll*1000, model_output.pitch*1000,
+					model_output.Vyaw*1000,model_output.Vx*1000,model_output.Vy*1000,
+					model_output.Vz *1000);
+					new_data(fr, nt->time , nd->phi/1000, nd->theta/1000, nd->psi/1000, nd->vx/1000,nd->vy/1000,nd->altitude);
+					new_data(fc, time, selectedNavdata.roll*1000, selectedNavdata.pitch*1000,
+							   selectedNavdata.Vyaw*1000, selectedNavdata.Vx*1000,
+							   selectedNavdata.Vy*1000, selectedNavdata.Vz*1000);
+					new_data(ff, time, filtered_drone_output.roll*1000, filtered_drone_output.pitch*1000,
+							   filtered_drone_output.Vyaw*1000, filtered_drone_output.Vx*1000,
+							   filtered_drone_output.Vy*1000, filtered_drone_output.Vz*1000);
+					new_data(fres,time,residues.r_roll,residues.r_pitch,residues.r_Vyaw,residues.r_Vx,residues.r_Vy,residues.r_Vz);
+					*/
+				}	
 
 				//current individu storage in a 10 indiv array in order to used the recognition on it
                 vp_os_mutex_lock(&class_mutex);
@@ -489,30 +517,8 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			}
 		}
 
-        //write data in the log in case of debug state
-		if(options.debug!=0){
-            fprintf(logSFM,"sign: %d\n",fault_msg);
-            fprintf(logSFM,"drone state: alt:%f pitch:%f roll:%f Vyaw:%f Vx:%f Vy:%f Vz:%f \n time:%u\n\n",
-                    (float32_t)(nd->altitude)/1000,
-                    filtered_drone_output.pitch,
-                    filtered_drone_output.roll,
-                    filtered_drone_output.Vyaw,
-                    filtered_drone_output.Vx,
-                    filtered_drone_output.Vy,
-                    filtered_drone_output.Vz,
-                    time/1000);
-			new_data(fm, time, model_output.roll*1000, model_output.pitch*1000,
-                       model_output.Vyaw*1000,model_output.Vx*1000,model_output.Vy*1000,
-                       model_output.Vz *1000);
-			new_data(fr, nt->time , nd->phi/1000, nd->theta/1000, nd->psi/1000, nd->vx/1000,nd->vy/1000,nd->altitude);
-			new_data(fc, time, selectedNavdata.roll*1000, selectedNavdata.pitch*1000,
-                       selectedNavdata.Vyaw*1000, selectedNavdata.Vx*1000,
-                       selectedNavdata.Vy*1000, selectedNavdata.Vz*1000);
-			new_data(ff, time, filtered_drone_output.roll*1000, filtered_drone_output.pitch*1000,
-                       filtered_drone_output.Vyaw*1000, filtered_drone_output.Vx*1000,
-                       filtered_drone_output.Vy*1000, filtered_drone_output.Vz*1000);
-			new_data(fres,time,residues.r_roll,residues.r_pitch,residues.r_Vyaw,residues.r_Vx,residues.r_Vy,residues.r_Vz);
-		}
+        
+		
 		recordNumber++;
 		time+=5000;
     }else{
