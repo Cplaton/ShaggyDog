@@ -73,7 +73,7 @@ GENERIC_INCLUDES:=$(addprefix -I,$(GENERIC_INCLUDES))
 
 # Included libraries management
 GENERIC_LIB_PATHS=-L$(GENERIC_TARGET_BINARIES_DIR) -L$(PG_LIB) -L$(DB_LIB_DIR) -lopenMinded_db 
-GENERIC_LIBS=-fprofile-lpc_arcs -ftest-coverage -lgcov -lpc_ardrone -lgtk-x11-2.0 -lrt -lpq -lstdc++
+GENERIC_LIBS=-fprofile-lpc_arcs -ftest-coverage -lgcov -lpc_ardrone -lgtk-x11-2.0 -lrt -lpq -lstdc++ -lm -g -O0
 
 SDK_FLAGS+="USE_APP=yes"
 SDK_FLAGS+="APP_ID=openMINDED"
