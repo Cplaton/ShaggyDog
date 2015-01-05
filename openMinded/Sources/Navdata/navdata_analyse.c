@@ -343,21 +343,12 @@ inline C_RESULT navdata_analyse_init( void * data )
     vp_os_mutex_init(&battery_mutex);
     vp_os_mutex_init(&wifi_mutex);
 
-//lecture du model naive bayes
-    if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-        nv_model=read_Model("naive_model");
-        while(nv_model==NULL){
-            nv_model=read_Model("naive_model");
-        }
-    }
+	
     if(mkdir("./DataModel", 0722) != 0)
     {
         perror("navdata_analyse_init");
     };
-    printf("Quoi? Oussama code comme Mare\n");
-    if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-        db_data = load_data(KNN_DATA_SET); //TODO: gérer l'erreur d'ouverture de fichier
-    }
+    
     return C_OK;
 }
 
@@ -394,6 +385,19 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
         refresh_command();
 
         if (!isInit){
+
+
+        	//lecture du model naive bayes
+   			if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+        		nv_model=read_Model("naive_model");
+        		while(nv_model==NULL){
+            		nv_model=read_Model("naive_model");
+        		}
+    		}	
+        	if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+     		   db_data = load_data(KNN_DATA_SET); //TODO: gérer l'erreur d'ouverture de fichier
+    		}
+
         	updateNavdata(&selectedNavdata, nd);
          	initModel(&selectedNavdata,(float32_t)(nd->altitude)/1000, nd->psi/1000);
         	initFilters(&selectedNavdata);
