@@ -354,9 +354,9 @@ inline C_RESULT navdata_analyse_init( void * data )
     {
         perror("navdata_analyse_init");
     };
-    
+    printf("Quoi? Oussama code comme Mare\n");
     if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-        db_data = load_data(KNN_DATA_SET);
+        db_data = load_data(KNN_DATA_SET); //TODO: gérer l'erreur d'ouverture de fichier
     }
     return C_OK;
 }
@@ -502,7 +502,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 indiv_knn * knn_neighbors;
                 
                 if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-// descripteurs d'un individu pour svm
+// descripters d'un individu pour svm
 				indiv.pitch = norm_indiv(av_pitch,1);
 				indiv.roll = norm_indiv(av_roll,2);
 				indiv.vyaw = norm_indiv(av_Vyaw,3);
