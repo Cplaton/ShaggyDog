@@ -33,8 +33,11 @@
 
 #define RECORD_TIME 15 //(en s)
 
-//(en s)
-#define RECORD_TIME 15
+#define NONE 0
+#define SVM 1
+#define KNN 2
+#define NAIVE 3
+#define ALL 4
 
 
 /********************************FILEs************************************/
@@ -311,6 +314,8 @@ int isInit = 0;
  **/
 int recordNumber = 0;
 
+int method_selected = NAIVE;
+
 /*************************FUNCTION DECLARATIONs********************************/
 
 /* according to the last navdata received, resfresh the drone state */
@@ -339,18 +344,21 @@ inline C_RESULT navdata_analyse_init( void * data )
     vp_os_mutex_init(&wifi_mutex);
 
 //lecture du model naive bayes
-    /*nv_model=read_Model("naive_model");
-    while(nv_model==NULL){
+    if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
         nv_model=read_Model("naive_model");
-    }*/
-
+        while(nv_model==NULL){
+            nv_model=read_Model("naive_model");
+        }
+    }
     if(mkdir("./DataModel", 0722) != 0)
     {
         perror("navdata_analyse_init");
     };
-
-    db_data = load_data(KNN_DATA_SET);
-
+    
+    
+    if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+        db_data = load_data(KNN_DATA_SET);
+    }
     return C_OK;
 }
 
@@ -485,25 +493,16 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                             norm_indiv(ay,8),
                             norm_indiv(az,9));
                     
-                    /*
-                     new_data(fm, time, model_output.roll*1000, model_output.pitch*1000,
-                     model_output.Vyaw*1000,model_output.Vx*1000,model_output.Vy*1000,
-                     model_output.Vz *1000);
-                     new_data(fr, nt->time , nd->phi/1000, nd->theta/1000, nd->psi/1000, nd->vx/1000,nd->vy/1000,nd->altitude);
-                     new_data(fc, time, selectedNavdata.roll*1000, selectedNavdata.pitch*1000,
-                     selectedNavdata.Vyaw*1000, selectedNavdata.Vx*1000,
-                     selectedNavdata.Vy*1000, selectedNavdata.Vz*1000);
-                     new_data(ff, time, filtered_drone_output.roll*1000, filtered_drone_output.pitch*1000,
-                     filtered_drone_output.Vyaw*1000, filtered_drone_output.Vx*1000,
-                     filtered_drone_output.Vy*1000, filtered_drone_output.Vz*1000);
-                     new_data(fres,time,residues.r_roll,residues.r_pitch,residues.r_Vyaw,residues.r_Vx,residues.r_Vy,residues.r_Vz);
-                     */
                 }
                 
 			}else{
-
-// descripters d'un individu pour svm
+                
                 specimen indiv;
+                sample naive_indiv;
+                indiv_knn knn_individu;
+                indiv_knn * knn_neighbors;
+                if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+// descripters d'un individu pour svm
 				indiv.pitch = norm_indiv(av_pitch,1);
 				indiv.roll = norm_indiv(av_roll,2);
 				indiv.vyaw = norm_indiv(av_Vyaw,3);
@@ -513,10 +512,10 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				indiv.ax = norm_indiv(ax,7);
 				indiv.ay = norm_indiv(ay,8);
 				indiv.az = norm_indiv(az,9);
+                }
 
-
+                if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
 // descripteurs d'un individu pour naive bayes
-/*                sample naive_indiv;
                 naive_indiv.classe=-1;
                 naive_indiv.feature[0]=av_pitch;
                 naive_indiv.feature[1]=av_roll;;
@@ -527,10 +526,10 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 naive_indiv.feature[6]=ax;
                 naive_indiv.feature[7]=ay;
                 naive_indiv.feature[8]=az;
-*/				
+                }
+
+                if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
 // descripteurs d'un individu pour knn				
-                indiv_knn knn_individu;
-                indiv_knn * knn_neighbors;
 				knn_individu.pitch = av_pitch;
 				knn_individu.roll = av_roll;
 				knn_individu.vyaw = av_Vyaw;
@@ -540,24 +539,38 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				knn_individu.ax = ax;
 				knn_individu.ay = ay;
 				knn_individu.az = az;
-
+                }
 
 				//current individu storage in a 10 indiv array in order to used the recognition on it
                 vp_os_mutex_lock(&class_mutex);
-    			//specimen_buffer[buff_counter]= indiv;
-				//specimen_naive_buffer[buff_counter]= naive_indiv;
+    			
+                if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+                    specimen_buffer[buff_counter]= indiv;
+                }
+
+                if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+                    specimen_naive_buffer[buff_counter]= naive_indiv;
+                }
                 vp_os_mutex_unlock(&class_mutex);
 				//if 10 individu are stored, we launch the recognition process
 				if(buff_counter == 9){
 					buff_counter = 0;
 				    	
 					vp_os_mutex_lock(&class_mutex);
-				    knn_neighbors = getNeighbors (db_data, knn_individu);
-				    class_id = getResponse(knn_neighbors);
-				   // naive_predict_mean(specimen_naive_buffer,nv_model);
-				    //predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
-					//class_id = res_pred.predict_class;
-					vp_os_mutex_unlock(&class_mutex);
+
+                    if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+				        knn_neighbors = getNeighbors (db_data, knn_individu);
+				        class_id = getResponse(knn_neighbors);
+                    }
+                    if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+				        naive_predict_mean(specimen_naive_buffer,nv_model);
+                    }
+
+                    if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+                        predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
+					    class_id = res_pred.predict_class;
+                    }
+                    vp_os_mutex_unlock(&class_mutex);
 				}else{
 					buff_counter++;
 				}
@@ -625,39 +638,64 @@ inline C_RESULT navdata_analyse_release( void )
     if(isStopped == 0){
 
         if( options.mission == 1 ){
-
-            KNNBase = open_learning_file("KNN_BaseApp");
+            
+            if(method_selected==KNN || method_selected==ALL){
+                KNNBase = open_learning_file("KNN_BaseApp");
+            }
             //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
-            LearningBase = open_learning_file("BaseApp");
-            specimen = get_normed_values_from_db(0,-1,&nb_specimen);
-            specimen_naive = get_values_from_db(0,-1,&nb_specimen);
-            tab_indiv = (sample **)vp_os_malloc(sizeof(sample)*nb_specimen);
+            if(method_selected==SVM || method_selected==ALL){
+                LearningBase = open_learning_file("BaseApp");
+                specimen = get_normed_values_from_db(0,-1,&nb_specimen);
+            }
 
+<<<<<<< HEAD
             fprintf(KNNBase, "%d\n", nb_specimen);
+=======
+            if(method_selected==NAIVE || method_selected==ALL){
+                specimen_naive = get_values_from_db(0,-1,&nb_specimen);
+                tab_indiv = (sample **)vp_os_malloc(sizeof(sample)*nb_specimen);
+            }
+>>>>>>> origin/csv
             //learning file filling
             for(i_db=0;i_db<nb_specimen;i_db++){
-                tab_indiv[i_db]=(sample *)vp_os_malloc(sizeof(sample));
-                tab_indiv[i_db]->classe=specimen_naive[i_db].class_id;
-                tab_indiv[i_db]->feature[0]=specimen_naive[i_db].pitch;
-                tab_indiv[i_db]->feature[1]=specimen_naive[i_db].roll;
-                tab_indiv[i_db]->feature[2]=specimen_naive[i_db].vyaw;
-                tab_indiv[i_db]->feature[3]=specimen_naive[i_db].vx;
-                tab_indiv[i_db]->feature[4]=specimen_naive[i_db].vy;
-                tab_indiv[i_db]->feature[5]=specimen_naive[i_db].vz;
-                tab_indiv[i_db]->feature[6]=specimen_naive[i_db].ax;
-                tab_indiv[i_db]->feature[7]=specimen_naive[i_db].ay;
-                tab_indiv[i_db]->feature[8]=specimen_naive[i_db].az;
 
-                new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].pitch,specimen[i_db].roll,specimen[i_db].vyaw,specimen[i_db].vx,specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
-                new_data_learning_KNN(KNNBase,specimen_naive[i_db].class_id,specimen_naive[i_db].pitch,specimen_naive[i_db].roll,specimen_naive[i_db].vyaw,specimen_naive[i_db].vx,specimen_naive[i_db].vy,specimen_naive[i_db].vz,specimen_naive[i_db].ax,specimen_naive[i_db].ay,specimen_naive[i_db].az);
+                if(method_selected==NAIVE || method_selected==ALL){
+                    tab_indiv[i_db]=(sample *)vp_os_malloc(sizeof(sample));
+                    tab_indiv[i_db]->classe=specimen_naive[i_db].class_id;
+                    tab_indiv[i_db]->feature[0]=specimen_naive[i_db].pitch;
+                    tab_indiv[i_db]->feature[1]=specimen_naive[i_db].roll;
+                    tab_indiv[i_db]->feature[2]=specimen_naive[i_db].vyaw;
+                    tab_indiv[i_db]->feature[3]=specimen_naive[i_db].vx;
+                    tab_indiv[i_db]->feature[4]=specimen_naive[i_db].vy;
+                    tab_indiv[i_db]->feature[5]=specimen_naive[i_db].vz;
+                    tab_indiv[i_db]->feature[6]=specimen_naive[i_db].ax;
+                    tab_indiv[i_db]->feature[7]=specimen_naive[i_db].ay;
+                    tab_indiv[i_db]->feature[8]=specimen_naive[i_db].az;
+                }
+
+                if(method_selected==SVM || method_selected==ALL){
+                    new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].pitch,specimen[i_db].roll,specimen[i_db].vyaw,specimen[i_db].vx,specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
+                }
+                if(method_selected==KNN || method_selected==ALL){
+                    new_data_learning_KNN(KNNBase,specimen_naive[i_db].class_id,specimen_naive[i_db].pitch,specimen_naive[i_db].roll,specimen_naive[i_db].vyaw,specimen_naive[i_db].vx,specimen_naive[i_db].vy,specimen_naive[i_db].vz,specimen_naive[i_db].ax,specimen_naive[i_db].ay,specimen_naive[i_db].az);
+                }
             }
-            close_learning_file(LearningBase);
-            naive_training(tab_indiv, nb_specimen);
+
+            if(method_selected==SVM || method_selected==ALL){
+                close_learning_file(LearningBase);
+            }
+            if(method_selected==NAIVE || method_selected==ALL){
+                naive_training(tab_indiv, nb_specimen);
+            }
+
             disconnect_to_database();
             // apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
-            training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
-            fclose(KNNBase);
-			
+            if(method_selected==SVM || method_selected==ALL){
+                training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
+            }
+            if(method_selected==KNN || method_selected==ALL){
+                fclose(KNNBase);
+            }
 
 		} 
 
