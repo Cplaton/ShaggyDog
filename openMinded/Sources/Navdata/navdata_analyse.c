@@ -314,7 +314,7 @@ int isInit = 0;
  **/
 int recordNumber = 0;
 
-int method_selected = NAIVE;
+int method_selected = KNN;
 
 /*************************FUNCTION DECLARATIONs********************************/
 
