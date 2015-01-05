@@ -337,10 +337,12 @@ inline C_RESULT navdata_analyse_init( void * data )
     vp_os_mutex_init(&battery_mutex);
     vp_os_mutex_init(&wifi_mutex);
 
-    nv_model=read_Model("naive_model");
+//lecture du model naive bayes
+    /*nv_model=read_Model("naive_model");
     while(nv_model==NULL){
         nv_model=read_Model("naive_model");
-    }
+    }*/
+
     if(mkdir("./DataModel", 0722) != 0)
     {
         perror("navdata_analyse_init");
@@ -500,10 +502,14 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			}else{
 				//data normalization
                 specimen indiv;
+<<<<<<< HEAD
                 sample naive_indiv;
                 indiv_knn knn_individu;
                 indiv_knn * knn_neighbors;
 /*
+=======
+// descripteurs d'un individu pour svm
+>>>>>>> origin/csv
 				indiv.pitch = norm_indiv(av_pitch,1);
 				indiv.roll = norm_indiv(av_roll,2);
 				indiv.vyaw = norm_indiv(av_Vyaw,3);
@@ -513,7 +519,11 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				indiv.ax = norm_indiv(ax,7);
 				indiv.ay = norm_indiv(ay,8);
 				indiv.az = norm_indiv(az,9);
-*/				
+
+
+// descripteurs d'un individu pour svm
+/*
+                sample naive_indiv;
                 naive_indiv.classe=-1;
                 naive_indiv.feature[0]=av_pitch;
                 naive_indiv.feature[1]=av_roll;;
@@ -524,6 +534,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 naive_indiv.feature[6]=ax;
                 naive_indiv.feature[7]=ay;
                 naive_indiv.feature[8]=az;
+<<<<<<< HEAD
 				
 				knn_individu.pitch = av_pitch;
 				knn_individu.roll = av_roll;
@@ -534,27 +545,31 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				knn_individu.ax = ax;
 				knn_individu.ay = ay;
 				knn_individu.az = az;
+=======
+*/				
+>>>>>>> origin/csv
 
 				//current individu storage in a 10 indiv array in order to used the recognition on it
                 vp_os_mutex_lock(&class_mutex);
-				//specimen_buffer[buff_counter]= indiv;
-				specimen_naive_buffer[buff_counter]= naive_indiv;
+				specimen_buffer[buff_counter]= indiv;
+				//specimen_naive_buffer[buff_counter]= naive_indiv;
                 vp_os_mutex_unlock(&class_mutex);
 				//if 10 individu are stored, we launch the recognition process
 				if(buff_counter == 9){
 					buff_counter = 0;
 				    	
-                    printf("buffer rempli\n");
 					vp_os_mutex_lock(&class_mutex);
+<<<<<<< HEAD
 				    naive_predict_mean(specimen_naive_buffer,nv_model);
 				    knn_neighbors = getNeighbors (db_data, knn_individu);
 				    class_id = getResponse(knn_neighbors);
 					//predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
+=======
+				    //naive_predict_mean(specimen_naive_buffer,nv_model);
+					predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
+>>>>>>> origin/csv
 					//class_id = res_pred.predict_class;
 					vp_os_mutex_unlock(&class_mutex);
-				    /*for(i=0;i<10;i++){
-                        destroy_indiv(&specimen_naive_buffer[i]);
-                    }*/
 				}else{
 					buff_counter++;
 				}
@@ -608,7 +623,6 @@ inline C_RESULT navdata_analyse_release( void )
     struct augmented_navdata * specimen;
     struct augmented_navdata * specimen_naive;
     sample ** tab_indiv;
-    destroy_model(&model);
     if(options.debug!=0 && isStopped == 0){
 
          close_navdata_file(fr);

@@ -214,7 +214,7 @@ void naive_training(sample ** tab_indiv, int nb_indiv){
         v=Calculate_Variance(tab_values[i].az,nb_indiv_per_class[i],m);
         fprintf(fmodel,"%f %f\n",m,v);
     }
-    free(tab_values);
+//    free(tab_values);
     fclose(fmodel);    
 }
 

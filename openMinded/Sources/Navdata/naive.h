@@ -47,16 +47,30 @@ void naive_training(sample ** tab_indiv, int nb_indiv);
 naive_model * read_Model(char * file_name);
     
 /**
-* @brief   classify a specimen . 
+* @brief   classify a given specimen with a given model. 
 * @param   indiv   Sample structure's pointer, specimen to classify. 
 * @param   model   naive_model structure's pointer, model to use for classification.
 * @return  Integer representing the predicted class.
 **/
 int naive_predict(sample * indiv,naive_model * model);
 
+/**
+* @brief   classify a given specimens' buffer with a given model. 
+* @param   indiv   Sample structure's pointer, specimen to classify. 
+* @param   model   naive_model structure's pointer, model to use for classification.
+* @return  Integer representing the predicted class.
+**/
 void naive_predict_mean(sample * indiv,naive_model * model);
 
+/**
+* @brief   free the memspace used for a specimen. 
+* @param   indiv   Sample structure's pointer, specimen to destroy. 
+**/
 void destroy_indiv(sample * indiv);
 
+/**
+* @brief   free the memspace used for a model. 
+* @param   model   naive_model structure's pointer, model to destroy.
+**/
 void destroy_model(naive_model * model);
 #endif // _NAIVE_H_
