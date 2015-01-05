@@ -642,7 +642,7 @@ inline C_RESULT navdata_analyse_release( void )
                 KNNBase = open_learning_file("KNN_BaseApp");
             }
             //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
-            if(method_selected==SVM || method_selected==ALL || method_selected==KNN){
+            if(method_selected==SVM || method_selected==ALL){
                 LearningBase = open_learning_file("BaseApp");
                 specimen = get_normed_values_from_db(0,-1,&nb_specimen);
             }
