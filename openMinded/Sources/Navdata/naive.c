@@ -44,7 +44,7 @@ double proba_x_given_class(float x , float mean_class , float var_class, int nb_
     double res=0;
     res = Gaussian(x,var_class,mean_class);
     if(res==-1000){
-        printf("error in naive.c : variance is null\n");
+//        printf("error in naive.c : variance is null\n");
         res=1;
     }else{
         res=res/(1/(double)nb_class);
@@ -65,6 +65,14 @@ sample * create_indiv(int class, float roll, float pitch, float vyaw, float vx, 
     indiv->feature[7]=ay;
     indiv->feature[8]=az;
     return indiv;
+}
+
+void destroy_indiv(sample * indiv){
+    free(indiv);
+}
+
+void destroy_model(naive_model * model){
+    free(model);
 }
 
 int find_class(int * tab, int val, int tab_size){
@@ -206,6 +214,7 @@ void naive_training(sample ** tab_indiv, int nb_indiv){
         v=Calculate_Variance(tab_values[i].az,nb_indiv_per_class[i],m);
         fprintf(fmodel,"%f %f\n",m,v);
     }
+    free(tab_values);
     fclose(fmodel);    
 }
 
@@ -218,36 +227,41 @@ naive_model * read_Model(char * file_name){
     model=(naive_model *)malloc(sizeof(model));        
     
     fmodel = fopen(file_name,"r+");
-    check=(char*)malloc(5);
-    fscanf(fmodel,"%s %d",check,&nb_class);
-    if(strcmp(check,"nb_cl")==0){
-        model->nb_class=nb_class;
-        no_err=1;
-    }else{
-        no_err=0;
-    }
-    if(no_err){
-        check=realloc(check,7);
-        fscanf(fmodel,"%s %d",check,&nb_feat);
-        if(strcmp(check,"nb_feat")==0){
-            model->nb_feature=nb_feat;
+    if(fmodel!=NULL){
+        check=(char*)malloc(5);
+        fscanf(fmodel,"%s %d",check,&nb_class);
+        if(strcmp(check,"nb_cl")==0){
+            model->nb_class=nb_class;
             no_err=1;
         }else{
             no_err=0;
         }
         if(no_err){
-            free(check);
-            model->classe=(int *)malloc(sizeof(int)*model->nb_class);
-            model->mean=(float **)malloc(sizeof(float)*model->nb_class);
-            model->variance=(float **)malloc(sizeof(float)*model->nb_class);
-            for(j=0;j<model->nb_class;j++){
-                model->mean[j]=(float *)malloc(sizeof(float)*model->nb_feature);
-                model->variance[j]=(float *)malloc(sizeof(float)*model->nb_feature);
-                fscanf(fmodel,"%d %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",&model->classe[j], &model->mean[j][0], &model->variance[j][0], &model->mean[j][1], &model->variance[j][1], &model->mean[j][2], &model->variance[j][2], &model->mean[j][3], &model->variance[j][3], &model->mean[j][4], &model->variance[j][4], &model->mean[j][5], &model->variance[j][5], &model->mean[j][6], &model->variance[j][6], &model->mean[j][7], &model->variance[j][7], &model->mean[j][8], &model->variance[j][8]);
+            check=realloc(check,7);
+            fscanf(fmodel,"%s %d",check,&nb_feat);
+            if(strcmp(check,"nb_feat")==0){
+                model->nb_feature=nb_feat;
+                no_err=1;
+            }else{
+                no_err=0;
             }
-        }else{
-            model=NULL;
+            if(no_err){
+                free(check);
+                model->classe=(int *)malloc(sizeof(int)*model->nb_class);
+                model->mean=(float **)malloc(sizeof(float)*model->nb_class);
+                model->variance=(float **)malloc(sizeof(float)*model->nb_class);
+                for(j=0;j<model->nb_class;j++){
+                    model->mean[j]=(float *)malloc(sizeof(float)*model->nb_feature);
+                    model->variance[j]=(float *)malloc(sizeof(float)*model->nb_feature);
+                    fscanf(fmodel,"%d %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",&model->classe[j], &model->mean[j][0], &model->variance[j][0], &model->mean[j][1], &model->variance[j][1], &model->mean[j][2], &model->variance[j][2], &model->mean[j][3], &model->variance[j][3], &model->mean[j][4], &model->variance[j][4], &model->mean[j][5], &model->variance[j][5], &model->mean[j][6], &model->variance[j][6], &model->mean[j][7], &model->variance[j][7], &model->mean[j][8], &model->variance[j][8]);
+                }
+            }else{
+                model=NULL;
+            }
         }
+    }
+    else{
+        model=NULL;
     }
     return model;
 }
@@ -266,13 +280,49 @@ int naive_predict(sample * indiv,naive_model * model){
                posterior=posterior*proba_x_given_class(indiv->feature[i],model->mean[j][i], model->variance[j][i], model->nb_class);
            }
        }
-       printf("ressemblance à la classe %d : %lf\n", model->classe[j],posterior);
+       //printf("ressemblance à la classe %d : %lf\n", model->classe[j],posterior);
        if(max<=posterior){
            max=posterior;
            index=j;
        }
    }
 return model->classe[index];
+}
+
+void naive_predict_mean(sample * buffer, naive_model * model){
+    int i,j,l;
+    int * counters;
+    int recog_values[20];
+    counters = (int*) malloc(sizeof(int)*model->nb_class);
+    for (l=0;l<10;l++){
+        recog_values[l]=naive_predict(&buffer[l],model);
+    }
+    if (counters == NULL){
+        printf("malloc rate");
+        exit(1);
+    }
+    for(i=0;i<model->nb_class;i++){
+        counters[i]=0;
+    }
+    for(j=0;j<model->nb_class;j++){
+        for(i=0;i<10;i++){
+            if (recog_values[i]==model->classe[j]){
+                counters[j]++;
+            }
+        }
+    }
+    int max=0;
+    int recog_class=0;
+    for(j=0;j<model->nb_class;j++){
+        if(counters[j]>max){
+            max=counters[j];
+            recog_class=model->classe[j];
+        }
+    }
+    printf("nombre de classes naive : %d\n",model->nb_class);
+    printf("Classe naivement reconnue : %d\n",recog_class);
+    printf("Confiance naive: %lf\n ", 100*((double)max)/((double)l));
+    free(counters);
 }
 
 /*

@@ -47,10 +47,16 @@ void naive_training(sample ** tab_indiv, int nb_indiv);
 naive_model * read_Model(char * file_name);
     
 /**
-* @brief   train the naive bayes classifier, create a file naive_model in the current directory. 
+* @brief   classify a specimen . 
 * @param   indiv   Sample structure's pointer, specimen to classify. 
 * @param   model   naive_model structure's pointer, model to use for classification.
 * @return  Integer representing the predicted class.
 **/
 int naive_predict(sample * indiv,naive_model * model);
+
+void naive_predict_mean(sample * indiv,naive_model * model);
+
+void destroy_indiv(sample * indiv);
+
+void destroy_model(naive_model * model);
 #endif // _NAIVE_H_

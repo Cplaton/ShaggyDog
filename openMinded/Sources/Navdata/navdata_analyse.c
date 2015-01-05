@@ -28,6 +28,7 @@
 #include "utils.h"
 #include "svm-predict.h"
 #include "svm-train.h"
+#include "naive.h"
 
 #define RECORD_TIME 15 //(en s)
 
@@ -223,6 +224,10 @@ int class_id_aux;
 //specimen indiv;
 specimen specimen_buffer[10];
 
+
+sample specimen_naive_buffer[10];
+
+naive_model * nv_model;
 /**
  * @var     buff_counter
  * @brief   used to store 10 specimens in an array in order to recognize the situation
@@ -330,6 +335,10 @@ inline C_RESULT navdata_analyse_init( void * data )
     vp_os_mutex_init(&battery_mutex);
     vp_os_mutex_init(&wifi_mutex);
 
+    nv_model=read_Model("naive_model");
+    while(nv_model==NULL){
+        nv_model=read_Model("naive_model");
+    }
     if(mkdir("./DataModel", 0722) != 0)
     {
         perror("navdata_analyse_init");
@@ -345,7 +354,7 @@ inline C_RESULT navdata_analyse_init( void * data )
 inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata )
 {
     static int counter = 0 ;
-
+    static int i;
     // navdata structures
     const navdata_demo_t *nd = &navdata->navdata_demo;
     const navdata_time_t *nt = &navdata->navdata_time;
@@ -371,7 +380,6 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
         refresh_command();
 
         if (!isInit){
-
         	updateNavdata(&selectedNavdata, nd);
          	initModel(&selectedNavdata,(float32_t)(nd->altitude)/1000, nd->psi/1000);
         	initFilters(&selectedNavdata);
@@ -488,6 +496,8 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			}else{
 				//data normalization
                 specimen indiv;
+                sample naive_indiv;
+/*
 				indiv.pitch = norm_indiv(av_pitch,1);
 				indiv.roll = norm_indiv(av_roll,2);
 				indiv.vyaw = norm_indiv(av_Vyaw,3);
@@ -497,22 +507,37 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				indiv.ax = norm_indiv(ax,7);
 				indiv.ay = norm_indiv(ay,8);
 				indiv.az = norm_indiv(az,9);
-				
+*/				
+                naive_indiv.classe=-1;
+                naive_indiv.feature[0]=av_pitch;
+                naive_indiv.feature[1]=av_roll;;
+                naive_indiv.feature[2]=av_Vyaw;
+                naive_indiv.feature[3]=av_Vx;
+                naive_indiv.feature[4]=av_Vy;
+                naive_indiv.feature[5]=av_Vz;
+                naive_indiv.feature[6]=ax;
+                naive_indiv.feature[7]=ay;
+                naive_indiv.feature[8]=az;
 				
 
 				//current individu storage in a 10 indiv array in order to used the recognition on it
                 vp_os_mutex_lock(&class_mutex);
-				specimen_buffer[buff_counter]= indiv;
+				//specimen_buffer[buff_counter]= indiv;
+				specimen_naive_buffer[buff_counter]= naive_indiv;
                 vp_os_mutex_unlock(&class_mutex);
-				//if 10 individu are store, we launch the recognition process
+				//if 10 individu are stored, we launch the recognition process
 				if(buff_counter == 9){
 					buff_counter = 0;
-					
+				    	
+                    printf("buffer rempli\n");
 					vp_os_mutex_lock(&class_mutex);
-					predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
-					class_id = res_pred.predict_class;
+				    naive_predict_mean(specimen_naive_buffer,nv_model);
+					//predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
+					//class_id = res_pred.predict_class;
 					vp_os_mutex_unlock(&class_mutex);
-					
+				    /*for(i=0;i<10;i++){
+                        destroy_indiv(&specimen_naive_buffer[i]);
+                    }*/
 				}else{
 					buff_counter++;
 				}
@@ -564,7 +589,9 @@ inline C_RESULT navdata_analyse_release( void )
     int nb_specimen;
     int i_db;
     struct augmented_navdata * specimen;
-
+    struct augmented_navdata * specimen_naive;
+    sample ** tab_indiv;
+    destroy_model(&model);
     if(options.debug!=0 && isStopped == 0){
 
          close_navdata_file(fr);
@@ -583,15 +610,29 @@ inline C_RESULT navdata_analyse_release( void )
             //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
             LearningBase = open_learning_file("BaseApp");
             specimen = get_normed_values_from_db(0,-1,&nb_specimen);
+            specimen_naive = get_values_from_db(0,-1,&nb_specimen);
+            tab_indiv = (sample **)vp_os_malloc(sizeof(sample)*nb_specimen);
 
             //learning file filling
             for(i_db=0;i_db<nb_specimen;i_db++){
+                tab_indiv[i_db]=(sample *)vp_os_malloc(sizeof(sample));
+                tab_indiv[i_db]->classe=specimen_naive[i_db].class_id;
+                tab_indiv[i_db]->feature[0]=specimen_naive[i_db].pitch;
+                tab_indiv[i_db]->feature[1]=specimen_naive[i_db].roll;
+                tab_indiv[i_db]->feature[2]=specimen_naive[i_db].vyaw;
+                tab_indiv[i_db]->feature[3]=specimen_naive[i_db].vx;
+                tab_indiv[i_db]->feature[4]=specimen_naive[i_db].vy;
+                tab_indiv[i_db]->feature[5]=specimen_naive[i_db].vz;
+                tab_indiv[i_db]->feature[6]=specimen_naive[i_db].ax;
+                tab_indiv[i_db]->feature[7]=specimen_naive[i_db].ay;
+                tab_indiv[i_db]->feature[8]=specimen_naive[i_db].az;
+
                 new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].pitch,specimen[i_db].roll,specimen[i_db].vyaw,specimen[i_db].vx,
                 specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
             }
             close_learning_file(LearningBase);
+            naive_training(tab_indiv, nb_specimen);
             disconnect_to_database();
-
             // apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
             training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
 			
