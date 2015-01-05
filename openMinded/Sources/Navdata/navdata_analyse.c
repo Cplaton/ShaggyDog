@@ -500,6 +500,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 sample naive_indiv;
                 indiv_knn knn_individu;
                 indiv_knn * knn_neighbors;
+                
                 if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
 // descripters d'un individu pour svm
 				indiv.pitch = norm_indiv(av_pitch,1);
@@ -575,7 +576,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				}
 				
 				//write data in the log in case of debug state
-				if(options.debug!=0){
+				if(options.debug!=0 && (method_selected==SVM || method_selected==ALL)){
 					fprintf(logSFM,"%d 1:%f 2:%f 3:%f 4:%f 5:%f 6:%f 7:%f 8:%f 9:%f\n",
                     class_id,
 					indiv.pitch,
@@ -588,19 +589,6 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 					indiv.ay,
 					indiv.az);
 					
-					/*
-					new_data(fm, time, model_output.roll*1000, model_output.pitch*1000,
-					model_output.Vyaw*1000,model_output.Vx*1000,model_output.Vy*1000,
-					model_output.Vz *1000);
-					new_data(fr, nt->time , nd->phi/1000, nd->theta/1000, nd->psi/1000, nd->vx/1000,nd->vy/1000,nd->altitude);
-					new_data(fc, time, selectedNavdata.roll*1000, selectedNavdata.pitch*1000,
-							   selectedNavdata.Vyaw*1000, selectedNavdata.Vx*1000,
-							   selectedNavdata.Vy*1000, selectedNavdata.Vz*1000);
-					new_data(ff, time, filtered_drone_output.roll*1000, filtered_drone_output.pitch*1000,
-							   filtered_drone_output.Vyaw*1000, filtered_drone_output.Vx*1000,
-							   filtered_drone_output.Vy*1000, filtered_drone_output.Vz*1000);
-					new_data(fres,time,residues.r_roll,residues.r_pitch,residues.r_Vyaw,residues.r_Vx,residues.r_Vy,residues.r_Vz);
-					*/
 				}	
 			}
 		}
