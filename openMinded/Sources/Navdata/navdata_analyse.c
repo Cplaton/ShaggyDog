@@ -648,14 +648,12 @@ inline C_RESULT navdata_analyse_release( void )
                 specimen = get_normed_values_from_db(0,-1,&nb_specimen);
             }
 
-<<<<<<< HEAD
-            fprintf(KNNBase, "%d\n", nb_specimen);
-=======
             if(method_selected==NAIVE || method_selected==ALL){
                 specimen_naive = get_values_from_db(0,-1,&nb_specimen);
                 tab_indiv = (sample **)vp_os_malloc(sizeof(sample)*nb_specimen);
             }
->>>>>>> origin/csv
+            
+            fprintf(KNNBase, "%d\n", nb_specimen);
             //learning file filling
             for(i_db=0;i_db<nb_specimen;i_db++){
 
