@@ -271,7 +271,7 @@ double norm_indiv(double init, int type){
 	break;
 	case 4: //DATA_VX:
 		min = min_vx;
-		max = max_vy;
+		max = max_vx;
 	break;
 	case 5: //DATA_VY:
 		min = min_vy;
