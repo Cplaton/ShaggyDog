@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#define NB_LIGNE 418
 #define K 3
 
 
@@ -29,6 +28,7 @@ typedef struct {
 	float ay;
 	float az;
 	int  class_id;
+	int nb_indiv;
 }indiv_knn;
 
 
@@ -36,7 +36,7 @@ indiv_knn * load_data(char * nomFichier);
 
 float euclideanDistance(indiv_knn instance1, indiv_knn instance2);
 
-indiv_knn * getNeighbors(indiv_knn trainingSet[NB_LIGNE], indiv_knn testInstance);
+indiv_knn * getNeighbors(indiv_knn * trainingSet, indiv_knn testInstance);
 
 int getResponse (indiv_knn neighbors[K]);
 

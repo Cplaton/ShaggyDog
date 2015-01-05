@@ -1,16 +1,23 @@
 #include "knn_classification.h"
 
+
 indiv_knn * load_data(char * nomFichier) {
 
 	FILE * fichier = NULL;
+	int nb_specimen;
 
-	static indiv_knn data_matrice[NB_LIGNE];
+	fichier = fopen(nomFichier, "r+");
+
+	fscanf(fichier, "%d", &nb_specimen);
+
+	static indiv_knn * data_matrice;
+	data_matrice = malloc(sizeof(indiv_knn)*nb_specimen);
 	float floatdata[9];
 	int intdata;
 
-	fichier = fopen(nomFichier, "r+");
 	int i;
-	for (i = 0; i<NB_LIGNE; i++) {
+
+	for (i = 0; i<nb_specimen; i++) {
 		
 		fscanf(fichier, "%d %f %f %f %f %f %f %f %f %f", &intdata, &floatdata[0], &floatdata[1], &floatdata[2], &floatdata[3], &floatdata[4], &floatdata[5], &floatdata[6], &floatdata[7], &floatdata[8]);
 		data_matrice[i].pitch = floatdata[0];
@@ -24,6 +31,8 @@ indiv_knn * load_data(char * nomFichier) {
 		data_matrice[i].az    = floatdata[8];
 
 		data_matrice[i].class_id    = intdata;
+
+		data_matrice[i].nb_indiv = nb_specimen;
 	}
 
 	fclose(fichier);
@@ -48,17 +57,25 @@ float euclideanDistance(indiv_knn instance1, indiv_knn instance2) {
 }
 
 
-indiv_knn * getNeighbors(indiv_knn trainingSet[NB_LIGNE], indiv_knn testInstance) {
+indiv_knn * getNeighbors(indiv_knn * trainingSet, indiv_knn testInstance) {
 
-	float distances[NB_LIGNE];
-	indiv_knn data_table[NB_LIGNE];
+	
+	float * distances;
+	indiv_knn * data_table;
 	static indiv_knn neighbors[K];
 	float dist;
 	indiv_knn tmp1;
 	float tmp2;
 
+	int nb_specimen;
+
+	nb_specimen = trainingSet[0].nb_indiv;
+
+	distances = malloc(sizeof(float)*nb_specimen);
+	data_table = malloc(sizeof(indiv_knn)*nb_specimen);
+
 	int i;
-	for(i=0;i<NB_LIGNE;i++){
+	for(i=0;i<nb_specimen;i++){
 		dist = euclideanDistance(testInstance, trainingSet[i]);		
 		data_table[i].pitch = trainingSet[i].pitch;
 		data_table[i].roll = trainingSet[i].roll;
@@ -75,8 +92,8 @@ indiv_knn * getNeighbors(indiv_knn trainingSet[NB_LIGNE], indiv_knn testInstance
 	}
 
 	int j;
-	for (i=0;i<NB_LIGNE;i++) {
-		for (j=i+1;j<NB_LIGNE;j++) {
+	for (i=0;i<nb_specimen;i++) {
+		for (j=i+1;j<nb_specimen;j++) {
 			if (distances[i] > distances[j]) {
 				
 
