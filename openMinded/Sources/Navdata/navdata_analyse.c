@@ -314,7 +314,7 @@ int isInit = 0;
  **/
 int recordNumber = 0;
 
-int method_selected = NAIVE;
+int method_selected = KNN;
 
 /*************************FUNCTION DECLARATIONs********************************/
 
@@ -354,8 +354,7 @@ inline C_RESULT navdata_analyse_init( void * data )
     {
         perror("navdata_analyse_init");
     };
-    
-    
+    printf("Quoi?\n");
     if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
         db_data = load_data(KNN_DATA_SET);
     }
@@ -643,12 +642,12 @@ inline C_RESULT navdata_analyse_release( void )
                 KNNBase = open_learning_file("KNN_BaseApp");
             }
             //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
-            if(method_selected==SVM || method_selected==ALL){
+            if(method_selected==SVM || method_selected==ALL || method_selected==KNN){
                 LearningBase = open_learning_file("BaseApp");
                 specimen = get_normed_values_from_db(0,-1,&nb_specimen);
             }
 
-            if(method_selected==NAIVE || method_selected==ALL){
+            if(method_selected==NAIVE || method_selected==ALL || method_selected==KNN){
                 specimen_naive = get_values_from_db(0,-1,&nb_specimen);
                 tab_indiv = (sample **)vp_os_malloc(sizeof(sample)*nb_specimen);
             }

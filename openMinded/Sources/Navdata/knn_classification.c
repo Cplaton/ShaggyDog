@@ -5,36 +5,35 @@ indiv_knn * load_data(char * nomFichier) {
 
 	FILE * fichier = NULL;
 	int nb_specimen;
-
-	fichier = fopen(nomFichier, "r+");
-
-	fscanf(fichier, "%d", &nb_specimen);
-
 	static indiv_knn * data_matrice;
-	data_matrice = malloc(sizeof(indiv_knn)*nb_specimen);
 	float floatdata[9];
 	int intdata;
+	fichier = fopen(nomFichier, "r+");
 
-	int i;
+	if (fichier != NULL) {
+		fscanf(fichier, "%d", &nb_specimen);
+		data_matrice = malloc(sizeof(indiv_knn)*nb_specimen);
+		int i;
 
-	for (i = 0; i<nb_specimen; i++) {
-		
-		fscanf(fichier, "%d %f %f %f %f %f %f %f %f %f", &intdata, &floatdata[0], &floatdata[1], &floatdata[2], &floatdata[3], &floatdata[4], &floatdata[5], &floatdata[6], &floatdata[7], &floatdata[8]);
-		data_matrice[i].pitch = floatdata[0];
-		data_matrice[i].roll  = floatdata[1];
-		data_matrice[i].vyaw  = floatdata[2];
-		data_matrice[i].vx    = floatdata[3];
-		data_matrice[i].vy    = floatdata[4];
-		data_matrice[i].vz    = floatdata[5];
-		data_matrice[i].ax    = floatdata[6];
-		data_matrice[i].ay    = floatdata[7];
-		data_matrice[i].az    = floatdata[8];
+		for (i = 0; i<nb_specimen; i++) {
+			
+			fscanf(fichier, "%d %f %f %f %f %f %f %f %f %f", &intdata, &floatdata[0], &floatdata[1], &floatdata[2], &floatdata[3], &floatdata[4], &floatdata[5], &floatdata[6], &floatdata[7], &floatdata[8]);
+			data_matrice[i].pitch = floatdata[0];
+			data_matrice[i].roll  = floatdata[1];
+			data_matrice[i].vyaw  = floatdata[2];
+			data_matrice[i].vx    = floatdata[3];
+			data_matrice[i].vy    = floatdata[4];
+			data_matrice[i].vz    = floatdata[5];
+			data_matrice[i].ax    = floatdata[6];
+			data_matrice[i].ay    = floatdata[7];
+			data_matrice[i].az    = floatdata[8];
 
-		data_matrice[i].class_id    = intdata;
+			data_matrice[i].class_id    = intdata;
 
-		data_matrice[i].nb_indiv = nb_specimen;
+			data_matrice[i].nb_indiv = nb_specimen;
+		}
+
 	}
-
 	fclose(fichier);
 	return data_matrice;
 }
