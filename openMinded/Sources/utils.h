@@ -112,6 +112,7 @@ void closeLogFile(FILE * fd) ;
  **/
 void new_data_learning(FILE * fd, int classe, float roll, float pitch, float yaw, float vx, float vy, float vz, float ax, float ay, float az);
 
+void new_data_learning_KNN(FILE * fd, int classe, float roll, float pitch, float yaw, float vx, float vy, float vz, float ax, float ay, float az);
 
 /**
  * @brief   Opens in writing mode a new file for libSVM with the given name

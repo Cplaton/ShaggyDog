@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#define NB_LIGNE 464
+#define NB_LIGNE 418
 #define K 3
 
 

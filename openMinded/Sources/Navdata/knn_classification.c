@@ -161,7 +161,7 @@ int getResponse (indiv_knn neighbors[K]) {
 			occurence_last = occurence;
 		}
 	}
-	printf("class_id = %d\n", response);
+	printf("knn : class_id = %d\n", response);
 	return response;
 
 }

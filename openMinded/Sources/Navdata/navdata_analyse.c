@@ -87,6 +87,7 @@ FILE * csv;
  * @brief	File in which the navdata would be stored in txt format (to send to libSVM) will be used as learning base and test sample for cross validation
  **/
 FILE * LearningBase;
+FILE * KNNBase;
 
 /**
  * @var		tmp
@@ -500,13 +501,9 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 }
                 
 			}else{
-				//data normalization
-                specimen indiv;
-                sample naive_indiv;
-                indiv_knn knn_individu;
-                indiv_knn * knn_neighbors;
 
 // descripters d'un individu pour svm
+                specimen indiv;
 				indiv.pitch = norm_indiv(av_pitch,1);
 				indiv.roll = norm_indiv(av_roll,2);
 				indiv.vyaw = norm_indiv(av_Vyaw,3);
@@ -518,7 +515,8 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				indiv.az = norm_indiv(az,9);
 
 
-// descripteurs d'un individu pour svm
+// descripteurs d'un individu pour naive bayes
+/*                sample naive_indiv;
                 naive_indiv.classe=-1;
                 naive_indiv.feature[0]=av_pitch;
                 naive_indiv.feature[1]=av_roll;;
@@ -529,8 +527,10 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 naive_indiv.feature[6]=ax;
                 naive_indiv.feature[7]=ay;
                 naive_indiv.feature[8]=az;
-				
+*/				
 // descripteurs d'un individu pour knn				
+                indiv_knn knn_individu;
+                indiv_knn * knn_neighbors;
 				knn_individu.pitch = av_pitch;
 				knn_individu.roll = av_roll;
 				knn_individu.vyaw = av_Vyaw;
@@ -544,7 +544,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 
 				//current individu storage in a 10 indiv array in order to used the recognition on it
                 vp_os_mutex_lock(&class_mutex);
-				specimen_buffer[buff_counter]= indiv;
+    			//specimen_buffer[buff_counter]= indiv;
 				//specimen_naive_buffer[buff_counter]= naive_indiv;
                 vp_os_mutex_unlock(&class_mutex);
 				//if 10 individu are stored, we launch the recognition process
@@ -552,11 +552,10 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 					buff_counter = 0;
 				    	
 					vp_os_mutex_lock(&class_mutex);
-				    naive_predict_mean(specimen_naive_buffer,nv_model);
 				    knn_neighbors = getNeighbors (db_data, knn_individu);
 				    class_id = getResponse(knn_neighbors);
-				    naive_predict_mean(specimen_naive_buffer,nv_model);
-					predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
+				   // naive_predict_mean(specimen_naive_buffer,nv_model);
+				    //predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
 					//class_id = res_pred.predict_class;
 					vp_os_mutex_unlock(&class_mutex);
 				}else{
@@ -627,6 +626,7 @@ inline C_RESULT navdata_analyse_release( void )
 
         if( options.mission == 1 ){
 
+            KNNBase = open_learning_file("KNN_BaseApp");
             //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
             LearningBase = open_learning_file("BaseApp");
             specimen = get_normed_values_from_db(0,-1,&nb_specimen);
@@ -647,15 +647,15 @@ inline C_RESULT navdata_analyse_release( void )
                 tab_indiv[i_db]->feature[7]=specimen_naive[i_db].ay;
                 tab_indiv[i_db]->feature[8]=specimen_naive[i_db].az;
 
-                new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].pitch,specimen[i_db].roll,specimen[i_db].vyaw,specimen[i_db].vx,
-                specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
+                new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].pitch,specimen[i_db].roll,specimen[i_db].vyaw,specimen[i_db].vx,specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
+                new_data_learning_KNN(KNNBase,specimen_naive[i_db].class_id,specimen_naive[i_db].pitch,specimen_naive[i_db].roll,specimen_naive[i_db].vyaw,specimen_naive[i_db].vx,specimen_naive[i_db].vy,specimen_naive[i_db].vz,specimen_naive[i_db].ax,specimen_naive[i_db].ay,specimen_naive[i_db].az);
             }
             close_learning_file(LearningBase);
             naive_training(tab_indiv, nb_specimen);
             disconnect_to_database();
             // apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
             training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
-			
+            fclose(KNNBase);
 			
 
 		} 
@@ -663,7 +663,6 @@ inline C_RESULT navdata_analyse_release( void )
          printf("closed\n");
          isStopped = 1;
     }
-
     vp_os_mutex_destroy(&state_mutex);
     vp_os_mutex_destroy(&battery_mutex);
     vp_os_mutex_destroy(&wifi_mutex);
