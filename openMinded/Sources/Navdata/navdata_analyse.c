@@ -314,7 +314,7 @@ int isInit = 0;
  **/
 int recordNumber = 0;
 
-int method_selected = SVM;
+int method_selected = KNN;
 
 /*************************FUNCTION DECLARATIONs********************************/
 
@@ -652,7 +652,9 @@ inline C_RESULT navdata_analyse_release( void )
                 tab_indiv = (sample **)vp_os_malloc(sizeof(sample)*nb_specimen);
             }
             
-            fprintf(KNNBase, "%d\n", nb_specimen);
+            if(method_selected==KNN || method_selected==ALL){
+                fprintf(KNNBase, "%d\n", nb_specimen);
+            }
             //learning file filling
             for(i_db=0;i_db<nb_specimen;i_db++){
 
