@@ -21,6 +21,7 @@
 #define NAME_TRAINING_SET "Sources/Navdata/BaseApp"
 #define NAME_TRAINING_MODEL "Sources/Navdata/BaseApp.model"
 
+#define KNN_DATA_SET "Sources/Navdata/KNN_BaseApp"
 
 /**
  * @enum        drone_state

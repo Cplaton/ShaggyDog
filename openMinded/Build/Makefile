@@ -33,7 +33,7 @@ GENERIC_BINARIES_COMMON_SOURCE_FILES+=	\
    Navdata/svm-predict.c	\
    Navdata/svm.cpp \
    Navdata/naive.c \
-   Navdata/knn_classification \
+   Navdata/knn_classification.c \
    ardrone_move_cmd.c   		\
    disable_navdata_demo.c    		\
    utils.c		\

@@ -29,18 +29,18 @@ typedef struct {
 	float ay;
 	float az;
 	int  class_id;
-}navdata;
+}indiv_knn;
 
 
-navdata * load_data(char * nomFichier);
+indiv_knn * load_data(char * nomFichier);
 
-float euclideanDistance(navdata instance1, navdata instance2);
+float euclideanDistance(indiv_knn instance1, indiv_knn instance2);
 
-navdata * getNeighbors(navdata trainingSet[NB_LIGNE], navdata testInstance);
+indiv_knn * getNeighbors(indiv_knn trainingSet[NB_LIGNE], indiv_knn testInstance);
 
-int getResponse (navdata neighbors[K]);
+int getResponse (indiv_knn neighbors[K]);
 
-float getAccuracy(navdata * testSet, int * tab, int size);
+float getAccuracy(indiv_knn * testSet, int * tab, int size);
 
 int exists (int * tab, int val, int size);
 

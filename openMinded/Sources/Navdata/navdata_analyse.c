@@ -29,6 +29,7 @@
 #include "svm-predict.h"
 #include "svm-train.h"
 #include "naive.h"
+#include "knn_classification.h"
 
 #define RECORD_TIME 15 //(en s)
 
@@ -224,8 +225,9 @@ int class_id_aux;
 //specimen indiv;
 specimen specimen_buffer[10];
 
-
 sample specimen_naive_buffer[10];
+
+indiv_knn * db_data;
 
 naive_model * nv_model;
 /**
@@ -343,6 +345,8 @@ inline C_RESULT navdata_analyse_init( void * data )
     {
         perror("navdata_analyse_init");
     };
+
+    db_data = load_data(KNN_DATA_SET);
 
     return C_OK;
 }
@@ -497,6 +501,8 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				//data normalization
                 specimen indiv;
                 sample naive_indiv;
+                indiv_knn knn_individu;
+                indiv_knn * knn_neighbors;
 /*
 				indiv.pitch = norm_indiv(av_pitch,1);
 				indiv.roll = norm_indiv(av_roll,2);
@@ -519,6 +525,15 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 naive_indiv.feature[7]=ay;
                 naive_indiv.feature[8]=az;
 				
+				knn_individu.pitch = av_pitch;
+				knn_individu.roll = av_roll;
+				knn_individu.vyaw = av_Vyaw;
+				knn_individu.vx = av_Vx;
+				knn_individu.vy = av_Vy;
+				knn_individu.vz = av_Vz;
+				knn_individu.ax = ax;
+				knn_individu.ay = ay;
+				knn_individu.az = az;
 
 				//current individu storage in a 10 indiv array in order to used the recognition on it
                 vp_os_mutex_lock(&class_mutex);
@@ -532,6 +547,8 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                     printf("buffer rempli\n");
 					vp_os_mutex_lock(&class_mutex);
 				    naive_predict_mean(specimen_naive_buffer,nv_model);
+				    knn_neighbors = getNeighbors (db_data, knn_individu);
+				    class_id = getResponse(knn_neighbors);
 					//predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
 					//class_id = res_pred.predict_class;
 					vp_os_mutex_unlock(&class_mutex);

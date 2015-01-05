@@ -1,15 +1,15 @@
 #include "knn_classification.h"
 
-navdata * load_data(char * nomFichier) {
+indiv_knn * load_data(char * nomFichier) {
 
 	FILE * fichier = NULL;
 
-	static navdata data_matrice[NB_LIGNE];
+	static indiv_knn data_matrice[NB_LIGNE];
 	float floatdata[9];
 	int intdata;
 
 	fichier = fopen(nomFichier, "r+");
-	int i, j;
+	int i;
 	for (i = 0; i<NB_LIGNE; i++) {
 		
 		fscanf(fichier, "%d %f %f %f %f %f %f %f %f %f", &intdata, &floatdata[0], &floatdata[1], &floatdata[2], &floatdata[3], &floatdata[4], &floatdata[5], &floatdata[6], &floatdata[7], &floatdata[8]);
@@ -30,7 +30,7 @@ navdata * load_data(char * nomFichier) {
 	return data_matrice;
 }
 
-float euclideanDistance(navdata instance1, navdata instance2) {
+float euclideanDistance(indiv_knn instance1, indiv_knn instance2) {
 
 	float distance = 0.0;
 
@@ -48,13 +48,13 @@ float euclideanDistance(navdata instance1, navdata instance2) {
 }
 
 
-navdata * getNeighbors(navdata trainingSet[NB_LIGNE], navdata testInstance) {
+indiv_knn * getNeighbors(indiv_knn trainingSet[NB_LIGNE], indiv_knn testInstance) {
 
 	float distances[NB_LIGNE];
-	navdata data_table[NB_LIGNE];
-	static navdata neighbors[K];
+	indiv_knn data_table[NB_LIGNE];
+	static indiv_knn neighbors[K];
 	float dist;
-	navdata tmp1;
+	indiv_knn tmp1;
 	float tmp2;
 
 	int i;
@@ -140,7 +140,7 @@ navdata * getNeighbors(navdata trainingSet[NB_LIGNE], navdata testInstance) {
 	return neighbors;
 }
 
-int getResponse (navdata neighbors[K]) {
+int getResponse (indiv_knn neighbors[K]) {
 
 
 	int resp[K];
@@ -165,7 +165,7 @@ int getResponse (navdata neighbors[K]) {
 
 }
 
-float getAccuracy(navdata * testSet, int * tab, int size) {
+float getAccuracy(indiv_knn * testSet, int * tab, int size) {
 
 	float correct = 0.0;
 	int i;
@@ -207,16 +207,16 @@ int occurence_number (int * tab, int val, int size) {
 	return trouve;
 
 }
-
-void main() {
 /*
-	navdata * matrice;
+void main() {
+
+	indiv_knn * matrice;
 
 	matrice = load_data("BaseApp");
 
  //0.004172  0.385072  0.346904  0.224912  0.505152  0.492094  0.812270  0.042337  0.664200 
 	
-	navdata testInstance;
+	indiv_knn testInstance;
 	testInstance.pitch = 0.004172 ;
 	testInstance.roll  = 0.385072;
 	testInstance.vyaw = 0.346904;
@@ -228,7 +228,7 @@ void main() {
 	testInstance.az = 0.664200;
 
 
-	navdata * neighbors;
+	indiv_knn * neighbors;
 
 	neighbors = getNeighbors(matrice, testInstance);
 
@@ -244,8 +244,8 @@ void main() {
 
 	printf("response = %d\n", response);
 
-*/
 
 	
 }
 
+*/
