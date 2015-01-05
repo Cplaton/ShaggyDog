@@ -502,14 +502,11 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 			}else{
 				//data normalization
                 specimen indiv;
-<<<<<<< HEAD
                 sample naive_indiv;
                 indiv_knn knn_individu;
                 indiv_knn * knn_neighbors;
-/*
-=======
-// descripteurs d'un individu pour svm
->>>>>>> origin/csv
+
+// descripters d'un individu pour svm
 				indiv.pitch = norm_indiv(av_pitch,1);
 				indiv.roll = norm_indiv(av_roll,2);
 				indiv.vyaw = norm_indiv(av_Vyaw,3);
@@ -522,8 +519,6 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 
 
 // descripteurs d'un individu pour svm
-/*
-                sample naive_indiv;
                 naive_indiv.classe=-1;
                 naive_indiv.feature[0]=av_pitch;
                 naive_indiv.feature[1]=av_roll;;
@@ -534,8 +529,8 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 naive_indiv.feature[6]=ax;
                 naive_indiv.feature[7]=ay;
                 naive_indiv.feature[8]=az;
-<<<<<<< HEAD
 				
+// descripteurs d'un individu pour knn				
 				knn_individu.pitch = av_pitch;
 				knn_individu.roll = av_roll;
 				knn_individu.vyaw = av_Vyaw;
@@ -545,9 +540,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				knn_individu.ax = ax;
 				knn_individu.ay = ay;
 				knn_individu.az = az;
-=======
-*/				
->>>>>>> origin/csv
+
 
 				//current individu storage in a 10 indiv array in order to used the recognition on it
                 vp_os_mutex_lock(&class_mutex);
@@ -559,15 +552,11 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 					buff_counter = 0;
 				    	
 					vp_os_mutex_lock(&class_mutex);
-<<<<<<< HEAD
 				    naive_predict_mean(specimen_naive_buffer,nv_model);
 				    knn_neighbors = getNeighbors (db_data, knn_individu);
 				    class_id = getResponse(knn_neighbors);
-					//predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
-=======
-				    //naive_predict_mean(specimen_naive_buffer,nv_model);
+				    naive_predict_mean(specimen_naive_buffer,nv_model);
 					predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
->>>>>>> origin/csv
 					//class_id = res_pred.predict_class;
 					vp_os_mutex_unlock(&class_mutex);
 				}else{
