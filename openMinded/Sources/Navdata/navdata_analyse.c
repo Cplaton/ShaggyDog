@@ -227,9 +227,9 @@ int class_id_aux;
  * @brief   Value used in recognition process
  **/
 //specimen indiv;
-specimen specimen_buffer[20];
+specimen specimen_buffer[10];
 
-sample specimen_naive_buffer[20];
+sample specimen_naive_buffer[10];
 
 indiv_knn * db_data;
 
@@ -557,7 +557,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 }
                 //vp_os_mutex_unlock(&class_mutex);
 				//if 10 individu are stored, we launch the recognition process
-				if(buff_counter == 20){
+				if(buff_counter == 10){
 					buff_counter = 0;
 				    	
 					vp_os_mutex_lock(&class_mutex);
