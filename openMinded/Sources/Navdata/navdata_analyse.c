@@ -630,23 +630,17 @@ inline C_RESULT navdata_analyse_release( void )
 
         if( options.mission == 1 ){
             
-            if(method_selected==KNN || method_selected==ALL){
-                KNNBase = open_learning_file("KNN_BaseApp");
-            }
-            //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
-            if(method_selected==SVM || method_selected==ALL){
-                LearningBase = open_learning_file("BaseApp");
-                specimen = get_normed_values_from_db(0,-1,&nb_specimen);
-            }
-
-            if(method_selected==NAIVE || method_selected==ALL || method_selected==KNN){
-                specimen_naive = get_values_from_db(0,-1,&nb_specimen);
-                tab_indiv = (sample **)vp_os_malloc(sizeof(sample)*nb_specimen);
-            }
+            KNNBase = open_learning_file("KNN_BaseApp");
             
-            if(method_selected==KNN || method_selected==ALL){
-                fprintf(KNNBase, "%d\n", nb_specimen);
-            }
+            //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
+			LearningBase = open_learning_file("BaseApp");
+			specimen = get_normed_values_from_db(0,-1,&nb_specimen);
+            
+			specimen_naive = get_values_from_db(0,-1,&nb_specimen);
+			tab_indiv = (sample **)vp_os_malloc(sizeof(sample)*nb_specimen);
+            
+            fprintf(KNNBase, "%d\n", nb_specimen);
+            
             //learning file filling
             for(i_db=0;i_db<nb_specimen;i_db++){
 
@@ -664,29 +658,22 @@ inline C_RESULT navdata_analyse_release( void )
                     tab_indiv[i_db]->feature[8]=specimen_naive[i_db].az;
                 }
 
-                if(method_selected==SVM || method_selected==ALL){
-                    new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].pitch,specimen[i_db].roll,specimen[i_db].vyaw,specimen[i_db].vx,specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
-                }
-                if(method_selected==KNN || method_selected==ALL){
-                    new_data_learning_KNN(KNNBase,specimen_naive[i_db].class_id,specimen_naive[i_db].pitch,specimen_naive[i_db].roll,specimen_naive[i_db].vyaw,specimen_naive[i_db].vx,specimen_naive[i_db].vy,specimen_naive[i_db].vz,specimen_naive[i_db].ax,specimen_naive[i_db].ay,specimen_naive[i_db].az);
-                }
+                
+                new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].pitch,specimen[i_db].roll,specimen[i_db].vyaw,specimen[i_db].vx,specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
+                
+				new_data_learning_KNN(KNNBase,specimen_naive[i_db].class_id,specimen_naive[i_db].pitch,specimen_naive[i_db].roll,specimen_naive[i_db].vyaw,specimen_naive[i_db].vx,specimen_naive[i_db].vy,specimen_naive[i_db].vz,specimen_naive[i_db].ax,specimen_naive[i_db].ay,specimen_naive[i_db].az);
+                
             }
 
-            if(method_selected==SVM || method_selected==ALL){
-                close_learning_file(LearningBase);
-            }
-            if(method_selected==NAIVE || method_selected==ALL){
-                naive_training(tab_indiv, nb_specimen);
-            }
+			close_learning_file(LearningBase);
+			naive_training(tab_indiv, nb_specimen);
 
             disconnect_to_database();
             // apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
-            if(method_selected==SVM || method_selected==ALL){
-                training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
-            }
-            if(method_selected==KNN || method_selected==ALL){
-                fclose(KNNBase);
-            }
+
+ //               training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
+            fclose(KNNBase);
+            
 
 		} 
 
