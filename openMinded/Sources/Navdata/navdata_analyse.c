@@ -314,11 +314,7 @@ int isInit = 0;
  **/
 int recordNumber = 0;
 
-<<<<<<< HEAD
-int method_selected = NAIVE;
-=======
 int method_selected = SVM;
->>>>>>> 72f736b58b7b964d601cdaeffb5fb37d4319159c
 
 /*************************FUNCTION DECLARATIONs********************************/
 
@@ -561,7 +557,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 }
                 //vp_os_mutex_unlock(&class_mutex);
 				//if 10 individu are stored, we launch the recognition process
-				if(buff_counter == 15){
+				if(buff_counter == 20){
 					buff_counter = 0;
 				    	
 					vp_os_mutex_lock(&class_mutex);
