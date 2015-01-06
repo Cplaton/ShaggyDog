@@ -682,7 +682,7 @@ inline C_RESULT navdata_analyse_release( void )
             disconnect_to_database();
             // apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
             if(method_selected==SVM || method_selected==ALL){
-                training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
+ //               training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
             }
             if(method_selected==KNN || method_selected==ALL){
                 fclose(KNNBase);
