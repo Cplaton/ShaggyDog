@@ -297,7 +297,7 @@ int naive_predict_mean(sample * buffer, naive_model * model){
     int * counters;
     int recog_values[20];
     counters = (int*) malloc(sizeof(int)*model->nb_class);
-    for (l=0;l<10;l++){
+    for (l=0;l<20;l++){
         recog_values[l]=naive_predict(&buffer[l],model);
     }
     if (counters == NULL){
@@ -308,7 +308,7 @@ int naive_predict_mean(sample * buffer, naive_model * model){
         counters[i]=0;
     }
     for(j=0;j<model->nb_class;j++){
-        for(i=0;i<10;i++){
+        for(i=0;i<20;i++){
             if (recog_values[i]==model->classe[j]){
                 counters[j]++;
             }
