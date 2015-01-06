@@ -665,7 +665,7 @@ inline C_RESULT navdata_analyse_release( void )
             }
 
 			close_learning_file(LearningBase);
-		//	naive_training(tab_indiv, nb_specimen);
+			naive_training(tab_indiv, nb_specimen);
 
             disconnect_to_database();
             // apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)

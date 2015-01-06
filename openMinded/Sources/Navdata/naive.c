@@ -127,15 +127,17 @@ void naive_training(sample ** tab_indiv, int nb_indiv){
                     tab_aux[j]=tab_class[j];
                     nb_indiv_aux[j]=nb_indiv_per_class[j];
                 }
-                tab_class = (int *)realloc(tab_class,sizeof(tab_aux)+sizeof(int));
-                nb_indiv_per_class = (int *)realloc(nb_indiv_per_class,sizeof(nb_indiv_aux)+sizeof(int));
+
+                tab_class = (int *)malloc(sizeof(tab_class)+sizeof(int));
+                nb_indiv_per_class = (int *)malloc(sizeof(nb_indiv_per_class)+sizeof(int));
+
                 for(j=0;j<index_tab_class-1;j++){
                     tab_class[j]=tab_aux[j];
                     nb_indiv_per_class[j]=nb_indiv_aux[j];
                 }
                 tab_class[index_tab_class-1]=tab_indiv[i]->classe;
                 nb_indiv_per_class[index_tab_class-1]=1;
-                free(tab_aux);
+                //free(tab_aux);
             }else{
                 k=0;
                 while(tab_class[k]!=tab_indiv[i]->classe){
