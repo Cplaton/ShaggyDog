@@ -314,7 +314,7 @@ int isInit = 0;
  **/
 int recordNumber = 0;
 
-int method_selected = KNN;
+int method_selected = NAIVE;
 
 /*************************FUNCTION DECLARATIONs********************************/
 
@@ -387,17 +387,6 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
         if (!isInit){
 
 
-        	//lecture du model naive bayes
-   			if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-        		nv_model=read_Model("naive_model");
-        		while(nv_model==NULL){
-            		nv_model=read_Model("naive_model");
-        		}
-    		}	
-        	if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-     		   db_data = load_data(KNN_DATA_SET); //TODO: gérer l'erreur d'ouverture de fichier
-    		}
-
         	updateNavdata(&selectedNavdata, nd);
          	initModel(&selectedNavdata,(float32_t)(nd->altitude)/1000, nd->psi/1000);
         	initFilters(&selectedNavdata);
@@ -430,6 +419,17 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				}
     		}
 		}
+        	//lecture du model naive bayes
+   			if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+        		nv_model=read_Model("naive_model");
+        		while(nv_model==NULL){
+            		nv_model=read_Model("naive_model");
+        		}
+    		}	
+        	if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+     		   db_data = load_data(KNN_DATA_SET); //TODO: gérer l'erreur d'ouverture de fichier
+    		}
+
         //récupération et traitement des nouvelles data
 		updateNavdata(&selectedNavdata, nd);
 		model(&local_cmd,&model_output);
