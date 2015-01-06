@@ -32,10 +32,10 @@ predict_results predict(specimen * buffer)
     int nr_class=svm_get_nr_class(modell);
     int j,i,l;
     int *labels;
-    double recog_values[20];
+    double recog_values[10];
     double predict_label;
     
-    struct svm_node x[20];
+    struct svm_node x[10];
     
     
     //	printf("dans predict\n");
@@ -46,7 +46,7 @@ predict_results predict(specimen * buffer)
     
     max_line_len = 1024;
     //	printf("apres realloc\n");
-    for(l=0;l<20;l++) // pour parcourir le tableau de structure
+    for(l=0;l<10;l++) // pour parcourir le tableau de structure
     {
         
         //x = (struct svm_node *) malloc(10*sizeof(struct svm_node));
