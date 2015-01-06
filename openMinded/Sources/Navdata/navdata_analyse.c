@@ -644,7 +644,6 @@ inline C_RESULT navdata_analyse_release( void )
             //learning file filling
             for(i_db=0;i_db<nb_specimen;i_db++){
 
-                if(method_selected==NAIVE || method_selected==ALL){
                     tab_indiv[i_db]=(sample *)vp_os_malloc(sizeof(sample));
                     tab_indiv[i_db]->classe=specimen_naive[i_db].class_id;
                     tab_indiv[i_db]->feature[0]=specimen_naive[i_db].pitch;
@@ -656,7 +655,7 @@ inline C_RESULT navdata_analyse_release( void )
                     tab_indiv[i_db]->feature[6]=specimen_naive[i_db].ax;
                     tab_indiv[i_db]->feature[7]=specimen_naive[i_db].ay;
                     tab_indiv[i_db]->feature[8]=specimen_naive[i_db].az;
-                }
+                
 
                 
                 new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].pitch,specimen[i_db].roll,specimen[i_db].vyaw,specimen[i_db].vx,specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
