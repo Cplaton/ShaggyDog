@@ -567,7 +567,9 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				        class_id = getResponse(knn_neighbors);
                     }
                     if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-                       class_id =  naive_predict_mean(specimen_naive_buffer,nv_model);
+                       if(nv_model!=NULL && specimen_naive_buffer != NULL && sizeof(specimen_naive_buffer)==sizeof(naive_indiv)*20){
+                            class_id =  naive_predict_mean(specimen_naive_buffer,nv_model);
+                        }
                     }
 
                     if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
