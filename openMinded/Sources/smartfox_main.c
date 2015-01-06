@@ -125,7 +125,7 @@ void stop_request() {
 /* Implementing thread table in which you add routines of your application and those provided by the SDK */
 BEGIN_THREAD_TABLE
   THREAD_TABLE_ENTRY( ardrone_control, 20 )
-  THREAD_TABLE_ENTRY( navdata_update, 30 )
+  THREAD_TABLE_ENTRY( navdata_update, 40 )
   THREAD_TABLE_ENTRY( th_move_cmd, 10 ) 
   THREAD_TABLE_ENTRY( th_dis_navdata_demo, 20 )
   THREAD_TABLE_ENTRY( th_gui,20)

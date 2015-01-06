@@ -215,6 +215,7 @@ void naive_training(sample ** tab_indiv, int nb_indiv){
         fprintf(fmodel,"%f %f\n",m,v);
     }
 //    free(tab_values);
+    printf("naive model created\n");
     fclose(fmodel);    
 }
 
@@ -289,7 +290,7 @@ int naive_predict(sample * indiv,naive_model * model){
 return model->classe[index];
 }
 
-void naive_predict_mean(sample * buffer, naive_model * model){
+int naive_predict_mean(sample * buffer, naive_model * model){
     int i,j,l;
     int * counters;
     int recog_values[20];
@@ -323,6 +324,7 @@ void naive_predict_mean(sample * buffer, naive_model * model){
     printf("Classe naivement reconnue : %d\n",recog_class);
     printf("Confiance naive: %lf\n ", 100*((double)max)/((double)l));
     free(counters);
+    return recog_class;
 }
 
 /*

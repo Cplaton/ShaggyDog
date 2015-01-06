@@ -60,7 +60,7 @@ int naive_predict(sample * indiv,naive_model * model);
 * @param   model   naive_model structure's pointer, model to use for classification.
 * @return  Integer representing the predicted class.
 **/
-void naive_predict_mean(sample * indiv,naive_model * model);
+int naive_predict_mean(sample * indiv,naive_model * model);
 
 /**
 * @brief   free the memspace used for a specimen. 

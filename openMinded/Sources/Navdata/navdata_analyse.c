@@ -314,7 +314,7 @@ int isInit = 0;
  **/
 int recordNumber = 0;
 
-int method_selected = NAIVE;
+int method_selected = KNN;
 
 /*************************FUNCTION DECLARATIONs********************************/
 
@@ -387,6 +387,17 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
         if (!isInit){
 
 
+        	//lecture du model naive bayes
+   			if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+        		nv_model=read_Model("naive_model");
+        		while(nv_model==NULL){
+            		nv_model=read_Model("naive_model");
+        		}
+    		}	
+        	if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
+     		   db_data = load_data(KNN_DATA_SET); //TODO: gérer l'erreur d'ouverture de fichier
+    		}
+        
         	updateNavdata(&selectedNavdata, nd);
          	initModel(&selectedNavdata,(float32_t)(nd->altitude)/1000, nd->psi/1000);
         	initFilters(&selectedNavdata);
@@ -419,18 +430,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				}
     		}
 		}
-        	//lecture du model naive bayes
-   			if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-        		nv_model=read_Model("naive_model");
-        		while(nv_model==NULL){
-            		nv_model=read_Model("naive_model");
-        		}
-    		}	
-        	if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-     		   db_data = load_data(KNN_DATA_SET); //TODO: gérer l'erreur d'ouverture de fichier
-    		}
-
-        //récupération et traitement des nouvelles data
+            //récupération et traitement des nouvelles data
 		updateNavdata(&selectedNavdata, nd);
 		model(&local_cmd,&model_output);
 		filters(&selectedNavdata,&filtered_drone_output);
@@ -546,7 +546,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 }
 
 				//current individu storage in a 10 indiv array in order to used the recognition on it
-                vp_os_mutex_lock(&class_mutex);
+                //vp_os_mutex_lock(&class_mutex);
     			
                 if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
                     specimen_buffer[buff_counter]= indiv;
@@ -555,7 +555,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
                     specimen_naive_buffer[buff_counter]= naive_indiv;
                 }
-                vp_os_mutex_unlock(&class_mutex);
+                //vp_os_mutex_unlock(&class_mutex);
 				//if 10 individu are stored, we launch the recognition process
 				if(buff_counter == 9){
 					buff_counter = 0;
@@ -567,7 +567,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				        class_id = getResponse(knn_neighbors);
                     }
                     if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-				        naive_predict_mean(specimen_naive_buffer,nv_model);
+                       class_id =  naive_predict_mean(specimen_naive_buffer,nv_model);
                     }
 
                     if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
@@ -665,7 +665,7 @@ inline C_RESULT navdata_analyse_release( void )
             }
 
 			close_learning_file(LearningBase);
-			naive_training(tab_indiv, nb_specimen);
+		//	naive_training(tab_indiv, nb_specimen);
 
             disconnect_to_database();
             // apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
