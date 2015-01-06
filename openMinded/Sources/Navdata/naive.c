@@ -249,7 +249,7 @@ naive_model * read_Model(char * file_name){
                 no_err=0;
             }
             if(no_err){
-                free(check);
+                //free(check);
                 model->classe=(int *)malloc(sizeof(int)*model->nb_class);
                 model->mean=(float **)malloc(sizeof(float)*model->nb_class);
                 model->variance=(float **)malloc(sizeof(float)*model->nb_class);
