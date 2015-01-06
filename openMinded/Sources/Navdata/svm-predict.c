@@ -119,6 +119,12 @@ predict_results predict(specimen * buffer)
             recog_class = labels[j];
         }
     }
+	
+	if (100*((double)max)/((double)l < 70.0))
+	{
+		recog_class = 0;
+		max = 0;
+	}
     
     printf("nombre de classes : %d\n",nr_class);
     printf("Classe reconnue : %d\n",recog_class);
