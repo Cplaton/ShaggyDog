@@ -10,7 +10,7 @@
 #include <linux/input.h>
 #include <VP_Api/vp_api_thread_helper.h> // api pour les threads
 
- extern int modeReaction;
+
 
 PROTO_THREAD_ROUTINE(th_user_app, data);
 
