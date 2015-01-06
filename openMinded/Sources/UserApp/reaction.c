@@ -28,6 +28,8 @@
 #define LEFT_WALL  5
 
 int enable_openMinded_safety_mode = 0;
+int modeReaction = 0;
+
 
 static vp_os_mutex_t class_mutex;
 static vp_os_mutex_t reaction_mutex;
@@ -45,7 +47,7 @@ DEFINE_THREAD_ROUTINE(reaction, data) {
 
 		}
 		*/
-		if (enable_openMinded_safety_mode == 1)
+		if (modeReaction == 0)
 			check_situation();	
 	}
 
@@ -221,6 +223,7 @@ void check_situation () {
 	switch(class_id) {
 
 		case FRONT_WALL:
+			printf("Reaction.c class_id = %d\n", class_id);
 			vp_os_mutex_lock(&reaction_mutex);
 			modeReaction = 1;
 			vp_os_mutex_unlock(&reaction_mutex);
@@ -233,6 +236,7 @@ void check_situation () {
 			break;
 
 		case BACK_WALL:
+			printf("Reaction.c class_id = %d\n", class_id);
 			vp_os_mutex_lock(&reaction_mutex);
 			modeReaction = 1;
 			vp_os_mutex_unlock(&reaction_mutex);
@@ -244,6 +248,7 @@ void check_situation () {
 			break;
 
 		case RIGHT_WALL:
+			printf("Reaction.c class_id = %d\n", class_id);
 			vp_os_mutex_lock(&reaction_mutex);
 			modeReaction = 1;
 			vp_os_mutex_unlock(&reaction_mutex);
@@ -255,6 +260,7 @@ void check_situation () {
 			break;
 
 		case LEFT_WALL:
+			printf("Reaction.c class_id = %d\n", class_id);
 			vp_os_mutex_lock(&reaction_mutex);
 			modeReaction = 1;
 			vp_os_mutex_unlock(&reaction_mutex);
