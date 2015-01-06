@@ -21,8 +21,6 @@
 static vp_os_mutex_t class_mutex;
 static vp_os_mutex_t reaction_mutex;
 
-int modeReaction;
-
 /*to stop diagnosis app*/
 void kill();
 

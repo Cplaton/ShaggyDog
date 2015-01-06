@@ -18,7 +18,7 @@ struct s_predict_results{
 	int predict_class;
 }typedef predict_results;
 
-extern specimen specimen_buffer[10];
+extern specimen specimen_buffer[20];
 
 predict_results recognition_process(specimen* buffer, char* training_model);
 

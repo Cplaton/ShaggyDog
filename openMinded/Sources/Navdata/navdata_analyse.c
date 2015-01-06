@@ -227,9 +227,9 @@ int class_id_aux;
  * @brief   Value used in recognition process
  **/
 //specimen indiv;
-specimen specimen_buffer[10];
+specimen specimen_buffer[20];
 
-sample specimen_naive_buffer[10];
+sample specimen_naive_buffer[20];
 
 indiv_knn * db_data;
 
@@ -314,7 +314,11 @@ int isInit = 0;
  **/
 int recordNumber = 0;
 
+<<<<<<< HEAD
 int method_selected = NAIVE;
+=======
+int method_selected = SVM;
+>>>>>>> 72f736b58b7b964d601cdaeffb5fb37d4319159c
 
 /*************************FUNCTION DECLARATIONs********************************/
 
@@ -557,7 +561,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 }
                 //vp_os_mutex_unlock(&class_mutex);
 				//if 10 individu are stored, we launch the recognition process
-				if(buff_counter == 9){
+				if(buff_counter == 15){
 					buff_counter = 0;
 				    	
 					vp_os_mutex_lock(&class_mutex);
