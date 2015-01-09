@@ -52,6 +52,7 @@ typedef struct gui
 	GtkWidget *labelBattery;
 	GtkWidget *labelWifi;
 	GtkWidget *labelDroneS;
+	GtkWidget *labelDroneClass;
 	/*-----images-----*/
 	GtkWidget* imgSmartFox;
 	GtkWidget* imgFile;
@@ -85,6 +86,7 @@ typedef struct gui
 	GtkWidget *textEntryBattery;
 	GtkWidget *textEntryWifi;
 	GtkWidget *textEntryDroneS;
+	GtkWidget *textEntryDroneClass;
 	/*-----checkbuttons-----*/
 	GtkWidget *checkButtonSaturation;
 	GtkWidget *checkButtonSys;
