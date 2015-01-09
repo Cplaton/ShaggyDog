@@ -1,6 +1,5 @@
 #include "knn_classification.h"
 
-
 indiv_knn * load_data(char * nomFichier) {
 
 	FILE * fichier = NULL;

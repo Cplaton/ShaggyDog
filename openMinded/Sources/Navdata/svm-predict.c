@@ -10,7 +10,7 @@ int print_null(const char *s,...) {return 0;}
 
 static int (*info)(const char *fmt,...) = &printf;
 
-//specimen specimen_buffer[10];
+
 
 //struct svm_node *x;
 int max_nr_attr = 64;
@@ -36,20 +36,14 @@ predict_results predict(specimen * buffer)
     double predict_label;
     
     struct svm_node x[10];
-    
-    
-    //	printf("dans predict\n");
+
     // pour avoir les labels
     labels=(int *) malloc(nr_class*sizeof(int));
     svm_get_labels(modell,labels);
-    //printf("apres get labels\n");
     
     max_line_len = 1024;
-    //	printf("apres realloc\n");
     for(l=0;l<10;l++) // pour parcourir le tableau de structure
     {
-        
-        //x = (struct svm_node *) malloc(10*sizeof(struct svm_node));
         for(i=0;i<10;i++) // pour parcourir la structure
         {
             x[i].index = i+1;

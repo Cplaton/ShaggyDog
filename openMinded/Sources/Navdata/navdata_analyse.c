@@ -334,6 +334,10 @@ void refresh_wifi_quality(const navdata_wifi_t *);
 void extractDesiredNavdata(const navdata_demo_t * nd, Navdata_t *selectedNavdata);
 void refresh_command();
 
+void init_svm_indiv(specimen * indiv);
+void init_naive_indiv(sample * naive_indiv);
+void init_knn_indiv(indiv_knn * knn_individu);
+
 /*************************FUNCTION IMPLEMENTATIONs*******************************/
 
 /**
@@ -363,10 +367,8 @@ inline C_RESULT navdata_analyse_init( void * data )
 inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata )
 {
     static int counter = 0 ;
-    static int i;
     // navdata structures
     const navdata_demo_t *nd = &navdata->navdata_demo;
-    const navdata_time_t *nt = &navdata->navdata_time;
     const navdata_wifi_t *nw = &navdata->navdata_wifi;
 
     Navdata_t selectedNavdata;
@@ -502,11 +504,16 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 }
                 
 			}else{
-                
+                // Declaration des individus
                 specimen indiv;
                 sample naive_indiv;
                 indiv_knn knn_individu;
                 indiv_knn * knn_neighbors;
+				
+				// initialisation 
+				init_svm_indiv(&indiv);
+				init_naive_indiv(&naive_indiv);
+				init_knn_indiv(&knn_individu);
 
                 
                 if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
@@ -563,7 +570,6 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				//if 10 individu are stored, we launch the recognition process
 				if(buff_counter == 10){
 					buff_counter = 0;
-				    	
 					vp_os_mutex_lock(&class_mutex);
 
                     if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
@@ -825,6 +831,40 @@ float get_wifi_quality() {
 
   return link_quality;
 
+}
+
+
+void init_svm_indiv(specimen * indiv){
+	indiv->pitch = 0;
+	indiv->roll = 0;
+	indiv->vyaw = 0;
+	indiv->vx = 0;
+	indiv->vy = 0;
+	indiv->vz = 0;
+	indiv->ax = 0;
+	indiv->ay = 0;
+	indiv->az = 0;
+}
+void init_naive_indiv(sample * naive_indiv){
+	int i = 0;
+	naive_indiv->classe=-1;
+	for(i=0;i<9;i++){
+		naive_indiv->feature[i]=0;
+	}
+}
+
+void init_knn_indiv(indiv_knn * knn_individu){
+	knn_individu->pitch = 0;
+	knn_individu->roll = 0;
+	knn_individu->vyaw = 0;
+	knn_individu->vx = 0;
+	knn_individu->vy = 0;
+	knn_individu->vz = 0;
+	knn_individu->ax = 0;
+	knn_individu->ay = 0;
+	knn_individu->az = 0;
+	knn_individu->nb_indiv = 0;
+	knn_individu->class_id = 0;
 }
 
 /* Registering to navdata client */

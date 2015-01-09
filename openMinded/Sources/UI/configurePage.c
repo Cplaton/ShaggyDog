@@ -6,8 +6,6 @@ typedef struct
 }
 combo_data_st;
 
-
-
 extern gui_t *gui;
 
 char * select_mission;

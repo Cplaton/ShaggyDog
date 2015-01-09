@@ -64,7 +64,6 @@ float max_ay = 0.0077;
 float min_az = -0.03;
 float max_az = 0.015;
 
-
 void exit_nicely()
 {
 	PQfinish(conn_bd);

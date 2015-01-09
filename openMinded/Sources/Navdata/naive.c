@@ -91,7 +91,7 @@ void naive_training(sample ** tab_indiv, int nb_indiv){
     FILE * fmodel;
     int * tab_class;
     int * tab_aux;
-    int * nb_indiv_per_class;
+    int * nb_indiv_per_class = NULL;
     int * nb_indiv_aux ;
     int index_tab_class = 0;    
     int i,j,k;
@@ -146,7 +146,6 @@ void naive_training(sample ** tab_indiv, int nb_indiv){
                 nb_indiv_per_class[k]++;
             }
         }
-    
     }
     printf("index=%d\n",index_tab_class);
     values_tmp tab_values[index_tab_class];
@@ -226,13 +225,14 @@ naive_model * read_Model(char * file_name){
     FILE * fmodel;
     naive_model * model;
     char * check;
-    int nb_class, nb_feat, no_err,j;
+    int nb_class, nb_feat, no_err,j,res;
     model=(naive_model *)malloc(sizeof(model));        
     
+	
     fmodel = fopen(file_name,"r+");
     if(fmodel!=NULL){
         check=(char*)malloc(5);
-        fscanf(fmodel,"%s %d",check,&nb_class);
+        res = fscanf(fmodel,"%s %d",check,&nb_class);
         if(strcmp(check,"nb_cl")==0){
             model->nb_class=nb_class;
             no_err=1;
@@ -241,7 +241,7 @@ naive_model * read_Model(char * file_name){
         }
         if(no_err){
             check=realloc(check,7);
-            fscanf(fmodel,"%s %d",check,&nb_feat);
+            res = fscanf(fmodel,"%s %d",check,&nb_feat);
             if(strcmp(check,"nb_feat")==0){
                 model->nb_feature=nb_feat;
                 no_err=1;
@@ -256,7 +256,7 @@ naive_model * read_Model(char * file_name){
                 for(j=0;j<model->nb_class;j++){
                     model->mean[j]=(float *)malloc(sizeof(float)*model->nb_feature);
                     model->variance[j]=(float *)malloc(sizeof(float)*model->nb_feature);
-                    fscanf(fmodel,"%d %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",&model->classe[j], &model->mean[j][0], &model->variance[j][0], &model->mean[j][1], &model->variance[j][1], &model->mean[j][2], &model->variance[j][2], &model->mean[j][3], &model->variance[j][3], &model->mean[j][4], &model->variance[j][4], &model->mean[j][5], &model->variance[j][5], &model->mean[j][6], &model->variance[j][6], &model->mean[j][7], &model->variance[j][7], &model->mean[j][8], &model->variance[j][8]);
+                    res = fscanf(fmodel,"%d %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",&model->classe[j], &model->mean[j][0], &model->variance[j][0], &model->mean[j][1], &model->variance[j][1], &model->mean[j][2], &model->variance[j][2], &model->mean[j][3], &model->variance[j][3], &model->mean[j][4], &model->variance[j][4], &model->mean[j][5], &model->variance[j][5], &model->mean[j][6], &model->variance[j][6], &model->mean[j][7], &model->variance[j][7], &model->mean[j][8], &model->variance[j][8]);
                 }
             }else{
                 model=NULL;
