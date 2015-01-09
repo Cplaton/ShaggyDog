@@ -578,7 +578,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 
 				        	knn_buffer_counter = 0;
 				        	class_id = getResponse_mean(knn_buffer);
-                                                alertDroneState(class_id);
+                            alertDroneState(class_id);
 				        }
 				        else{
 				       		knn_buffer[knn_buffer_counter] = getResponse(knn_neighbors);
@@ -876,7 +876,7 @@ void alertDroneState (int classId){
 }
 
 
-void alertDroneState (int classCount, int classId, float confidence, char * algoName){
+void alertFullDroneState (int classCount, int classId, float confidence, char * algoName){
     showState(classId);
     if(options.debug!=0){
         printf("Algorithme : %s\n", algoName);
