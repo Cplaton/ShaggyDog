@@ -209,52 +209,19 @@ void mission_SFS_2() {
 				get_command(&lastcommand, &type);// Type : TAKEOFF_REQUEST, 	FLYING_REQUEST, LANDING_REQUEST
 				status = get_drone_state();
 				if (status == FLYING){
-					etat = FORWARD_PITCH;
+					etat = HOVER_DRONE;
 				}
 				break;
 
-			case FORWARD_PITCH :
-
-				//void apply_command(roll, pitch, yaw, gas)
-				vp_os_mutex_lock(&class_mutex);
-                class_id=0;
-                vp_os_mutex_unlock(&class_mutex);
-				command = pitch(-0.2, 1000000);
-				if (command != 0) {
-					etat = LEFT_YAW;
-				}
-				break;
 
 			case HOVER_DRONE :
 
 				vp_os_mutex_lock(&class_mutex);
                 class_id=1;
                 vp_os_mutex_unlock(&class_mutex);
-				fin = hover(5000000);
+				fin = hover(10000000);
 				if (fin == 1)
-					etat = RIGHT_YAW;
-				break;
-
-			case LEFT_YAW:
-
-				vp_os_mutex_lock(&class_mutex);
-                class_id=0;
-                vp_os_mutex_unlock(&class_mutex);
-				command = yaw(-1.0,2000000);
-				if (command != 0) {
-					etat = HOVER_DRONE;
-				}
-				break;
-
-			case RIGHT_YAW:
-
-				vp_os_mutex_lock(&class_mutex);
-                class_id=0;
-                vp_os_mutex_unlock(&class_mutex);
-				command = yaw(1.0,2000000);
-				if (command != 0) {
 					etat = LAND_DRONE;
-				}
 				break;
 
 			case LAND_DRONE :

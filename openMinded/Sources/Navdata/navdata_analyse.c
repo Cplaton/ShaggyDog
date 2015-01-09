@@ -314,7 +314,7 @@ int isInit = 0;
  **/
 int recordNumber = 0;
 
-int method_selected = SVM;
+int method_selected = KNN;
 
 /*************************FUNCTION DECLARATIONs********************************/
 
