@@ -4,7 +4,7 @@ extern int debugModeOn;
 
 
 void showState(int classid){
-   
+
 	char msg[20];
 
 	/*-----switch different fault_t message-----*/
@@ -36,8 +36,8 @@ void showState(int classid){
 	default:
 		sprintf(msg,"%s","No obstacle");
 	}
-        
-        gtk_entry_set_text(GTK_ENTRY(gui->textEntryDroneClass),msg);
+
+	gtk_entry_set_text(GTK_ENTRY(gui->textEntryDroneClass),msg);
 }
 
 /*-----computation different fault message according to fault_t message------*/
@@ -130,7 +130,7 @@ void displayAlertMsg (fault_t msg) {
 	default:
 		sprintf(alertMsg,"%s","No obstacle");
 	}
-	
+
 	msgTime = time(NULL);
 	if(debugModeOn == 1)
 		gtk_entry_set_text(GTK_ENTRY(gui->textEntrySignatureState),alertMsg);
