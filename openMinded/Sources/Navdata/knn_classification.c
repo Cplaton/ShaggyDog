@@ -177,8 +177,37 @@ int getResponse (indiv_knn neighbors[K]) {
 			occurence_last = occurence;
 		}
 	}
-	printf("knn : class_id = %d\n", response);
 	return response;
+
+}
+
+int getResponse_mean (int buffer[Buffer_Size]) {
+
+
+	int counter[Trained_Class_Nb];
+	int response_mean = 0;
+	int i;
+
+	for (i=0;i<Trained_Class_Nb;i++) {
+		counter[i] = 0;
+	}
+
+	for (i=0;i<Buffer_Size;i++) {
+		counter[buffer[i]]++;
+	}
+
+	int max = 0;
+
+	for (i=0;i<Trained_Class_Nb;i++) {
+
+		if (counter[i] > max) {
+
+			max = counter[i];
+			response_mean = i;
+		}
+	}
+	printf("knn : class_id = %d\n", response_mean);
+	return response_mean;
 
 }
 

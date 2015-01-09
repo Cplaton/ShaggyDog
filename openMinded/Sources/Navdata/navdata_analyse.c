@@ -316,6 +316,10 @@ int recordNumber = 0;
 
 int method_selected = KNN;
 
+int knn_buffer[10];
+
+int knn_buffer_counter = 0;
+
 /*************************FUNCTION DECLARATIONs********************************/
 
 /* according to the last navdata received, resfresh the drone state */
@@ -503,6 +507,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                 sample naive_indiv;
                 indiv_knn knn_individu;
                 indiv_knn * knn_neighbors;
+
                 
                 if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
 // descripters d'un individu pour svm
@@ -563,7 +568,15 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 
                     if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
 				        knn_neighbors = getNeighbors (db_data, knn_individu);
-				        class_id = getResponse(knn_neighbors);
+				        if (knn_buffer_counter == 3) {
+
+				        	knn_buffer_counter = 0;
+				        	class_id = getResponse_mean(knn_buffer);	
+				        }
+				        else{
+				       		knn_buffer[knn_buffer_counter] = getResponse(knn_neighbors);
+				        	knn_buffer_counter++;	
+				        }
                     }
                     if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
                        if(nv_model!=NULL && specimen_naive_buffer != NULL){
