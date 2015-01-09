@@ -9,8 +9,7 @@
 #define USER_APP_H__
 #include <linux/input.h>
 #include <VP_Api/vp_api_thread_helper.h> // api pour les threads
-
-
+#include "reaction.h"
 
 PROTO_THREAD_ROUTINE(th_user_app, data);
 
