@@ -2,6 +2,46 @@
 extern gui_t *gui;
 extern int debugModeOn;
 
+
+void showState(int classid){
+   
+	char msg[20];
+	time_t msgTime;
+	GtkTextIter endAlert;
+
+	/*-----switch different fault_t message-----*/
+	switch (classid) {
+	case 2:
+		sprintf(msg,"%s","Front Obs");
+		break;
+	case 3:
+		sprintf(msg,"%s","Rear Obs");
+		break;
+	case 4:
+		sprintf(msg,"%s","Right Obs");
+		break;
+	case 5:
+		sprintf(msg,"%s","Left Obs");
+		break;
+	case 6:
+		sprintf(msg,"%s","Top Obs");
+		break;
+	case 7:
+		sprintf(msg,"%s","Bottom Obs");
+		break;
+	case 1:
+		sprintf(msg,"%s","Stationary");
+		break;
+	case 0:
+		sprintf(msg,"%s","Unknown");
+		break;
+	default:
+		sprintf(msg,"%s","No obstacle");
+	}
+        
+        gtk_entry_set_text(GTK_ENTRY(gui->textEntryDroneClass),msg);
+}
+
 /*-----computation different fault message according to fault_t message------*/
 void displayAlertMsg (fault_t msg) {
 	char alertMsg[50];
