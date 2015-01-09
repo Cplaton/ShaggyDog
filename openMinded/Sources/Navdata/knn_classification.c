@@ -3,20 +3,20 @@
 indiv_knn * load_data(char * nomFichier) {
 
 	FILE * fichier = NULL;
-	int nb_specimen;
+	int nb_specimen, res;
 	static indiv_knn * data_matrice;
 	float floatdata[9];
 	int intdata;
 	fichier = fopen(nomFichier, "r+");
 
 	if (fichier != NULL) {
-		fscanf(fichier, "%d", &nb_specimen);
+		res = fscanf(fichier, "%d", &nb_specimen);
 		data_matrice = malloc(sizeof(indiv_knn)*nb_specimen);
 		int i;
 
 		for (i = 0; i<nb_specimen; i++) {
 			
-			fscanf(fichier, "%d %f %f %f %f %f %f %f %f %f", &intdata, &floatdata[0], &floatdata[1], &floatdata[2], &floatdata[3], &floatdata[4], &floatdata[5], &floatdata[6], &floatdata[7], &floatdata[8]);
+			res = fscanf(fichier, "%d %f %f %f %f %f %f %f %f %f", &intdata, &floatdata[0], &floatdata[1], &floatdata[2], &floatdata[3], &floatdata[4], &floatdata[5], &floatdata[6], &floatdata[7], &floatdata[8]);
 			data_matrice[i].pitch = floatdata[0];
 			data_matrice[i].roll  = floatdata[1];
 			data_matrice[i].vyaw  = floatdata[2];
@@ -185,6 +185,7 @@ int getResponse_mean (int buffer[Buffer_Size]) {
 
 	int counter[Trained_Class_Nb];
 	int response_mean = 0;
+	float accuracy = 0.0;
 	int i;
 
 	for (i=0;i<Trained_Class_Nb;i++) {
@@ -203,38 +204,12 @@ int getResponse_mean (int buffer[Buffer_Size]) {
 
 			max = counter[i];
 			response_mean = i;
+			accuracy = ((float)max/(float)Buffer_Size)*100.0;
 		}
 	}
-	printf("knn : class_id = %d\n", response_mean);
+	printf("knn : class_id = %d, accuracy = %f\n", response_mean, accuracy);
 	return response_mean;
 
-}
-
-float getAccuracy(indiv_knn * testSet, int * tab, int size) {
-
-	float correct = 0.0;
-	int i;
-	for (i=0;i<size;i++){
-		if (testSet[i].class_id == tab[i])
-			correct++;
-	}
-
-	return (correct/(float)size) * 100.0;
-}
-
-int exists (int * tab, int val, int size) {
-
-	int trouve = 0;
-
-	int i = 0;
-	while ((i<size) && (trouve == 0)) {
-		
-		if (tab[i] == val)
-			trouve = 1;
-		i++;
-	}
-
-	return trouve;
 }
 
 int occurence_number (int * tab, int val, int size) {
@@ -252,45 +227,3 @@ int occurence_number (int * tab, int val, int size) {
 	return trouve;
 
 }
-/*
-void main() {
-
-	indiv_knn * matrice;
-
-	matrice = load_data("BaseApp");
-
- //0.004172  0.385072  0.346904  0.224912  0.505152  0.492094  0.812270  0.042337  0.664200 
-	
-	indiv_knn testInstance;
-	testInstance.pitch = 0.004172 ;
-	testInstance.roll  = 0.385072;
-	testInstance.vyaw = 0.346904;
-	testInstance.vx = 0.224912;
-	testInstance.vy  = 0.505152;
-	testInstance.vz = 0.492094;
-	testInstance.ax = 0.812270 ;
-	testInstance.ay  = 0.042337;
-	testInstance.az = 0.664200;
-
-
-	indiv_knn * neighbors;
-
-	neighbors = getNeighbors(matrice, testInstance);
-
-	//printf("%f\n", neighbors[0].pitch);
-	//printf("%f\n", neighbors[1].pitch);
-	//printf("%f\n", neighbors[2].pitch);
-
-	int response;
-
-	response = getResponse(neighbors);
-
-	
-
-	printf("response = %d\n", response);
-
-
-	
-}
-
-*/

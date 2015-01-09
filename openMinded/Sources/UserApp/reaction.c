@@ -1,3 +1,10 @@
+/**
+ * @file    reaction.c
+ * @author  ShaggyDogs
+ * @brief   Reaction Module
+ * @version 1.0
+ * @date    December 2014
+ **/
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -39,6 +46,7 @@ DEFINE_THREAD_ROUTINE(reaction, data) {
 	while (1) {
 
 		usleep(100);
+
 		if (modeReaction == 0 && enable_openMinded_safety_mode==1)
 			check_situation();	
 	}

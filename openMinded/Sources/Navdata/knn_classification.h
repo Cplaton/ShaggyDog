@@ -43,10 +43,6 @@ int getResponse (indiv_knn neighbors[K]);
 
 int getResponse_mean (int buffer[Buffer_Size]);
 
-float getAccuracy(indiv_knn * testSet, int * tab, int size);
-
-int exists (int * tab, int val, int size);
-
 int occurence_number (int * tab, int val, int size);
 
 #endif
