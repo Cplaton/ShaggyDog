@@ -27,7 +27,7 @@
 #define RIGHT_WALL 4
 #define LEFT_WALL  5
 
-int enable_openMinded_safety_mode;
+int enable_openMinded_safety_mode=1;
 int modeReaction = 0;
 
 

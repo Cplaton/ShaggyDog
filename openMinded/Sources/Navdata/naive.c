@@ -297,7 +297,7 @@ int naive_predict_mean(sample * buffer, naive_model * model){
     int * counters;
     int recog_values[10];
     counters = (int*) malloc(sizeof(int)*model->nb_class);
-    for (l=0;l<0;l++){
+    for (l=0;l<10;l++){
         recog_values[l]=naive_predict(&buffer[l],model);
     }
     if (counters == NULL){
@@ -325,7 +325,7 @@ int naive_predict_mean(sample * buffer, naive_model * model){
     printf("nombre de classes naive : %d\n",model->nb_class);
     printf("Classe naivement reconnue : %d\n",recog_class);
     printf("Confiance naive: %lf\n ", 100*((double)max)/((double)l));
-    free(counters);
+    //free(counters);
     return recog_class;
 }
 
