@@ -20,11 +20,11 @@
  * @abstract	Struct containing the information that should be sent to the drone in order to command it
  **/
 typedef struct _move_command {
-    int record_nb;  /**< ??. */
-    float roll;     /**< roll to set to the drone. */
-    float pitch;    /**< pitch to set to the drone. */
-    float yaw;      /**< yaw to set to the drone. */
-    float gas;      /**< gas to set to the motors. */
+	int record_nb; /**< ??. */
+	float roll; /**< roll to set to the drone. */
+	float pitch; /**< pitch to set to the drone. */
+	float yaw;  /**< yaw to set to the drone. */
+	float gas;  /**< gas to set to the motors. */
 } move_command;
 
 /**
@@ -93,7 +93,7 @@ FILE * openLogFile(char * name);
  * @brief   Closes the tansmetted log file
  * @param   fd    The log file to be closed
  **/
-void closeLogFile(FILE * fd) ;
+void closeLogFile(FILE * fd);
 
 
 /**
