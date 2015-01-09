@@ -2,7 +2,7 @@
  * @file    naive.h
  * @author  ShaggyPlaton
  * @brief   Naive Bayes library
- * @version 2.0
+ * @version 0.42
  * @date    December 2014
  **/
 

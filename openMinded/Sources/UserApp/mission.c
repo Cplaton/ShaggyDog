@@ -2,7 +2,7 @@
  * @file    mission.c
  * @author  ShaggyDogs
  * @brief   Contains all the functions used to send commands to the drone
- * @version 2.0
+ * @version 1.0
  * @date    November 2014
  */
 
