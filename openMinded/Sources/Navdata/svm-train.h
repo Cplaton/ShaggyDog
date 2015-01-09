@@ -9,8 +9,10 @@
 #define _TRAIN_H
 
 /**
- * @fn      
- * @brief  
+ * @fn      training_model_generation
+ * @brief   function generating a SVM model from training samples.
+ * @param   training_set    path to the file containing the learning base. 
+ * @param   training_model  path to the
  * @param 
  * @param
  * @return
