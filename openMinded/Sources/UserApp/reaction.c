@@ -39,19 +39,8 @@ DEFINE_THREAD_ROUTINE(reaction, data) {
 	while (1) {
 
 		usleep(100);
-<<<<<<< HEAD
-		/*
-		if (modeReaction == 1) {
 
-			printf("Module de reaciton active\n");
-			avoid_front_wall();
-
-		}
-		*/
-		if (modeReaction == 0)
-=======
 		if (modeReaction == 0 && enable_openMinded_safety_mode==1)
->>>>>>> 01319f77cb4912a68905bd3dac0821d9e8513bcb
 			check_situation();	
 	}
 
