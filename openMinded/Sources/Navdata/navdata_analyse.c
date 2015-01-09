@@ -103,61 +103,61 @@ FILE * tmp;
  * @var		av_alt
  * @brief	Average altitude of the last statements.
  **/
-static float av_alt = 0.0 ;
+static float av_alt = 0.0;
 
 /**
  * @var		av_pitch
  * @brief	Average pitch of the last statements.
  **/
-static float av_pitch = 0.0 ;
+static float av_pitch = 0.0;
 
 /**
  * @var		av_roll
  * @brief	Average roll of the last statements.
  **/
-static float av_roll = 0.0 ;
+static float av_roll = 0.0;
 
 /**
  * @var		av_Vyaw
  * @brief	Average yaw speed of the last statements.
  **/
-static float av_Vyaw = 0.0 ;
+static float av_Vyaw = 0.0;
 
 /**
  * @var		av_Vx
  * @brief	Average x speed of the last statements.
  **/
-static float av_Vx = 0.0 ;
+static float av_Vx = 0.0;
 
 /**
  * @var		av_aVy
  * @brief	Average y speed of the last statements.
  **/
-static float av_Vy = 0.0 ;
+static float av_Vy = 0.0;
 
 /**
  * @var		av_z speed
  * @brief	Average z speed of the last statements.
  **/
-static float av_Vz = 0.0 ;
+static float av_Vz = 0.0;
 
 /**
  * @var		av_alt
  * @brief	Average x acceleration of the last statements.
  **/
-static float ax = 0.0 ;
+static float ax = 0.0;
 
 /**
  * @var		av_alt
  * @brief	Average y acceleration of the last statements.
  **/
-static float ay = 0.0 ;
+static float ay = 0.0;
 
 /**
  * @var		av_alt
  * @brief	Average z acceleration of the last statements.
  **/
-static float az = 0.0 ;
+static float az = 0.0;
 
 /**
  * @var		drone_state
@@ -172,7 +172,7 @@ static drone_state_t drone_state = UNKNOWN_STATE;
  * @brief	Current battery level  of the drone. Value is in percentage.
  * @warning This variable is protected by the battery_mutex. Do not forget to call it before accessing the variable.
  **/
-static float drone_battery = 0.0 ;
+static float drone_battery = 0.0;
 
 /**
  * @var		drone_battery
@@ -347,17 +347,17 @@ void init_knn_indiv(indiv_knn * knn_individu);
  **/
 inline C_RESULT navdata_analyse_init( void * data )
 {
-    vp_os_mutex_init(&state_mutex);
-    vp_os_mutex_init(&battery_mutex);
-    vp_os_mutex_init(&wifi_mutex);
+	vp_os_mutex_init(&state_mutex);
+	vp_os_mutex_init(&battery_mutex);
+	vp_os_mutex_init(&wifi_mutex);
 
-	
-    if(mkdir("./DataModel", 0722) != 0)
-    {
-        perror("navdata_analyse_init");
-    };
-    
-    return C_OK;
+
+	if(mkdir("./DataModel", 0722) != 0)
+	{
+		perror("navdata_analyse_init");
+	};
+
+	return C_OK;
 }
 
 /**
@@ -366,76 +366,76 @@ inline C_RESULT navdata_analyse_init( void * data )
  **/
 inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata )
 {
-    static int counter = 0 ;
-    // navdata structures
-    const navdata_demo_t *nd = &navdata->navdata_demo;
-    const navdata_wifi_t *nw = &navdata->navdata_wifi;
+	static int counter = 0;
+	// navdata structures
+	const navdata_demo_t *nd = &navdata->navdata_demo;
+	const navdata_wifi_t *nw = &navdata->navdata_wifi;
 
-    Navdata_t selectedNavdata;
-    Navdata_t model_output;
-    Navdata_t filtered_drone_output;
-    //Residue_t residues;
-    static uint32_t time=0;
+	Navdata_t selectedNavdata;
+	Navdata_t model_output;
+	Navdata_t filtered_drone_output;
+	//Residue_t residues;
+	static uint32_t time=0;
 
-    extract_drone_state(nd);
-    refresh_battery(nd);
-    refresh_wifi_quality(nw);
+	extract_drone_state(nd);
+	refresh_battery(nd);
+	refresh_wifi_quality(nw);
 
 
-    if (   (nd->ctrl_state >> 16) == CTRL_FLYING
-        || (nd->ctrl_state >> 16) == CTRL_HOVERING
-        || (nd->ctrl_state >> 16) ==  CTRL_TRANS_GOTOFIX)
+	if (   (nd->ctrl_state >> 16) == CTRL_FLYING
+	       || (nd->ctrl_state >> 16) == CTRL_HOVERING
+	       || (nd->ctrl_state >> 16) ==  CTRL_TRANS_GOTOFIX)
 	{ // ready to receive data
 
-        extractDesiredNavdata(nd,&selectedNavdata);
-        refresh_command();
+		extractDesiredNavdata(nd,&selectedNavdata);
+		refresh_command();
 
-        if (!isInit){
+		if (!isInit) {
 
 
-        	//lecture du model naive bayes
-   			if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-        		while(nv_model==NULL){
-            		nv_model=read_Model("naive_model");
-        		}
-    		}	
-        	if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-     		   db_data = load_data(KNN_DATA_SET); //TODO: gérer l'erreur d'ouverture de fichier
-    		}
-        
-        	updateNavdata(&selectedNavdata, nd);
-         	initModel(&selectedNavdata,(float32_t)(nd->altitude)/1000, nd->psi/1000);
-        	initFilters(&selectedNavdata);
+			//lecture du model naive bayes
+			if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)) {
+				while(nv_model==NULL) {
+					nv_model=read_Model("naive_model");
+				}
+			}
+			if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)) {
+				db_data = load_data(KNN_DATA_SET); //TODO: gérer l'erreur d'ouverture de fichier
+			}
+
+			updateNavdata(&selectedNavdata, nd);
+			initModel(&selectedNavdata,(float32_t)(nd->altitude)/1000, nd->psi/1000);
+			initFilters(&selectedNavdata);
 
 			// get min and max from database to normalize recognition data
-			if(connect_to_database()!=0){
+			if(connect_to_database()!=0) {
 				printf("failed to connect database");
 			}
 			disconnect_to_database();
 			// fin get min and max
 
-           	isInit = 1;
+			isInit = 1;
 
-			if(options.debug!=0){
+			if(options.debug!=0) {
 
 				fm = open_navdata_file(NAME_MODEL_DATA);
-     		    ff = open_navdata_file(NAME_FILTERED_DATA);
+				ff = open_navdata_file(NAME_FILTERED_DATA);
 				fr = open_navdata_file(NAME_REAL_DATA);
 				fc = open_navdata_file("selectedNav");
 				fres = open_navdata_file("residue");
 				logSFM=openLogFile("logSFM");
 
-				if( options.mission==1 ){
-					if(connect_to_database()!=0){
+				if( options.mission==1 ) {
+					if(connect_to_database()!=0) {
 						printf("failed to connect database");
 					}else{
 						printf("start flight\n");
 						start_new_flight();
 					}
 				}
-    		}
+			}
 		}
-            //récupération et traitement des nouvelles data
+		//récupération et traitement des nouvelles data
 		updateNavdata(&selectedNavdata, nd);
 		model(&local_cmd,&model_output);
 		filters(&selectedNavdata,&filtered_drone_output);
@@ -444,281 +444,301 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 		alert_msg=residueAnalysis(&residues);
 		fault_msg=diagnosis(0);
 
-		if(options.disableSSM==0){
-            safetyOn=smartSafetyMode(fault_msg, &filtered_drone_output);
+		if(options.disableSSM==0) {
+			safetyOn=smartSafetyMode(fault_msg, &filtered_drone_output);
 		}
-		if(safetyOn==4){
-            fault_msg=diagnosis(1);
+		if(safetyOn==4) {
+			fault_msg=diagnosis(1);
 		}
 		//1 individu est constitué à partir de 10 jeux de donné
-		if(counter==0){
-			av_alt = 0.0 ;
-			av_pitch = 0.0 ;
-			av_roll = 0.0 ;
-			av_Vyaw = 0.0 ;
-			av_Vx = 0.0 ;
-			av_Vy = 0.0 ;
-			av_Vz = 0.0 ;
-			ax = filtered_drone_output.Vx ;
-			ay = filtered_drone_output.Vy ;
-			az = filtered_drone_output.Vz ;
+		if(counter==0) {
+			av_alt = 0.0;
+			av_pitch = 0.0;
+			av_roll = 0.0;
+			av_Vyaw = 0.0;
+			av_Vx = 0.0;
+			av_Vy = 0.0;
+			av_Vz = 0.0;
+			ax = filtered_drone_output.Vx;
+			ay = filtered_drone_output.Vy;
+			az = filtered_drone_output.Vz;
 		}
 		//alt,pitch,roll,Vyaw,Velocity calculation
-		if(counter<=9){
-			av_alt += (float32_t)(nd->altitude)/10000 ;
-			av_pitch += filtered_drone_output.pitch/10 ;
-			av_roll += filtered_drone_output.roll/10 ;
-			av_Vyaw += filtered_drone_output.Vyaw/10 ;
-			av_Vx += filtered_drone_output.Vx/10 ;
-			av_Vy += filtered_drone_output.Vy/10 ;
-			av_Vz += filtered_drone_output.Vz/10 ;
+		if(counter<=9) {
+			av_alt += (float32_t)(nd->altitude)/10000;
+			av_pitch += filtered_drone_output.pitch/10;
+			av_roll += filtered_drone_output.roll/10;
+			av_Vyaw += filtered_drone_output.Vyaw/10;
+			av_Vx += filtered_drone_output.Vx/10;
+			av_Vy += filtered_drone_output.Vy/10;
+			av_Vz += filtered_drone_output.Vz/10;
 			counter++;
 		}
-		if(counter==10){
-		    //acceleration calculation
-			ax = (filtered_drone_output.Vx - ax)/50 ;
-			ay = (filtered_drone_output.Vy - ay)/50 ;
-			az = (filtered_drone_output.Vz - az)/50 ;
-			counter = 0 ;
+		if(counter==10) {
+			//acceleration calculation
+			ax = (filtered_drone_output.Vx - ax)/50;
+			ay = (filtered_drone_output.Vy - ay)/50;
+			az = (filtered_drone_output.Vz - az)/50;
+			counter = 0;
 
 			//si mission active, on rempli la BD avec le nouvelle individu
-			if( options.mission == 1 ){
+			if( options.mission == 1 ) {
 				vp_os_mutex_lock(&class_mutex);
 				class_id_aux=class_id;
 				vp_os_mutex_unlock(&class_mutex);
 				insert_new_data(time,av_alt,av_pitch,av_roll,av_Vyaw,av_Vx,av_Vy,av_Vz,ax,ay,az,class_id_aux);
-                
-                if(options.debug!=0){
-                    fprintf(logSFM,"%d 1:%f 2:%f 3:%f 4:%f 5:%f 6:%f 7:%f 8:%f 9:%f\n",
-                            class_id,
-                            norm_indiv(av_pitch,1),
-                            norm_indiv(av_roll,2),
-                            norm_indiv(av_Vyaw,3),
-                            norm_indiv(av_Vx,4),
-                            norm_indiv(av_Vy,5),
-                            norm_indiv(av_Vz,6),
-                            norm_indiv(ax,7),
-                            norm_indiv(ay,8),
-                            norm_indiv(az,9));
-                    
-                }
-                
+
+				if(options.debug!=0) {
+					fprintf(logSFM,"%d 1:%f 2:%f 3:%f 4:%f 5:%f 6:%f 7:%f 8:%f 9:%f\n",
+					        class_id,
+					        norm_indiv(av_pitch,1),
+					        norm_indiv(av_roll,2),
+					        norm_indiv(av_Vyaw,3),
+					        norm_indiv(av_Vx,4),
+					        norm_indiv(av_Vy,5),
+					        norm_indiv(av_Vz,6),
+					        norm_indiv(ax,7),
+					        norm_indiv(ay,8),
+					        norm_indiv(az,9));
+
+				}
+
 			}else{
-                // Declaration des individus
-                specimen indiv;
-                sample naive_indiv;
-                indiv_knn knn_individu;
-                indiv_knn * knn_neighbors;
-				
-				// initialisation 
+				// Declaration des individus
+				specimen indiv;
+				sample naive_indiv;
+				indiv_knn knn_individu;
+				indiv_knn * knn_neighbors;
+
+				// initialisation
 				init_svm_indiv(&indiv);
 				init_naive_indiv(&naive_indiv);
 				init_knn_indiv(&knn_individu);
 
-                
-                if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-// descripters d'un individu pour svm
-				indiv.pitch = norm_indiv(av_pitch,1);
-				indiv.roll = norm_indiv(av_roll,2);
-				indiv.vyaw = norm_indiv(av_Vyaw,3);
-				indiv.vx = norm_indiv(av_Vx,4);
-				indiv.vy = norm_indiv(av_Vy,5);
-				indiv.vz = norm_indiv(av_Vz,6);
-				indiv.ax = norm_indiv(ax,7);
-				indiv.ay = norm_indiv(ay,8);
-				indiv.az = norm_indiv(az,9);
-                }
 
-                if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-// descripteurs d'un individu pour naive bayes
-                naive_indiv.classe=-1;
-                naive_indiv.feature[0]=av_pitch;
-                naive_indiv.feature[1]=av_roll;;
-                naive_indiv.feature[2]=av_Vyaw;
-                naive_indiv.feature[3]=av_Vx;
-                naive_indiv.feature[4]=av_Vy;
-                naive_indiv.feature[5]=av_Vz;
-                naive_indiv.feature[6]=ax;
-                naive_indiv.feature[7]=ay;
-                naive_indiv.feature[8]=az;
-                }
+				if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)) {
+                                        // descripters d'un individu pour svm
+					indiv.pitch = norm_indiv(av_pitch,1);
+					indiv.roll = norm_indiv(av_roll,2);
+					indiv.vyaw = norm_indiv(av_Vyaw,3);
+					indiv.vx = norm_indiv(av_Vx,4);
+					indiv.vy = norm_indiv(av_Vy,5);
+					indiv.vz = norm_indiv(av_Vz,6);
+					indiv.ax = norm_indiv(ax,7);
+					indiv.ay = norm_indiv(ay,8);
+					indiv.az = norm_indiv(az,9);
+				}
 
-                if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-// descripteurs d'un individu pour knn				
-				knn_individu.pitch = av_pitch;
-				knn_individu.roll = av_roll;
-				knn_individu.vyaw = av_Vyaw;
-				knn_individu.vx = av_Vx;
-				knn_individu.vy = av_Vy;
-				knn_individu.vz = av_Vz;
-				knn_individu.ax = ax;
-				knn_individu.ay = ay;
-				knn_individu.az = az;
-                }
+				if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)) {
+                                        // descripteurs d'un individu pour naive bayes
+					naive_indiv.classe=-1;
+					naive_indiv.feature[0]=av_pitch;
+					naive_indiv.feature[1]=av_roll;;
+					naive_indiv.feature[2]=av_Vyaw;
+					naive_indiv.feature[3]=av_Vx;
+					naive_indiv.feature[4]=av_Vy;
+					naive_indiv.feature[5]=av_Vz;
+					naive_indiv.feature[6]=ax;
+					naive_indiv.feature[7]=ay;
+					naive_indiv.feature[8]=az;
+				}
+
+				if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)) {
+                                        // descripteurs d'un individu pour knn
+					knn_individu.pitch = av_pitch;
+					knn_individu.roll = av_roll;
+					knn_individu.vyaw = av_Vyaw;
+					knn_individu.vx = av_Vx;
+					knn_individu.vy = av_Vy;
+					knn_individu.vz = av_Vz;
+					knn_individu.ax = ax;
+					knn_individu.ay = ay;
+					knn_individu.az = az;
+				}
 
 				//current individu storage in a 10 indiv array in order to used the recognition on it
-                //vp_os_mutex_lock(&class_mutex);
-    			
-                if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-                    specimen_buffer[buff_counter]= indiv;
-                }
+				//vp_os_mutex_lock(&class_mutex);
 
-                if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-                    specimen_naive_buffer[buff_counter]= naive_indiv;
-                }
-                //vp_os_mutex_unlock(&class_mutex);
+				if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)) {
+					specimen_buffer[buff_counter]= indiv;
+				}
+
+				if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)) {
+					specimen_naive_buffer[buff_counter]= naive_indiv;
+				}
+				//vp_os_mutex_unlock(&class_mutex);
 				//if 10 individu are stored, we launch the recognition process
-				if(buff_counter == 10){
+				if(buff_counter == 10) {
 					buff_counter = 0;
 					vp_os_mutex_lock(&class_mutex);
 
-                    if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-				        knn_neighbors = getNeighbors (db_data, knn_individu);
-				        if (knn_buffer_counter == Buffer_Size) {
+					if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)) {
+						knn_neighbors = getNeighbors (db_data, knn_individu);
+						if (knn_buffer_counter == Buffer_Size) {
 
-				        	knn_buffer_counter = 0;
-				        	class_id = getResponse_mean(knn_buffer);
-                            alertDroneState(class_id);
-				        }
-				        else{
-				       		knn_buffer[knn_buffer_counter] = getResponse(knn_neighbors);
-				        	knn_buffer_counter++;	
-				        }
-                    }
-                    if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-                       if(nv_model!=NULL && specimen_naive_buffer != NULL){
-                            predict_results res_pred =  naive_predict_mean(specimen_naive_buffer,nv_model);
-		            class_id = res_pred.predict_class;
-                            alertFullDroneState(res_pred.class_count, class_id, res_pred.confidence, "NAIVE");
-                        }
-                    }
+							knn_buffer_counter = 0;
+							class_id = getResponse_mean(knn_buffer);
+							alertDroneState(class_id);
+						}
+						else{
+							knn_buffer[knn_buffer_counter] = getResponse(knn_neighbors);
+							knn_buffer_counter++;
+						}
+					}
+					if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)) {
+						if(nv_model!=NULL && specimen_naive_buffer != NULL) {
+							predict_results res_pred =  naive_predict_mean(specimen_naive_buffer,nv_model);
+							class_id = res_pred.predict_class;
+							alertFullDroneState(res_pred.class_count, class_id, res_pred.confidence, "NAIVE");
+						}
+					}
 
-                    if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
-                        predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
-		        class_id = res_pred.predict_class;
-                        alertFullDroneState(res_pred.class_count, class_id, res_pred.confidence, "SVM");
-                    }
-                    vp_os_mutex_unlock(&class_mutex);
+					if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)) {
+						predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
+						class_id = res_pred.predict_class;
+						alertFullDroneState(res_pred.class_count, class_id, res_pred.confidence, "SVM");
+					}
+					vp_os_mutex_unlock(&class_mutex);
 				}else{
 					buff_counter++;
 				}
-				
+
 				//write data in the log in case of debug state
-				if(options.debug!=0 && (method_selected==SVM || method_selected==ALL)){
+				if(options.debug!=0 && (method_selected==SVM || method_selected==ALL)) {
 					fprintf(logSFM,"%d 1:%f 2:%f 3:%f 4:%f 5:%f 6:%f 7:%f 8:%f 9:%f\n",
-                    class_id,
-					indiv.pitch,
-					indiv.roll,
-					indiv.vyaw,
-					indiv.vx,
-					indiv.vy,
-					indiv.vz,
-					indiv.ax,
-					indiv.ay,
-					indiv.az);
-					
-				}	
+					        class_id,
+					        indiv.pitch,
+					        indiv.roll,
+					        indiv.vyaw,
+					        indiv.vx,
+					        indiv.vy,
+					        indiv.vz,
+					        indiv.ax,
+					        indiv.ay,
+					        indiv.az);
+
+				}
 			}
 		}
 
-        
-		
+
+
 		recordNumber++;
 		time+=5000;
-    }else{
+	}else{
 		isInit=0;
-    }
-    return C_OK;
+	}
+	return C_OK;
 }
 
 /* Relinquish the local resources after the event loop exit */
 inline C_RESULT navdata_analyse_release( void )
 {
-    int nb_specimen;
-    int i_db;
-    struct augmented_navdata * specimen;
-    struct augmented_navdata * specimen_naive;
-    sample ** tab_indiv;
-    if(options.debug!=0 && isStopped == 0){
+	int nb_specimen;
+	int i_db;
+	struct augmented_navdata * specimen;
+	struct augmented_navdata * specimen_naive;
+	sample ** tab_indiv;
+	if(options.debug!=0 && isStopped == 0) {
 
-         close_navdata_file(fr);
-         close_navdata_file(fm);
-         close_navdata_file(fc);
-         close_navdata_file(ff);
-         close_navdata_file(fres);
-         closeLogFile(logSFM);
-    }
+		close_navdata_file(fr);
+		close_navdata_file(fm);
+		close_navdata_file(fc);
+		close_navdata_file(ff);
+		close_navdata_file(fres);
+		closeLogFile(logSFM);
+	}
 
-    //Arret du drone
-    if(isStopped == 0){
+	//Arret du drone
+	if(isStopped == 0) {
 
-        if( options.mission == 1 ){
-            
-            KNNBase = open_learning_file("KNN_BaseApp");
-            
-            //les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
+		if( options.mission == 1 ) {
+
+			KNNBase = open_learning_file("KNN_BaseApp");
+
+			//les lignes suivantes sont d'une qualité douteuse, et probablement à jarter plus tard
 			LearningBase = open_learning_file("BaseApp");
 			specimen = get_normed_values_from_db(0,-1,&nb_specimen);
-            
+
 			specimen_naive = get_values_from_db(0,-1,&nb_specimen);
 			tab_indiv = (sample **)vp_os_malloc(sizeof(sample)*nb_specimen);
-            
-            fprintf(KNNBase, "%d\n", nb_specimen);
-            
-            //learning file filling
-            for(i_db=0;i_db<nb_specimen;i_db++){
 
-                    tab_indiv[i_db]=(sample *)vp_os_malloc(sizeof(sample));
-                    tab_indiv[i_db]->classe=specimen_naive[i_db].class_id;
-                    tab_indiv[i_db]->feature[0]=specimen_naive[i_db].pitch;
-                    tab_indiv[i_db]->feature[1]=specimen_naive[i_db].roll;
-                    tab_indiv[i_db]->feature[2]=specimen_naive[i_db].vyaw;
-                    tab_indiv[i_db]->feature[3]=specimen_naive[i_db].vx;
-                    tab_indiv[i_db]->feature[4]=specimen_naive[i_db].vy;
-                    tab_indiv[i_db]->feature[5]=specimen_naive[i_db].vz;
-                    tab_indiv[i_db]->feature[6]=specimen_naive[i_db].ax;
-                    tab_indiv[i_db]->feature[7]=specimen_naive[i_db].ay;
-                    tab_indiv[i_db]->feature[8]=specimen_naive[i_db].az;
-                
+			fprintf(KNNBase, "%d\n", nb_specimen);
 
-                
-                new_data_learning(LearningBase,specimen[i_db].class_id,specimen[i_db].pitch,specimen[i_db].roll,specimen[i_db].vyaw,specimen[i_db].vx,specimen[i_db].vy,specimen[i_db].vz,specimen[i_db].ax,specimen[i_db].ay,specimen[i_db].az);
-                
-				new_data_learning_KNN(KNNBase,specimen_naive[i_db].class_id,specimen_naive[i_db].pitch,specimen_naive[i_db].roll,specimen_naive[i_db].vyaw,specimen_naive[i_db].vx,specimen_naive[i_db].vy,specimen_naive[i_db].vz,specimen_naive[i_db].ax,specimen_naive[i_db].ay,specimen_naive[i_db].az);
-                
-            }
+			//learning file filling
+			for(i_db=0; i_db<nb_specimen; i_db++) {
+
+				tab_indiv[i_db]=(sample *)vp_os_malloc(sizeof(sample));
+				tab_indiv[i_db]->classe=specimen_naive[i_db].class_id;
+				tab_indiv[i_db]->feature[0]=specimen_naive[i_db].pitch;
+				tab_indiv[i_db]->feature[1]=specimen_naive[i_db].roll;
+				tab_indiv[i_db]->feature[2]=specimen_naive[i_db].vyaw;
+				tab_indiv[i_db]->feature[3]=specimen_naive[i_db].vx;
+				tab_indiv[i_db]->feature[4]=specimen_naive[i_db].vy;
+				tab_indiv[i_db]->feature[5]=specimen_naive[i_db].vz;
+				tab_indiv[i_db]->feature[6]=specimen_naive[i_db].ax;
+				tab_indiv[i_db]->feature[7]=specimen_naive[i_db].ay;
+				tab_indiv[i_db]->feature[8]=specimen_naive[i_db].az;
+
+
+
+				new_data_learning(LearningBase,
+                                        specimen[i_db].class_id,
+                                        specimen[i_db].pitch,
+                                        specimen[i_db].roll,
+                                        specimen[i_db].vyaw,
+                                        specimen[i_db].vx,
+                                        specimen[i_db].vy,
+                                        specimen[i_db].vz,
+                                        specimen[i_db].ax,
+                                        specimen[i_db].ay,
+                                        specimen[i_db].az);
+
+				new_data_learning_KNN(KNNBase,
+                                        specimen_naive[i_db].class_id,
+                                        specimen_naive[i_db].pitch,
+                                        specimen_naive[i_db].roll,
+                                        specimen_naive[i_db].vyaw,
+                                        specimen_naive[i_db].vx,
+                                        specimen_naive[i_db].vy,
+                                        specimen_naive[i_db].vz,
+                                        specimen_naive[i_db].ax,
+                                        specimen_naive[i_db].ay,
+                                        specimen_naive[i_db].az);
+
+			}
 
 			close_learning_file(LearningBase);
 			naive_training(tab_indiv, nb_specimen);
 
-            disconnect_to_database();
-            // apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
+			disconnect_to_database();
+			// apprentissage ici: d'abord cross valid (10 folds, puis génération du model (0 fold)
 
- //               training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
-            fclose(KNNBase);
-            
+			// training_model_generation(NAME_TRAINING_SET,NAME_TRAINING_MODEL,10,nb_specimen);
+			fclose(KNNBase);
 
-		} 
 
-         printf("closed\n");
-         isStopped = 1;
-    }
-    vp_os_mutex_destroy(&state_mutex);
-    vp_os_mutex_destroy(&battery_mutex);
-    vp_os_mutex_destroy(&wifi_mutex);
+		}
 
-    gtk_main();
-    return C_OK;
+		printf("closed\n");
+		isStopped = 1;
+	}
+	vp_os_mutex_destroy(&state_mutex);
+	vp_os_mutex_destroy(&battery_mutex);
+	vp_os_mutex_destroy(&wifi_mutex);
+
+	gtk_main();
+	return C_OK;
 }
 
 void extractDesiredNavdata(const navdata_demo_t * nd, Navdata_t *selectedNavdata) {
 
-        selectedNavdata->roll = nd->phi/1000;
-        selectedNavdata->pitch = nd->theta/1000;
-        selectedNavdata->Vyaw = nd->psi/1000;
-        selectedNavdata->Vx = nd->vx/1000;
-        selectedNavdata->Vy = nd->vy/1000;
-        selectedNavdata->Vz = nd->vz/1000;
+	selectedNavdata->roll = nd->phi/1000;
+	selectedNavdata->pitch = nd->theta/1000;
+	selectedNavdata->Vyaw = nd->psi/1000;
+	selectedNavdata->Vx = nd->vx/1000;
+	selectedNavdata->Vy = nd->vy/1000;
+	selectedNavdata->Vz = nd->vz/1000;
 
 }
 
@@ -726,7 +746,7 @@ void extractDesiredNavdata(const navdata_demo_t * nd, Navdata_t *selectedNavdata
 // motion command sent to the drone
 void refresh_command() {                        //PEPITE
 	commandType_t commandType;
-	get_command (&local_cmd , &commandType);
+	get_command (&local_cmd, &commandType);
 }
 
 
@@ -736,9 +756,9 @@ void refresh_command() {                        //PEPITE
  **/
 void refresh_battery(const navdata_demo_t * nd) {
 
-  vp_os_mutex_lock(&battery_mutex);
-  drone_battery = nd->vbat_flying_percentage;
-  vp_os_mutex_unlock(&battery_mutex);
+	vp_os_mutex_lock(&battery_mutex);
+	drone_battery = nd->vbat_flying_percentage;
+	vp_os_mutex_unlock(&battery_mutex);
 
 }
 
@@ -748,13 +768,13 @@ void refresh_battery(const navdata_demo_t * nd) {
  **/
 float get_battery_level() {
 
-  float bat_level;
+	float bat_level;
 
-  vp_os_mutex_lock(&battery_mutex);
-  bat_level = drone_battery;
-  vp_os_mutex_unlock(&battery_mutex);
+	vp_os_mutex_lock(&battery_mutex);
+	bat_level = drone_battery;
+	vp_os_mutex_unlock(&battery_mutex);
 
-  return bat_level;
+	return bat_level;
 
 }
 
@@ -764,32 +784,32 @@ float get_battery_level() {
  **/
 void extract_drone_state(const navdata_demo_t * nd) {
 
-  vp_os_mutex_lock(&state_mutex);
+	vp_os_mutex_lock(&state_mutex);
 
-  switch (nd->ctrl_state >> 16) {
-    case CTRL_FLYING:
-    case CTRL_HOVERING:
-    case CTRL_TRANS_GOTOFIX:
-    case CTRL_TRANS_LOOPING:
-      drone_state = FLYING;
-      break;
+	switch (nd->ctrl_state >> 16) {
+	case CTRL_FLYING:
+	case CTRL_HOVERING:
+	case CTRL_TRANS_GOTOFIX:
+	case CTRL_TRANS_LOOPING:
+		drone_state = FLYING;
+		break;
 
-    case CTRL_TRANS_TAKEOFF:
-      drone_state = TAKING_OFF;
-      break;
+	case CTRL_TRANS_TAKEOFF:
+		drone_state = TAKING_OFF;
+		break;
 
-    case CTRL_TRANS_LANDING:
-      drone_state = LANDING;
-      break;
+	case CTRL_TRANS_LANDING:
+		drone_state = LANDING;
+		break;
 
-    case CTRL_DEFAULT:
-    case CTRL_LANDED:
-    default:
-      drone_state = LANDED;
-      break;
-  }
+	case CTRL_DEFAULT:
+	case CTRL_LANDED:
+	default:
+		drone_state = LANDED;
+		break;
+	}
 
-  vp_os_mutex_unlock(&state_mutex);
+	vp_os_mutex_unlock(&state_mutex);
 
 }
 
@@ -799,13 +819,13 @@ void extract_drone_state(const navdata_demo_t * nd) {
  **/
 drone_state_t get_drone_state() {
 
-  drone_state_t state_tempo;
+	drone_state_t state_tempo;
 
-  vp_os_mutex_lock(&state_mutex);
-  state_tempo = drone_state;
-  vp_os_mutex_unlock(&state_mutex);
+	vp_os_mutex_lock(&state_mutex);
+	state_tempo = drone_state;
+	vp_os_mutex_unlock(&state_mutex);
 
-  return state_tempo;
+	return state_tempo;
 }
 
 
@@ -815,9 +835,9 @@ drone_state_t get_drone_state() {
  **/
 void refresh_wifi_quality(const navdata_wifi_t * nw) {
 
-  vp_os_mutex_lock(&wifi_mutex);
-  wifi_link_quality = nw->link_quality;
-  vp_os_mutex_unlock(&wifi_mutex);
+	vp_os_mutex_lock(&wifi_mutex);
+	wifi_link_quality = nw->link_quality;
+	vp_os_mutex_unlock(&wifi_mutex);
 
 }
 
@@ -827,13 +847,13 @@ void refresh_wifi_quality(const navdata_wifi_t * nw) {
  **/
 float get_wifi_quality() {
 
-  float link_quality;
+	float link_quality;
 
-  vp_os_mutex_lock(&wifi_mutex);
-  link_quality = wifi_link_quality;
-  vp_os_mutex_unlock(&wifi_mutex);
+	vp_os_mutex_lock(&wifi_mutex);
+	link_quality = wifi_link_quality;
+	vp_os_mutex_unlock(&wifi_mutex);
 
-  return link_quality;
+	return link_quality;
 
 }
 
@@ -852,7 +872,7 @@ void init_svm_indiv(specimen * indiv){
 void init_naive_indiv(sample * naive_indiv){
 	int i = 0;
 	naive_indiv->classe=-1;
-	for(i=0;i<9;i++){
+	for(i=0; i<9; i++) {
 		naive_indiv->feature[i]=0;
 	}
 }
@@ -873,28 +893,28 @@ void init_knn_indiv(indiv_knn * knn_individu){
 
 
 void alertDroneState (int classId){
-    showState(classId);
+	showState(classId);
 }
 
 
 void alertFullDroneState (int classCount, int classId, double confidence, char * algoName){
-    showState(classId);
-    if(options.debug!=0){
-        printf("Algorithme : %s\n", algoName);
-        if(classCount!=0)
-            printf("nombre de classes : %d\n",classCount);
-        else
-            printf("No one class was recognized\n");
-        
-        printf("Classe reconnue : %d\n",classId);
-        if(confidence != -1.0)
-            printf("Confiance : %lf\n ", confidence);
-        printf("---------------------------\n");
-    }
-    
+	showState(classId);
+	if(options.debug!=0) {
+		printf("Algorithme : %s\n", algoName);
+		if(classCount!=0)
+			printf("nombre de classes : %d\n",classCount);
+		else
+			printf("No one class was recognized\n");
+
+		printf("Classe reconnue : %d\n",classId);
+		if(confidence != -1.0)
+			printf("Confiance : %lf\n ", confidence);
+		printf("---------------------------\n");
+	}
+
 }
 /* Registering to navdata client */
 BEGIN_NAVDATA_HANDLER_TABLE
-  NAVDATA_HANDLER_TABLE_ENTRY(navdata_analyse_init, navdata_analyse_process, navdata_analyse_release, NULL)
+NAVDATA_HANDLER_TABLE_ENTRY(navdata_analyse_init, navdata_analyse_process, navdata_analyse_release, NULL)
 END_NAVDATA_HANDLER_TABLE
 
