@@ -277,7 +277,7 @@ void training_model_generation(char* training_set, char* training_model, int fol
 		fprintf(stderr,"ERROR: %s\n",error_msg);
 		exit(1);
 	}
-
+	
 	if(cross_validation)
 	{
 		 accuracy = do_cross_validation();

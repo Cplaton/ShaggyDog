@@ -6,8 +6,6 @@ typedef struct
 }
 combo_data_st;
 
-
-
 extern gui_t *gui;
 
 char * select_mission;
@@ -292,6 +290,13 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 	}else{
 		opt.debug = 0;
 	}
+
+    // open Minded Safety Mode checkbox management
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonReaction))==TRUE) {
+        enable_openMinded_safety_mode = 1;
+    }else{
+        enable_openMinded_safety_mode = 0;
+    }
     
     // Mission checkbox management
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonMission))==TRUE) {
@@ -314,13 +319,6 @@ void check_button_callback(GtkWidget *widget, gpointer data){
 	    opt.mission = 0;
         start_flight();
 	}
-
-    // open Minded Safety Mode checkbox management
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gui->checkButtonReaction))==TRUE) {
-        enable_openMinded_safety_mode = 1;
-    }else{
-        enable_openMinded_safety_mode = 0;
-    }
 }
 
 void start_flight(){
@@ -482,7 +480,7 @@ void configPage(){
 	gui->checkButtonSMLimited = gtk_check_button_new_with_label("Limited Smart Safety Mode");
 	gui->checkButtonDebug = gtk_check_button_new_with_label("Debug mode");
 	gui->checkButtonMission = gtk_check_button_new_with_label("Mission for learning process");
-    gui->checkButtonReaction = gtk_check_button_new_with_label("Enable openMinded Safety Mode");
+        gui->checkButtonReaction = gtk_check_button_new_with_label("Enable openMinded Safety Mode");
 
 	/*-----create finish button-----*/
 	gui->buttonFinish = gtk_button_new_with_label("Finish");
@@ -507,7 +505,7 @@ void configPage(){
 	gtk_tooltips_set_tip (gui->tooltipsSaturation, gui->checkButtonSaturation,infoBullSaturation, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsSaturation, gui->checkButtonSaturation,infoBullSaturation, NULL);
 	gtk_tooltips_set_tip (gui->tooltipsMission, gui->checkButtonMission,infoBullMission, NULL);
-    gtk_tooltips_set_tip (gui->tooltipsReaction, gui->checkButtonReaction, infoBullReaction, NULL);
+        gtk_tooltips_set_tip (gui->tooltipsReaction, gui->checkButtonReaction, infoBullReaction, NULL);
 
 	/*-----create smart fox image-----*/
 	gui->pixbuf = gdk_pixbuf_new_from_file_at_size("logo_OM.png",40,40,NULL);
@@ -528,7 +526,7 @@ void configPage(){
 	//gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonSMLimited);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonDebug);
 	gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonMission);
-    gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonReaction);
+        gtk_container_add(GTK_CONTAINER(gui->vboxCheckButton), gui->checkButtonReaction);
 
 	/*-----add finish button to haligh-----*/
 	gtk_container_add(GTK_CONTAINER(gui->halignButtonFinish), gui->buttonFinish);

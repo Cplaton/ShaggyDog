@@ -34,7 +34,7 @@
 #define RIGHT_WALL 4
 #define LEFT_WALL  5
 
-int enable_openMinded_safety_mode;
+int enable_openMinded_safety_mode=0;
 int modeReaction = 0;
 
 
@@ -46,16 +46,9 @@ DEFINE_THREAD_ROUTINE(reaction, data) {
 	while (1) {
 
 		usleep(100);
-		/*
-		if (modeReaction == 1) {
 
-			printf("Module de reaciton active\n");
-			avoid_front_wall();
-
-		}
-		*/
-		//if (modeReaction == 0)
-		//	check_situation();	
+		if (modeReaction == 0 && enable_openMinded_safety_mode==1)
+			check_situation();	
 	}
 
 	return 0;

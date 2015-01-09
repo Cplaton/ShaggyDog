@@ -229,10 +229,12 @@ void extract_key_event(struct input_event * ev) {
         }
         
       }
+      /*
       else{
         vp_os_mutex_lock(&class_mutex);
         class_id=0;
         vp_os_mutex_unlock(&class_mutex);}
+      */
       break;
 
     default : ;   

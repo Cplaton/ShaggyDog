@@ -92,7 +92,7 @@ void displayAlertMsg (fault_t msg) {
 	default:
 		sprintf(alertMsg,"%s","No obstacle");
 	}
-
+	
 	msgTime = time(NULL);
 	if(debugModeOn == 1)
 		gtk_entry_set_text(GTK_ENTRY(gui->textEntrySignatureState),alertMsg);
