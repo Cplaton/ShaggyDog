@@ -10,7 +10,7 @@ void showState(int classid){
 	GtkTextIter endAlert;
 
 	/*-----switch different fault_t message-----*/
-	switch (msg) {
+	switch (classid) {
 	case 2:
 		sprintf(msg,"%s","Front Obs");
 		break;

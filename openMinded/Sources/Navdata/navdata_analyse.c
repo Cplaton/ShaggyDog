@@ -577,7 +577,8 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 				        if (knn_buffer_counter == Buffer_Size) {
 
 				        	knn_buffer_counter = 0;
-				        	class_id = getResponse_mean(knn_buffer);	
+				        	class_id = getResponse_mean(knn_buffer);
+                                                alertDroneState(class_id);
 				        }
 				        else{
 				       		knn_buffer[knn_buffer_counter] = getResponse(knn_neighbors);
@@ -587,12 +588,14 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                     if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
                        if(nv_model!=NULL && specimen_naive_buffer != NULL){
                             class_id =  naive_predict_mean(specimen_naive_buffer,nv_model);
+                            alertDroneState(class_id);
                         }
                     }
 
                     if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
                         predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
-					    class_id = res_pred.predict_class;
+		        class_id = res_pred.predict_class;
+                        alertDroneState(class_id);
                     }
                     vp_os_mutex_unlock(&class_mutex);
 				}else{
@@ -867,6 +870,28 @@ void init_knn_indiv(indiv_knn * knn_individu){
 	knn_individu->class_id = 0;
 }
 
+
+void alertDroneState (int classId){
+    showState(classId);
+}
+
+
+void alertDroneState (int classCount, int classId, float confidence, char * algoName){
+    showState(classId);
+    if(options.debug!=0){
+        printf("Algorithme : %s\n", algoName);
+        if(classCount!=0)
+            printf("nombre de classes : %d\n",classCount);
+        else
+            printf("No one class was recognized\n");
+        
+        printf("Classe reconnue : %d\n",classId);
+        if(confidence != -1.0)
+            printf("Confiance : %lf\n ", confidence);
+        printf("---------------------------\n");
+    }
+    
+}
 /* Registering to navdata client */
 BEGIN_NAVDATA_HANDLER_TABLE
   NAVDATA_HANDLER_TABLE_ENTRY(navdata_analyse_init, navdata_analyse_process, navdata_analyse_release, NULL)

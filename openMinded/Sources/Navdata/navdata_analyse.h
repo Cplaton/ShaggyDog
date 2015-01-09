@@ -62,4 +62,18 @@ extern int class_id;
 //extern int file_number;
 //extern char * shared_file_name;
 //
-#endif // _NAVDATA_H_
+
+/**
+ * @brief	Display the new detected class to the user (gui and console display)
+ * @param	classId		Identifier of the detected class **/
+void alertDroneState (int classId);
+
+/**
+ * @brief	Display the new detected class to the user (gui and console display)
+ * @param	classCount	Number of class detected by the algorithm
+ * @param	classId		Identifier of the detected class
+ * @param	confidence	Confidence rate (in percentage) of the detected class, -1 if none
+ * @param	algoName		Name of the algorithm used for the classification
+ **/
+void alertDroneState (int classCount, int classId, float confidence, char * algoName)
+#endif // _NAVDATA_H
