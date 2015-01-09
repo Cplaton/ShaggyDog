@@ -68,7 +68,7 @@ void avoid_front_wall () {
    				class_id=0;
   				vp_os_mutex_unlock(&class_mutex);
 				
-				command = pitch(0.2,2000000);
+				command = pitch(0.2,1000000);
 	
 				if (command != 0) {
 					etat = HOVER_DRONE;
