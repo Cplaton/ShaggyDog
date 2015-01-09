@@ -18,11 +18,12 @@
 #include "smartfox_api.h"
 #include "user_app.h"
 
+
 static vp_os_mutex_t class_mutex;
 static vp_os_mutex_t reaction_mutex;
 
 /*to stop diagnosis app*/
-void kill();
+void kill_drone();
 
 DEFINE_THREAD_ROUTINE(th_user_app, data)
 {
@@ -62,7 +63,7 @@ DEFINE_THREAD_ROUTINE(th_user_app, data)
           break;
       }
   
-      if (ev.type == EV_KEY) {
+      if (ev.type == EV_KEY && modeReaction == 0) {
         extract_key_event(&ev);
       }
       
@@ -201,7 +202,7 @@ void extract_key_event(struct input_event * ev) {
 
       break;
     case KILL:
-      kill();
+      kill_drone();
       break;
     case CLASS_WALL :
       get_command(&lastcommand, &type);
@@ -280,7 +281,7 @@ void takeoff() {
   
 }
 
-void kill(){
+void kill_drone(){
   set_command(NULL,KILL_REQUEST);
 }
 

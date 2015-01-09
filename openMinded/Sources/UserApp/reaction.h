@@ -21,6 +21,7 @@
  * @brief   shared variable that enable/disable the reaction module of openMINDED
  **/
 extern int enable_openMinded_safety_mode;
+extern int modeReaction;
 
 PROTO_THREAD_ROUTINE(reaction, data);
 

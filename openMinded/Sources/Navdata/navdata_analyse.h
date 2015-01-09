@@ -2,7 +2,7 @@
  * @file    navdata_analyse.h
  * @author  ShaggyDogs and Smartfox
  * @brief   Navdata management based on Smartfox's file
- * @version 0.42
+ * @version 1.0
  * @date    November 2014
  **/
 

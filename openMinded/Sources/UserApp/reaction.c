@@ -80,7 +80,7 @@ void avoid_front_wall () {
 				vp_os_mutex_lock(&class_mutex);
                 class_id=1;
                 vp_os_mutex_unlock(&class_mutex);
-				fin = hover(2000000);
+				fin = hover(3000000);
 				if (fin == 1)
 					etat = END_REACTION;
 				break;
