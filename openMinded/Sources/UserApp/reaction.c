@@ -27,7 +27,7 @@
 #define RIGHT_WALL 4
 #define LEFT_WALL  5
 
-int enable_openMinded_safety_mode;
+int enable_openMinded_safety_mode=0;
 int modeReaction = 0;
 
 
@@ -39,6 +39,7 @@ DEFINE_THREAD_ROUTINE(reaction, data) {
 	while (1) {
 
 		usleep(100);
+<<<<<<< HEAD
 		/*
 		if (modeReaction == 1) {
 
@@ -48,6 +49,9 @@ DEFINE_THREAD_ROUTINE(reaction, data) {
 		}
 		*/
 		if (modeReaction == 0)
+=======
+		if (modeReaction == 0 && enable_openMinded_safety_mode==1)
+>>>>>>> 01319f77cb4912a68905bd3dac0821d9e8513bcb
 			check_situation();	
 	}
 
