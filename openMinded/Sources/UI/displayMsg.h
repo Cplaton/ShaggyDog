@@ -7,5 +7,5 @@
 
 void displayAlertMsg (fault_t msg);
 void displayEmergencyMsg (emergency_state em);
-
+void showState(int classid);
 #endif

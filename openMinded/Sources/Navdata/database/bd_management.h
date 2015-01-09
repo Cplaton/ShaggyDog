@@ -145,5 +145,11 @@ int insert_new_data( int time, float alt, float pitch, float roll, float vyaw, f
  **/
 int disconnect_to_database();
 
+/**
+ * @brief       Returns the name of th class with the given classid
+ * @param       classId         (in)  identifier of the class
+ * @param       className       (out) the char array representing the class name 
+ **/
+//void getClassName (int classId, char* className);
 #endif
 

@@ -34,6 +34,10 @@ void diagnosisPage(){
 	gtk_widget_set_size_request(gui->textEntryDroneS, 100, 30);
 	gtk_entry_set_editable(GTK_ENTRY(gui->textEntryDroneS),FALSE);
 
+	gui->textEntryDroneClass = gtk_entry_new();
+	gtk_widget_set_size_request(gui->textEntryDroneClass, 100, 30);
+	gtk_entry_set_editable(GTK_ENTRY(gui->textEntryDroneClass),FALSE);
+
 	/*-----create labels-----*/
 	gui->labelAlert = gtk_label_new(NULL);
 	gtk_label_set_markup (GTK_LABEL (gui->labelAlert),"<big><b>Alerts : </b></big>");
@@ -48,6 +52,8 @@ void diagnosisPage(){
 	gtk_label_set_markup (GTK_LABEL (gui->labelWifi),"<b>Wifi : </b>");
 	gui->labelDroneS = gtk_label_new(NULL);
 	gtk_label_set_markup (GTK_LABEL (gui->labelDroneS),"<b>Drone State : </b>");
+	gui->labelDroneClass = gtk_label_new(NULL);
+	gtk_label_set_markup (GTK_LABEL (gui->labelDroneClass),"<b>Class : </b>");
 
 	/*-----get associated buffer of this text view Alert------*/
 	gui->bufferAlert = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gui->textViewAlert));
@@ -99,11 +105,13 @@ void diagnosisPage(){
 	gtk_container_add(GTK_CONTAINER(gui->vboxIndicators),gui->textEntryBattery);
 	gtk_container_add(GTK_CONTAINER(gui->vboxIndicators),gui->textEntryWifi);
 	gtk_container_add(GTK_CONTAINER(gui->vboxIndicators),gui->textEntryDroneS);
+	gtk_container_add(GTK_CONTAINER(gui->vboxIndicators),gui->textEntryDroneClass);
 
 	/*-----add lebels to vboxes-----*/
 	gtk_container_add(GTK_CONTAINER(gui->vboxIndicatorsLabel),gui->labelBattery);
 	gtk_container_add(GTK_CONTAINER(gui->vboxIndicatorsLabel),gui->labelWifi);
 	gtk_container_add(GTK_CONTAINER(gui->vboxIndicatorsLabel),gui->labelDroneS);
+	gtk_container_add(GTK_CONTAINER(gui->vboxIndicatorsLabel),gui->labelDroneClass);
 
 	/*-----add boxes to aligns-----*/
 	gtk_container_add(GTK_CONTAINER(gui->valignIndicatorsLabel),gui->vboxIndicatorsLabel);
