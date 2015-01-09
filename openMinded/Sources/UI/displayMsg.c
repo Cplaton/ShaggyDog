@@ -6,8 +6,6 @@ extern int debugModeOn;
 void showState(int classid){
    
 	char msg[20];
-	time_t msgTime;
-	GtkTextIter endAlert;
 
 	/*-----switch different fault_t message-----*/
 	switch (classid) {
