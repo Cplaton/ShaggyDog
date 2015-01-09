@@ -31,19 +31,19 @@ void apply_command(float roll, float pitch, float Vyaw, float gas);
 
 /**
  * @fn      landing
- * @brief   makes the drone lands 
+ * @brief   makes the drone lands
  **/
 void landing();
 
 /**
  * @fn      takeoff
- * @brief   makes the drone takes off 
+ * @brief   makes the drone takes off
  **/
 void takeoff();
 
 /**
  * @fn      init_userapp
- * @brief   initialize the user app by reading the configuration file 
+ * @brief   initialize the user app by reading the configuration file
  * @param   keyboard_file       the conf file indicating wich key is used for each possible command
  * @param   len                 size of the file
  **/
@@ -62,21 +62,21 @@ void extract_key_event(struct input_event * ev);
 #define CONF_FILE "./Sources/UserApp/user_app.conf"
 
 /* drone motions and keyboard keys association*/
-#define GO_FORWARD 	KEY_W
-#define GO_BACK 	KEY_S
-#define GO_LEFT		KEY_A
-#define GO_RIGHT	KEY_D
-#define GO_UP		KEY_UP
-#define GO_DOWN		KEY_DOWN
-#define ROTATE_LEFT	KEY_LEFT
-#define ROTATE_RIGHT	KEY_RIGHT 
-#define TAKEOFF		KEY_T
-#define LANDING		KEY_L
-#define KILL		KEY_K
+#define GO_FORWARD      KEY_W
+#define GO_BACK         KEY_S
+#define GO_LEFT         KEY_A
+#define GO_RIGHT        KEY_D
+#define GO_UP           KEY_UP
+#define GO_DOWN         KEY_DOWN
+#define ROTATE_LEFT     KEY_LEFT
+#define ROTATE_RIGHT    KEY_RIGHT
+#define TAKEOFF         KEY_T
+#define LANDING         KEY_L
+#define KILL            KEY_K
 #define CLASS_WALL  KEY_N
 
 
-#define LOW_VELOCITY	0.3
+#define LOW_VELOCITY    0.3
 
 
 /* ############################################################################################################## */

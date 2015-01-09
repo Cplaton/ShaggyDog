@@ -31,12 +31,12 @@ PROTO_THREAD_ROUTINE(reaction, data);
 void avoid_front_wall();
 
 /**
- * @brief  Reaction to a wall impact on the left. 
+ * @brief  Reaction to a wall impact on the left.
  **/
 void avoid_left_wall();
 
 /**
- * @brief  Reaction to an impact on the back of the drone. 
+ * @brief  Reaction to an impact on the back of the drone.
  **/
 void avoid_back_wall();
 
@@ -46,7 +46,7 @@ void avoid_back_wall();
 void avoid_right_wall();
 
 /**
- * @brief In case of impact run the adapted reaction's function.  
+ * @brief In case of impact run the adapted reaction's function.
  **/
 void check_situation();
 

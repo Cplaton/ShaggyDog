@@ -48,7 +48,7 @@ DEFINE_THREAD_ROUTINE(reaction, data) {
 		usleep(100);
 
 		if (modeReaction == 0 && enable_openMinded_safety_mode==1)
-			check_situation();	
+			check_situation();
 	}
 
 	return 0;
@@ -63,34 +63,34 @@ void avoid_front_wall () {
 	while (modeReaction == 1) {
 		switch (etat) {
 
-			case BACKWARD_PITCH :
-				vp_os_mutex_lock(&class_mutex);
-   				class_id=0;
-  				vp_os_mutex_unlock(&class_mutex);
-				
-				command = pitch(0.2,1000000);
-	
-				if (command != 0) {
-					etat = HOVER_DRONE;
-				}
-				break;
+		case BACKWARD_PITCH:
+			vp_os_mutex_lock(&class_mutex);
+			class_id=0;
+			vp_os_mutex_unlock(&class_mutex);
 
-			case HOVER_DRONE :
+			command = pitch(0.2,1000000);
 
-				vp_os_mutex_lock(&class_mutex);
-                class_id=1;
-                vp_os_mutex_unlock(&class_mutex);
-				fin = hover(3000000);
-				if (fin == 1)
-					etat = END_REACTION;
-				break;
-			
-			case END_REACTION :
-				vp_os_mutex_lock(&reaction_mutex);
-				modeReaction = 0;
-				vp_os_mutex_unlock(&reaction_mutex);
-				displayEmergencyMsg(NO_EMERGENCY);
-				break;	
+			if (command != 0) {
+				etat = HOVER_DRONE;
+			}
+			break;
+
+		case HOVER_DRONE:
+
+			vp_os_mutex_lock(&class_mutex);
+			class_id=1;
+			vp_os_mutex_unlock(&class_mutex);
+			fin = hover(3000000);
+			if (fin == 1)
+				etat = END_REACTION;
+			break;
+
+		case END_REACTION:
+			vp_os_mutex_lock(&reaction_mutex);
+			modeReaction = 0;
+			vp_os_mutex_unlock(&reaction_mutex);
+			displayEmergencyMsg(NO_EMERGENCY);
+			break;
 		}
 	}
 
@@ -105,33 +105,33 @@ void avoid_left_wall () {
 	while (1) {
 		switch (etat) {
 
-			case RIGHT_ROLL :
+		case RIGHT_ROLL:
 
-				//void apply_command(roll, pitch, yaw, gas)
-				vp_os_mutex_lock(&class_mutex);
-                class_id=0;
-                vp_os_mutex_unlock(&class_mutex);
-				command = roll(0.2, 1000000);
-				if (command != 0) {
-					etat = HOVER_DRONE;
-				}
-				break;
+			//void apply_command(roll, pitch, yaw, gas)
+			vp_os_mutex_lock(&class_mutex);
+			class_id=0;
+			vp_os_mutex_unlock(&class_mutex);
+			command = roll(0.2, 1000000);
+			if (command != 0) {
+				etat = HOVER_DRONE;
+			}
+			break;
 
-			case HOVER_DRONE :
+		case HOVER_DRONE:
 
-				vp_os_mutex_lock(&class_mutex);
-                class_id=1;
-                vp_os_mutex_unlock(&class_mutex);
-				fin = hover(2000000);
-				if (fin == 1)
-					etat = END_REACTION;
-				break;
-			
-			case END_REACTION :
-				vp_os_mutex_lock(&reaction_mutex);
-				modeReaction = 0;
-				vp_os_mutex_unlock(&reaction_mutex);
-				break;	
+			vp_os_mutex_lock(&class_mutex);
+			class_id=1;
+			vp_os_mutex_unlock(&class_mutex);
+			fin = hover(2000000);
+			if (fin == 1)
+				etat = END_REACTION;
+			break;
+
+		case END_REACTION:
+			vp_os_mutex_lock(&reaction_mutex);
+			modeReaction = 0;
+			vp_os_mutex_unlock(&reaction_mutex);
+			break;
 		}
 	}
 
@@ -146,32 +146,32 @@ void avoid_back_wall () {
 	while (1) {
 		switch (etat) {
 
-			case FORWARD_PITCH :
+		case FORWARD_PITCH:
 
-				//void apply_command(roll, pitch, yaw, gas)
-				vp_os_mutex_lock(&class_mutex);
-                class_id=0;
-                vp_os_mutex_unlock(&class_mutex);
-				command = pitch(-0.2, 1000000);
-				if (command != 0) {
-					etat = HOVER_DRONE;
-				}
-				break;
+			//void apply_command(roll, pitch, yaw, gas)
+			vp_os_mutex_lock(&class_mutex);
+			class_id=0;
+			vp_os_mutex_unlock(&class_mutex);
+			command = pitch(-0.2, 1000000);
+			if (command != 0) {
+				etat = HOVER_DRONE;
+			}
+			break;
 
-			case HOVER_DRONE :
+		case HOVER_DRONE:
 
-				vp_os_mutex_lock(&class_mutex);
-                class_id=1;
-                vp_os_mutex_unlock(&class_mutex);
-				fin = hover(2000000);
-				if (fin == 1)
-					etat = END_REACTION;
-				break;
-			
-			case END_REACTION :
-				
-				modeReaction = 0;
-				break;	
+			vp_os_mutex_lock(&class_mutex);
+			class_id=1;
+			vp_os_mutex_unlock(&class_mutex);
+			fin = hover(2000000);
+			if (fin == 1)
+				etat = END_REACTION;
+			break;
+
+		case END_REACTION:
+
+			modeReaction = 0;
+			break;
 		}
 	}
 
@@ -187,32 +187,32 @@ void avoid_right_wall () {
 	while (1) {
 		switch (etat) {
 
-			case LEFT_ROLL :
+		case LEFT_ROLL:
 
-				//void apply_command(roll, pitch, yaw, gas)
-				vp_os_mutex_lock(&class_mutex);
-                class_id=0;
-                vp_os_mutex_unlock(&class_mutex);
-				command = roll(-0.2, 1000000);
-				if (command != 0) {
-					etat = LAND_DRONE;
-				}
-				break;
+			//void apply_command(roll, pitch, yaw, gas)
+			vp_os_mutex_lock(&class_mutex);
+			class_id=0;
+			vp_os_mutex_unlock(&class_mutex);
+			command = roll(-0.2, 1000000);
+			if (command != 0) {
+				etat = LAND_DRONE;
+			}
+			break;
 
-			case HOVER_DRONE :
+		case HOVER_DRONE:
 
-				vp_os_mutex_lock(&class_mutex);
-                class_id=1;
-                vp_os_mutex_unlock(&class_mutex);
-				fin = hover(2000000);
-				if (fin == 1)
-					etat = HOVER_DRONE;
-				break;
-			
-			case END_REACTION :
-				
-				modeReaction = 0;
-				break;	
+			vp_os_mutex_lock(&class_mutex);
+			class_id=1;
+			vp_os_mutex_unlock(&class_mutex);
+			fin = hover(2000000);
+			if (fin == 1)
+				etat = HOVER_DRONE;
+			break;
+
+		case END_REACTION:
+
+			modeReaction = 0;
+			break;
 		}
 	}
 
@@ -222,54 +222,54 @@ void check_situation () {
 
 	switch(class_id) {
 
-		case FRONT_WALL:
-			printf("Reaction.c class_id = %d\n", class_id);
-			vp_os_mutex_lock(&reaction_mutex);
-			modeReaction = 1;
-			vp_os_mutex_unlock(&reaction_mutex);
-			
-			displayAlertMsg(OBSTACLE_DEVANT);
-			displayEmergencyMsg(GO_BACK);
-			
-			avoid_front_wall();
-			
-			break;
+	case FRONT_WALL:
+		printf("Reaction.c class_id = %d\n", class_id);
+		vp_os_mutex_lock(&reaction_mutex);
+		modeReaction = 1;
+		vp_os_mutex_unlock(&reaction_mutex);
 
-		case BACK_WALL:
-			printf("Reaction.c class_id = %d\n", class_id);
-			vp_os_mutex_lock(&reaction_mutex);
-			modeReaction = 1;
-			vp_os_mutex_unlock(&reaction_mutex);
-			
-			displayAlertMsg(OBSTACLE_ARRIERE);
-			displayEmergencyMsg(GO_FORWARD);
-			
-			avoid_back_wall();
-			break;
+		displayAlertMsg(OBSTACLE_DEVANT);
+		displayEmergencyMsg(GO_BACK);
 
-		case RIGHT_WALL:
-			printf("Reaction.c class_id = %d\n", class_id);
-			vp_os_mutex_lock(&reaction_mutex);
-			modeReaction = 1;
-			vp_os_mutex_unlock(&reaction_mutex);
-			
-			displayAlertMsg(OBSTACLE_DROITE);
-			displayEmergencyMsg(GO_LEFT);
-			
-			avoid_right_wall();
-			break;
+		avoid_front_wall();
 
-		case LEFT_WALL:
-			printf("Reaction.c class_id = %d\n", class_id);
-			vp_os_mutex_lock(&reaction_mutex);
-			modeReaction = 1;
-			vp_os_mutex_unlock(&reaction_mutex);
+		break;
 
-			displayAlertMsg(OBSTACLE_GAUCHE);
-			displayEmergencyMsg(GO_RIGHT);
-			
-			avoid_left_wall();
-			break;		
+	case BACK_WALL:
+		printf("Reaction.c class_id = %d\n", class_id);
+		vp_os_mutex_lock(&reaction_mutex);
+		modeReaction = 1;
+		vp_os_mutex_unlock(&reaction_mutex);
+
+		displayAlertMsg(OBSTACLE_ARRIERE);
+		displayEmergencyMsg(GO_FORWARD);
+
+		avoid_back_wall();
+		break;
+
+	case RIGHT_WALL:
+		printf("Reaction.c class_id = %d\n", class_id);
+		vp_os_mutex_lock(&reaction_mutex);
+		modeReaction = 1;
+		vp_os_mutex_unlock(&reaction_mutex);
+
+		displayAlertMsg(OBSTACLE_DROITE);
+		displayEmergencyMsg(GO_LEFT);
+
+		avoid_right_wall();
+		break;
+
+	case LEFT_WALL:
+		printf("Reaction.c class_id = %d\n", class_id);
+		vp_os_mutex_lock(&reaction_mutex);
+		modeReaction = 1;
+		vp_os_mutex_unlock(&reaction_mutex);
+
+		displayAlertMsg(OBSTACLE_GAUCHE);
+		displayEmergencyMsg(GO_RIGHT);
+
+		avoid_left_wall();
+		break;
 
 	}
 

@@ -40,7 +40,7 @@
 #define RIGHT_YAW 9
 #define LAND_DRONE 10
 #define HOVER_DRONE 11
-#define END_REACTION 12 
+#define END_REACTION 12
 
 extern char * mission_select_list[6];
 /**
