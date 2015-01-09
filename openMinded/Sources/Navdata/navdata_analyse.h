@@ -28,11 +28,11 @@
  * @abstract	enum representing the possibles state of the drone.
  **/
 typedef enum drone_state {
-    FLYING,         /**< State that take the drone when he is flying normaly. */
-    LANDING,        /**< State that take the drone when he is landing. */
-    LANDED,         /**< State that take the drone when he is landed. */
-    TAKING_OFF,     /**< State that take the drone when he is taking off. */
-    UNKNOWN_STATE   /**< State that take the drone when he is not in anyone of the other states. */
+	FLYING,     /**< State that take the drone when he is flying normaly. */
+	LANDING,    /**< State that take the drone when he is landing. */
+	LANDED,     /**< State that take the drone when he is landed. */
+	TAKING_OFF, /**< State that take the drone when he is taking off. */
+	UNKNOWN_STATE /**< State that take the drone when he is not in anyone of the other states. */
 } drone_state_t;
 
 
