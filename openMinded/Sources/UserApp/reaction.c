@@ -47,8 +47,8 @@ DEFINE_THREAD_ROUTINE(reaction, data) {
 
 		}
 		*/
-		//if (modeReaction == 0)
-		//	check_situation();	
+		if (modeReaction == 0)
+			check_situation();	
 	}
 
 	return 0;

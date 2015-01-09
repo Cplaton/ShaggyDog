@@ -568,7 +568,7 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
 
                     if((method_selected==KNN && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
 				        knn_neighbors = getNeighbors (db_data, knn_individu);
-				        if (knn_buffer_counter == 3) {
+				        if (knn_buffer_counter == Buffer_Size) {
 
 				        	knn_buffer_counter = 0;
 				        	class_id = getResponse_mean(knn_buffer);	

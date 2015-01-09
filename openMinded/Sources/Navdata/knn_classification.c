@@ -186,6 +186,7 @@ int getResponse_mean (int buffer[Buffer_Size]) {
 
 	int counter[Trained_Class_Nb];
 	int response_mean = 0;
+	float accuracy = 0.0;
 	int i;
 
 	for (i=0;i<Trained_Class_Nb;i++) {
@@ -204,38 +205,12 @@ int getResponse_mean (int buffer[Buffer_Size]) {
 
 			max = counter[i];
 			response_mean = i;
+			accuracy = ((float)max/(float)Buffer_Size)*100.0;
 		}
 	}
-	printf("knn : class_id = %d\n", response_mean);
+	printf("knn : class_id = %d, accuracy = %f\n", response_mean, accuracy);
 	return response_mean;
 
-}
-
-float getAccuracy(indiv_knn * testSet, int * tab, int size) {
-
-	float correct = 0.0;
-	int i;
-	for (i=0;i<size;i++){
-		if (testSet[i].class_id == tab[i])
-			correct++;
-	}
-
-	return (correct/(float)size) * 100.0;
-}
-
-int exists (int * tab, int val, int size) {
-
-	int trouve = 0;
-
-	int i = 0;
-	while ((i<size) && (trouve == 0)) {
-		
-		if (tab[i] == val)
-			trouve = 1;
-		i++;
-	}
-
-	return trouve;
 }
 
 int occurence_number (int * tab, int val, int size) {
@@ -253,45 +228,3 @@ int occurence_number (int * tab, int val, int size) {
 	return trouve;
 
 }
-/*
-void main() {
-
-	indiv_knn * matrice;
-
-	matrice = load_data("BaseApp");
-
- //0.004172  0.385072  0.346904  0.224912  0.505152  0.492094  0.812270  0.042337  0.664200 
-	
-	indiv_knn testInstance;
-	testInstance.pitch = 0.004172 ;
-	testInstance.roll  = 0.385072;
-	testInstance.vyaw = 0.346904;
-	testInstance.vx = 0.224912;
-	testInstance.vy  = 0.505152;
-	testInstance.vz = 0.492094;
-	testInstance.ax = 0.812270 ;
-	testInstance.ay  = 0.042337;
-	testInstance.az = 0.664200;
-
-
-	indiv_knn * neighbors;
-
-	neighbors = getNeighbors(matrice, testInstance);
-
-	//printf("%f\n", neighbors[0].pitch);
-	//printf("%f\n", neighbors[1].pitch);
-	//printf("%f\n", neighbors[2].pitch);
-
-	int response;
-
-	response = getResponse(neighbors);
-
-	
-
-	printf("response = %d\n", response);
-
-
-	
-}
-
-*/
