@@ -14,7 +14,8 @@
 #include <math.h>
 
 #define K 3
-
+#define Buffer_Size 3
+#define Trained_Class_Nb 3
 
 typedef struct {
 
@@ -39,6 +40,8 @@ float euclideanDistance(indiv_knn instance1, indiv_knn instance2);
 indiv_knn * getNeighbors(indiv_knn * trainingSet, indiv_knn testInstance);
 
 int getResponse (indiv_knn neighbors[K]);
+
+int getResponse_mean (int buffer[Buffer_Size]);
 
 float getAccuracy(indiv_knn * testSet, int * tab, int size);
 
