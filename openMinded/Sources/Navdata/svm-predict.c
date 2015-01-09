@@ -5,7 +5,7 @@
  * @version 1.0
  * @date    December 2014
  **/
-#ifndef _PREDICT_H
+
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
