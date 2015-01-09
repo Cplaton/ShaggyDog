@@ -128,16 +128,18 @@ predict_results predict(specimen * buffer)
 		recog_class = 0;
 		max = 0;
 	}
-    
+
+    /*
     printf("nombre de classes : %d\n",nr_class);
     printf("Classe reconnue : %d\n",recog_class);
     printf("Confiance : %lf\n ", 100*((double)max)/((double)l));
-    
+    */
+
     free(labels);
     free(counters);
     res.predict_class = recog_class;
-    res.confidence = (int)100*((double)max)/((double)l);
-    
+    res.confidence = 100.0*((double)max)/((double)l);
+    res.class_count = nr_class;
     return res;
 }
 

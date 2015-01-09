@@ -8,6 +8,7 @@
 
 #ifndef _NAIVE_H_
 #define _NAIVE_H_
+#include "classifier.h"
 
 /**
 * @struct  sample
@@ -58,9 +59,9 @@ int naive_predict(sample * indiv,naive_model * model);
 * @brief   classify a given specimens' buffer with a given model. 
 * @param   indiv   Sample structure's pointer, specimen to classify. 
 * @param   model   naive_model structure's pointer, model to use for classification.
-* @return  Integer representing the predicted class.
+* @return  A structure representing the prediction results (class, confidence ..).
 **/
-int naive_predict_mean(sample * indiv,naive_model * model);
+predict_results naive_predict_mean(sample * indiv,naive_model * model);
 
 /**
 * @brief   free the memspace used for a specimen. 

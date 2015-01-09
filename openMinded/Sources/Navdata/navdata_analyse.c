@@ -587,15 +587,16 @@ inline C_RESULT navdata_analyse_process( const navdata_unpacked_t* const navdata
                     }
                     if((method_selected==NAIVE && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
                        if(nv_model!=NULL && specimen_naive_buffer != NULL){
-                            class_id =  naive_predict_mean(specimen_naive_buffer,nv_model);
-                            alertDroneState(class_id);
+                            predict_results res_pred =  naive_predict_mean(specimen_naive_buffer,nv_model);
+		            class_id = res_pred.predict_class;
+                            alertFullDroneState(res_pred.class_count, class_id, res_pred.confidence, "NAIVE");
                         }
                     }
 
                     if((method_selected==SVM && options.mission!=1) || (method_selected==ALL && options.mission!=1)){
                         predict_results res_pred = recognition_process(specimen_buffer, NAME_TRAINING_MODEL);
 		        class_id = res_pred.predict_class;
-                        alertDroneState(class_id);
+                        alertFullDroneState(res_pred.class_count, class_id, res_pred.confidence, "SVM");
                     }
                     vp_os_mutex_unlock(&class_mutex);
 				}else{
@@ -876,7 +877,7 @@ void alertDroneState (int classId){
 }
 
 
-void alertFullDroneState (int classCount, int classId, float confidence, char * algoName){
+void alertFullDroneState (int classCount, int classId, double confidence, char * algoName){
     showState(classId);
     if(options.debug!=0){
         printf("Algorithme : %s\n", algoName);

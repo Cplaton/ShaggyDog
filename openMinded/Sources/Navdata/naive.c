@@ -292,7 +292,7 @@ int naive_predict(sample * indiv,naive_model * model){
 return model->classe[index];
 }
 
-int naive_predict_mean(sample * buffer, naive_model * model){
+predict_results naive_predict_mean(sample * buffer, naive_model * model){
     int i,j,l;
     int * counters;
     int recog_values[10];
@@ -301,8 +301,7 @@ int naive_predict_mean(sample * buffer, naive_model * model){
         recog_values[l]=naive_predict(&buffer[l],model);
     }
     if (counters == NULL){
-        printf("malloc rate");
-        exit(1);
+        perror("malloc failed in naive.c");
     }
     for(i=0;i<model->nb_class;i++){
         counters[i]=0;
@@ -322,11 +321,19 @@ int naive_predict_mean(sample * buffer, naive_model * model){
             recog_class=model->classe[j];
         }
     }
-    printf("nombre de classes naive : %d\n",model->nb_class);
-    printf("Classe naivement reconnue : %d\n",recog_class);
-    printf("Confiance naive: %lf\n ", 100*((double)max)/((double)l));
+
+        predict_results res;
+        res.class_count = model->nb_class;
+        res.predict_class = recog_class;
+        res.confidence = 100.0*((double)max)/((double)l);
+        
+        /*
+        printf("nombre de classes naive : %d\n",model->nb_class);
+        printf("Classe naivement reconnue : %d\n",recog_class);
+        printf("Confiance naive: %lf\n ", 100*((double)max)/((double)l));
+        */
     //free(counters);
-    return recog_class;
+    return res;
 }
 
 /*

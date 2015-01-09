@@ -35,13 +35,7 @@ typedef enum drone_state {
     UNKNOWN_STATE   /**< State that take the drone when he is not in anyone of the other states. */
 } drone_state_t;
 
-/*
-typedef struct T_classifierResult{
-    int classCount,
-    int classId,
-    float confidence
-    
-};*/
+
 /* Returns the last drone state */
 /**
  * @brief   Gets the last drone state into drone_state_t format
@@ -82,5 +76,5 @@ void alertDroneState (int classId);
  * @param	confidence	Confidence rate (in percentage) of the detected class, -1 if none
  * @param	algoName		Name of the algorithm used for the classification
  **/
-void alertFullDroneState (int classCount, int classId, float confidence, char * algoName);
+void alertFullDroneState (int classCount, int classId, double confidence, char * algoName);
 #endif // _NAVDATA_H

@@ -7,7 +7,7 @@
  **/
 #ifndef _PREDICT_H
 #define _PREDICT_H
-
+#include "classifier.h"
 /**
  * @struct  specimen
  * @abstract   Structure that represents a sample for svm.
@@ -25,14 +25,6 @@ struct s_specimen{
 }typedef specimen;
 
 
-/**
- * @struct predict_results 
- * @abstract   Structure that represents a classification's result.
- **/
-struct s_predict_results{
-	int confidence;     /**< Confidense we can have in the result (in %). */
-	int predict_class;     /**< Predicted class. */
-}typedef predict_results;
 
 
 /**
