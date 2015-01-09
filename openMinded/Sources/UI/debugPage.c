@@ -25,6 +25,7 @@ void open_file_callback(GtkWidget* win){
 	}
 }
 
+
 void debugPage(){
 	/*-----Create a table of 8 rows and 6 lines-----*/
 	gui->tableDebugPage = gtk_table_new(6, 8, TRUE);

@@ -47,10 +47,8 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 	if (strcmp(select_mission, MISSION_WALL_4) == 0)
 		mission_WALL_4();
 
-	
 
 return 0;
-
 }
 
 void mission_SFS_1 () {
@@ -186,7 +184,6 @@ void mission_SFS_1 () {
 void mission_SFS_2() {
 
 	drone_state_t status = get_drone_state();
-	float command;
 	float fin;
 	Inputs_t lastcommand;
 	commandType_t type;

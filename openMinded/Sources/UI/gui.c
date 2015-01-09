@@ -16,7 +16,6 @@ void OnDestroy(GtkWidget *pWidget, gpointer pData) {
 	signal_exit();
 	gtk_main_quit();
 }
-
 /*-----main window of application-----*/
 void init_gui(int argc, char **argv)
 {
