@@ -1,3 +1,10 @@
+/**
+ * @file    reaction.c
+ * @author  ShaggyDogs
+ * @brief   Reaction Module
+ * @version 1.0
+ * @date    December 2014
+ **/
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -1,5 +1,5 @@
 /**
- * @file    mission.c
+ * @file    mission.h
  * @author  ShaggyDogs
  * @brief   Contains all the functions used to send commands to the drone
  * @version 2.0
@@ -87,12 +87,35 @@ void mission_WALL_4();
  **/
 float roll(float value, int us);
 
+/**
+ * @fn      pitch
+ * @brief   Applies the given pitch angle to the drone during the given time.
+ * @param   value       the pitch angle to set (in ?? )
+ * @param   us          the duration in us to wait for the answer.
+ **/
 float pitch(float value, int us);
 
+/**
+ * @fn      yaw
+ * @brief   Applies the given yaw velocity to the drone during the given time.
+ * @param   value       the yaw velocity to set (in ?? )
+ * @param   us          the duration in us to wait for the answer.
+ **/
 float yaw(float value, int us);
 
+/**
+ * @fn      gas
+ * @brief   Applies the given gas velocity to the drone during the given time.
+ * @param   value       the gas velocity to set (in ?? )
+ * @param   us          the duration in us to wait for the answer.
+ **/
 float gas(float value, int us);
 
+/**
+ * @fn      hover
+ * @brief   Applies the hovering command to the drone during the given time.
+ * @param   us          the duration in us to wait for the answer.
+ **/
 float hover(int us);
 
 
