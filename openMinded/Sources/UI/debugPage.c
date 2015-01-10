@@ -21,7 +21,7 @@ void open_file_callback(GtkWidget* win){
 	   gtk_widget_destroy (gui->dialogFile);   */
 	if (system("gedit DataModel/logSFM &") != 0) {
 		fprintf(stderr,"Failed to open the log file \n");
-		perror(" ");
+		perror("Problem while opening the logSFM file.");
 	}
 }
 

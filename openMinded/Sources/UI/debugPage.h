@@ -3,6 +3,9 @@
 
 #include "gui.h"
 
+/**
+ * @brief       constructor of the debug page.
+ **/
 void debugPage();
 
 #endif

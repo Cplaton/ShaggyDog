@@ -45,6 +45,7 @@ GENERIC_BINARIES_COMMON_SOURCE_FILES+=	\
    UI/debugPage.c 	\
    UI/diagnosisPage.c 	\
    UI/ardrone_gui.c	\
+   UI/controller.c	\
    UserApp/user_app.c \
    UserApp/mission.c   \
    UserApp/reaction.c

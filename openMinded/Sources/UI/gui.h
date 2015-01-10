@@ -11,11 +11,15 @@
 #include "diagnosisPage.h"
 #include "debugPage.h"
 #include "configurePage.h"
+#include "controller.h"
 
 //VP_SDK
 #include <VP_Os/vp_os_signal.h>
 #include <VP_Os/vp_os_malloc.h>
 
+/**
+ * @brief       Structure that define all the GUI content
+ **/
 typedef struct gui
 {
 	/*-----windows-----*/
@@ -46,15 +50,15 @@ typedef struct gui
 	GtkWidget *labelVyGeneral;
 	GtkWidget *labelVzGeneral;
 	GtkWidget *labelflightState;
-	GtkWidget *labelAlert;
-	GtkWidget *labelEmergency;
-	GtkWidget *labelIndicators;
-	GtkWidget *labelBattery;
-	GtkWidget *labelWifi;
-	GtkWidget *labelDroneS;
-	GtkWidget *labelDroneClass;
+	GtkWidget *labelAlert;                      /**< Label that introduce the alert TextView. */
+	GtkWidget *labelEmergency;                  /**< Label that introduce the emergency TextView. */
+	GtkWidget *labelIndicators;                 /**< Label that introduce the Indicators part of the diagnosis tab. */
+	GtkWidget *labelBattery;                    /**< Label that introduce the battery state textentry. */
+	GtkWidget *labelWifi;                       /**< Label that introduce the wifi quality textentry. */
+	GtkWidget *labelDroneS;                     /**< Label that introduce the drone state textentry. */
+	GtkWidget *labelDroneClass;                 /**< Label that introduce the drone class textentry. */
 	/*-----images-----*/
-	GtkWidget* imgSmartFox;
+	GtkWidget* imgSmartFox;                     /**< Logo displayed in the gui. */
 	GtkWidget* imgFile;
 	/*-----pixbuffers-----*/
 	GdkPixbuf *pixbuf;
@@ -66,8 +70,8 @@ typedef struct gui
 	GtkWidget *tableDebugPage;
 	GtkWidget *tableConfigPage;
 	/*-----textviews-----*/
-	GtkWidget *textViewAlert;
-	GtkWidget *textViewEmergency;
+	GtkWidget *textViewAlert;                   /**< TextView that displays the diagnosed alerts. */
+	GtkWidget *textViewEmergency;               /**< TextView that displays the reaction module decisions in case of alert. */
 	/*-----textentries-----*/
 	GtkWidget *textEntryRollSignature;
 	GtkWidget *textEntryVYawSignature;
@@ -83,10 +87,10 @@ typedef struct gui
 	GtkWidget *textEntryVyGeneral;
 	GtkWidget *textEntryVzGeneral;
 	GtkWidget *textEntryFlightState;
-	GtkWidget *textEntryBattery;
-	GtkWidget *textEntryWifi;
-	GtkWidget *textEntryDroneS;
-	GtkWidget *textEntryDroneClass;
+	GtkWidget *textEntryBattery;                /**< TextEntry that displays the battery state. */
+	GtkWidget *textEntryWifi;                   /**< TextEntry that displays the wifi quality. */
+	GtkWidget *textEntryDroneS;                 /**< TextEntry in wich the drone state is diplayed (flying, landing, taking of ...) */
+	GtkWidget *textEntryDroneClass;             /**< TextEntry in wich the recognized class is displayed (Standard fly, Obstacle front/back/left/Right...). */
 	/*-----checkbuttons-----*/
 	GtkWidget *checkButtonSaturation;
 	GtkWidget *checkButtonSys;
@@ -149,8 +153,26 @@ typedef struct gui
 	GtkTextBuffer* bufferEmergency;
 } gui_t;
 
+
+/**
+ * @brief       Getters of the GUI
+ * @return      the GUI instance
+ **/
 gui_t *get_gui();
+
+/**
+ * @brief       TODO: check if used
+ **/
 void diagnosisPage();
+
+/**
+ * @brief       Initialise the GUI instance
+ **/
 void init_gui(int argc, char **argv);
+
+/**
+ * @brief       Destroys the gui
+ **/
+void destroyGui();
 
 #endif
