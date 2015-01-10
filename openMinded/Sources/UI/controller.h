@@ -9,7 +9,8 @@
 #include "gui.h"
 #include "configurePage.h"
 
-
+#ifndef __CONTROLLER_H
+#define __CONTROLLER_H
 /*------------------------------------------------------------Public variables*/
 /**
  * @var		missionModeOn
@@ -52,3 +53,7 @@ void check_button_callback(GtkWidget *widget, gpointer data);
  */
 void check_selected_mission_id(GtkWidget *widget, gpointer data);
 
+
+
+
+#endif	

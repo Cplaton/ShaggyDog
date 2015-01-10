@@ -893,12 +893,12 @@ void init_knn_indiv(indiv_knn * knn_individu){
 
 
 void alertDroneState (int classId){
-	showState(classId);
+    showRecognizedClass(classId);
 }
 
 
 void alertFullDroneState (int classCount, int classId, double confidence, char * algoName){
-	showState(classId);
+	showRecognizedClass(classId);
 	if(options.debug!=0) {
 		printf("Algorithme : %s\n", algoName);
 		if(classCount!=0)

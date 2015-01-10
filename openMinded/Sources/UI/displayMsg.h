@@ -7,5 +7,11 @@
 
 void displayAlertMsg (fault_t msg);
 void displayEmergencyMsg (emergency_state em);
-void showState(int classid);
+void showRecognizedClass (int classid);
+
+void showDroneState(int state);
+void showDroneBatteryLevel(float level);
+void showDroneWifiQualityLevel(float level);
+
+
 #endif

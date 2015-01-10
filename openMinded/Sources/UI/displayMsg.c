@@ -3,7 +3,7 @@ extern gui_t *gui;
 extern int debugModeOn;
 
 
-void showState(int classid){
+void showRecognizedClass(int classid){
 
 	char msg[20];
 
@@ -202,5 +202,53 @@ void displayEmergencyMsg (emergency_state em) {
 		gtk_text_buffer_insert_with_tags_by_name(gui->bufferEmergency,&endEmergency,alertMsg_tmp,-1,"have_emergency",NULL);
 	}
 	while (gtk_events_pending()) {gtk_main_iteration (); }
+}
+
+
+void showDroneState(int state){
+    static char info[20];
+
+    switch (state) {
+        case 0:
+            sprintf(info,"%s","FLYING");
+            break;
+        case 1:
+            sprintf(info,"%s","LANDING");
+            break;
+        case 2:
+            sprintf(info,"%s","LANDED");
+            break;
+        case 3:
+            sprintf(info,"%s","TAKING_OFF");
+            break;
+        case 4:
+            sprintf(info,"%s","UNKNOWN_STATE");
+            break;
+        default:
+            sprintf(info,"%s","UNKNOWN_STATE");
+            break;
+    }
+    if(debugModeOn == 1) {
+        gtk_entry_set_text(GTK_ENTRY(gui->textEntryFlightState),info);
+    }
+    gtk_entry_set_text(GTK_ENTRY(gui->textEntryDroneS),info);
+
+}
+
+void showDroneBatteryLevel(float level){
+    static char info[20];
+    
+    sprintf(info,"%d%s",(int)level,"%");
+    gtk_entry_set_text(GTK_ENTRY(gui->textEntryBattery),info);
+    if(level < 20.0) {
+        gtk_widget_modify_text(GTK_WIDGET(gui->textEntryBattery), GTK_STATE_NORMAL, &(gui->RED_COLOR));
+    }
+    
+}
+
+void showDroneWifiQualityLevel(float level){
+    static char info[20];
+    sprintf(info,"%d",(int)level);
+    gtk_entry_set_text(GTK_ENTRY(gui->textEntryWifi),info);
 }
 

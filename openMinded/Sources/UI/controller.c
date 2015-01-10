@@ -172,7 +172,6 @@ void start_flight(){
     drone_state_t droneState;
     char msg[1000];
     char tabAlarm[6][15] = {"","","","","",""};
-    char info[20];
     int i;
     float batteryLevel = 0.0, wifiLevel = 0.0;
     
@@ -250,43 +249,16 @@ void start_flight(){
         
         /*----get battery level-----*/
         batteryLevel = get_battery_level();
-        sprintf(info,"%d%s",(int)batteryLevel,"%");
-        gtk_entry_set_text(GTK_ENTRY(gui->textEntryBattery),info);
-        if(batteryLevel < 20.0) {
-            gtk_widget_modify_text(GTK_WIDGET(gui->textEntryBattery), GTK_STATE_NORMAL, &(gui->RED_COLOR));
-        }
+        showDroneBatteryLevel(batteryLevel);
         
         /*-----get wifi-----*/
         wifiLevel = get_wifi_quality();
-        sprintf(info,"%d",(int)wifiLevel);
-        gtk_entry_set_text(GTK_ENTRY(gui->textEntryWifi),info);
+        showDroneWifiQualityLevel(wifiLevel);
         
         /*-----get drone flight state-----*/
         droneState = get_drone_state();
-        switch (droneState) {
-            case 0:
-                sprintf(info,"%s","FLYING");
-                break;
-            case 1:
-                sprintf(info,"%s","LANDING");
-                break;
-            case 2:
-                sprintf(info,"%s","LANDED");
-                break;
-            case 3:
-                sprintf(info,"%s","TAKING_OFF");
-                break;
-            case 4:
-                sprintf(info,"%s","UNKNOWN_STATE");
-                break;
-            default:
-                sprintf(info,"%s","UNKNOWN_STATE");
-                break;
-        }
-        if(debugModeOn == 1) {
-            gtk_entry_set_text(GTK_ENTRY(gui->textEntryFlightState),info);
-        }
-        gtk_entry_set_text(GTK_ENTRY(gui->textEntryDroneS),info);
+        showDroneState (droneState);
+        
         /*-----periode of 500ms-----*/
         //usleep(500000);
         while (gtk_events_pending()) {gtk_main_iteration (); }
