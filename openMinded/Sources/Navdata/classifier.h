@@ -1,4 +1,9 @@
-
+/**
+ * @file    classifier.h
+ * @author  shaggydogs
+ * @date    10/01/15
+ * @brief   Contain the structure used by each classifiers.
+ **/
 
 #ifndef _CLASSIFIER_H_
 #define _CLASSIFIER_H_

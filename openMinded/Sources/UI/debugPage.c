@@ -1,3 +1,10 @@
+/**
+ * @file    debugPage.c
+ * @author  smartfox
+ * @date    10/01/15
+ * @brief   Contains the initialisation of the debug page of the gui.
+ **/
+
 #include "debugPage.h"
 extern gui_t *gui;
 

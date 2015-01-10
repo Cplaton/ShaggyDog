@@ -56,4 +56,4 @@ void check_selected_mission_id(GtkWidget *widget, gpointer data);
 
 
 
-#endif	
+#endif

@@ -1,3 +1,9 @@
+/**
+ * @file    displayMsg.c
+ * @author  shaggydogs
+ * @date    10/01/15
+ * @brief   Manage the display of informations into the GUI.
+ **/
 #include "displayMsg.h"
 extern gui_t *gui;
 extern int debugModeOn;

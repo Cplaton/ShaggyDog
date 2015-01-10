@@ -1,3 +1,10 @@
+/**
+ * @file    diagnosisPage.c
+ * @author  shaggydogs
+ * @date    10/01/15
+ * @brief   Contains the initialisation of the diagnisis page of the gui.
+ **/
+
 #include "diagnosisPage.h"
 extern gui_t *gui;
 
@@ -107,7 +114,7 @@ void diagnosisPage(){
 	gtk_container_add(GTK_CONTAINER(gui->vboxIndicators),gui->textEntryDroneS);
 	gtk_container_add(GTK_CONTAINER(gui->vboxIndicators),gui->textEntryDroneClass);
 
-	/*-----add lebels to vboxes-----*/
+	/*-----add labels to vboxes-----*/
 	gtk_container_add(GTK_CONTAINER(gui->vboxIndicatorsLabel),gui->labelBattery);
 	gtk_container_add(GTK_CONTAINER(gui->vboxIndicatorsLabel),gui->labelWifi);
 	gtk_container_add(GTK_CONTAINER(gui->vboxIndicatorsLabel),gui->labelDroneS);

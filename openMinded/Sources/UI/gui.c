@@ -1,8 +1,8 @@
 /**
  * @file    gui.c
- * @author  shaggydogs & smartfox
+ * @author  shaggydogs
  * @date    10/01/15
- * @brief   Manage the gui creation.
+ * @brief   Contains the definition of the GUI structure and of it's global functions (init, destroy).
  **/
 
 

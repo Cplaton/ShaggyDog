@@ -1,3 +1,10 @@
+/**
+ * @file    ardrone_gui.c
+ * @author  smartfox
+ * @date    10/01/14
+ * @brief   Contains the initialisation of ardrone gui.
+ **/
+
 #include <ardrone_api.h>
 #include <ardrone_tool/UI/ardrone_input.h>
 

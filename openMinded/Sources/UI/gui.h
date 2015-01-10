@@ -1,3 +1,9 @@
+/**
+ * @file    gui.h
+ * @author  shaggydogs
+ * @date    10/01/15
+ * @brief   Contains the definition of the GUI structure and of it's global functions (init, destroy).
+ **/
 #ifndef GUI_H_
 #define GUI_H_
 
@@ -23,33 +29,33 @@
 typedef struct gui
 {
 	/*-----windows-----*/
-	GtkWidget *mainWindow;
+	GtkWidget *mainWindow;                      /**< TMain windows of the application. */
 	/*-----notebooks-----*/
-	GtkWidget *notebook;
+	GtkWidget *notebook;                        /**< Notebook that contains all the application tabs. */
 	/*-----frames-----*/
-	GtkWidget *frameNoteBook;
-	GtkWidget *frameAlert;
-	GtkWidget *frameEmergency;
+	GtkWidget *frameNoteBook;                   /**< Frame that contains the configure page. */
+	GtkWidget *frameAlert;                      /**< Frame in wich the alert messages are displayed. */
+	GtkWidget *frameEmergency;                  /**< Frame in wich the emergency messages are displayed. */
 	/*-----labels-----*/
-	GtkWidget *labelNoteBook;
-	GtkWidget *labelConfigPageTop;
-	GtkWidget *labelSF;
-	GtkWidget *labelDebugGeneral;
-	GtkWidget *labelDebugSignature;
-	GtkWidget *labelRoll;
-	GtkWidget *labelVYaw;
-	GtkWidget *labelPitch;
-	GtkWidget *labelVx;
-	GtkWidget *labelVy;
-	GtkWidget *labelVz;
-	GtkWidget *labelSignatureState;
-	GtkWidget *labelRollGeneral;
-	GtkWidget *labelVYawGeneral;
-	GtkWidget *labelPitchGeneral;
-	GtkWidget *labelVxGeneral;
-	GtkWidget *labelVyGeneral;
-	GtkWidget *labelVzGeneral;
-	GtkWidget *labelflightState;
+	GtkWidget *labelNoteBook;                   /**< Label of the configuration tab. */
+	GtkWidget *labelConfigPageTop;              /**< Label displayed in the top of the configure page. It explains the page usage. */
+	GtkWidget *labelSF;                         /**< Label displayed in the botom of the configuration page, it displays the application name. */
+	GtkWidget *labelDebugGeneral;               /**< Label introducing the general part of the debug page. */
+	GtkWidget *labelDebugSignature;             /**< Label introducing the signature part of the debug page. */
+	GtkWidget *labelRoll;                       /**< Label introducing the roll signature into the debug page. */
+	GtkWidget *labelVYaw;                       /**< Label introducing the vyaw signature into the debug page. */
+	GtkWidget *labelPitch;                      /**< Label introducing the pitch signature into the debug page. */
+	GtkWidget *labelVx;                         /**< Label introducing the vx signature into the debug page. */
+	GtkWidget *labelVy;                         /**< Label introducing the vy signature into the debug page. */
+	GtkWidget *labelVz;                         /**< Label introducing the vz signature into the debug page. */
+	GtkWidget *labelSignatureState;             /**< Label introducing the signature state into the debug page. */
+	GtkWidget *labelRollGeneral;                /**< Label introducing the roll into the debug page. */
+	GtkWidget *labelVYawGeneral;                /**< Label introducing the vyaw into debug page. */
+	GtkWidget *labelPitchGeneral;               /**< Label introducing the pitch into the debug page. */
+	GtkWidget *labelVxGeneral;                  /**< Label introducing the vx into the debug page. */
+	GtkWidget *labelVyGeneral;                  /**< Label introducing the vy into the debug page. */
+	GtkWidget *labelVzGeneral;                  /**< Label introducing the vz into the debug page. */
+	GtkWidget *labelflightState;                /**< Label introducing the fight state into the debug page. */
 	GtkWidget *labelAlert;                      /**< Label that introduce the alert TextView. */
 	GtkWidget *labelEmergency;                  /**< Label that introduce the emergency TextView. */
 	GtkWidget *labelIndicators;                 /**< Label that introduce the Indicators part of the diagnosis tab. */
@@ -59,98 +65,103 @@ typedef struct gui
 	GtkWidget *labelDroneClass;                 /**< Label that introduce the drone class textentry. */
 	/*-----images-----*/
 	GtkWidget* imgSmartFox;                     /**< Logo displayed in the gui. */
-	GtkWidget* imgFile;
+	GtkWidget* imgFile;                         /**< Other logo displayed in thr gui. */
 	/*-----pixbuffers-----*/
-	GdkPixbuf *pixbuf;
-	GdkPixbuf *pixbufFile;
+	GdkPixbuf *pixbuf;                          /**< Pixel buffer used to load the imgsmartfox. */
+	GdkPixbuf *pixbufFile;                      /**< Pixel buffer used to load the img file. */
 	/*-----buttons-----*/
-	GtkWidget *buttonFinish;
+	GtkWidget *buttonFinish;                    /**< Finish button of the configuration page, it is used to validate the selection. */
 	/*-----tables-----*/
-	GtkWidget *tableDisgnosisPage;
-	GtkWidget *tableDebugPage;
-	GtkWidget *tableConfigPage;
+	GtkWidget *tableDisgnosisPage;              /**< Table used to define the diagnosis page structure. */
+	GtkWidget *tableDebugPage;                  /**< Table used to define the debug page structure. */
+	GtkWidget *tableConfigPage;                 /**< Table used to define the config page structure. */
 	/*-----textviews-----*/
 	GtkWidget *textViewAlert;                   /**< TextView that displays the diagnosed alerts. */
 	GtkWidget *textViewEmergency;               /**< TextView that displays the reaction module decisions in case of alert. */
 	/*-----textentries-----*/
-	GtkWidget *textEntryRollSignature;
-	GtkWidget *textEntryVYawSignature;
-	GtkWidget *textEntryPitchSignature;
-	GtkWidget *textEntryVxSignature;
-	GtkWidget *textEntryVySignature;
-	GtkWidget *textEntryVzSignature;
-	GtkWidget *textEntrySignatureState;
-	GtkWidget *textEntryRollGeneral;
-	GtkWidget *textEntryVYawGeneral;
-	GtkWidget *textEntryPitchGeneral;
-	GtkWidget *textEntryVxGeneral;
-	GtkWidget *textEntryVyGeneral;
-	GtkWidget *textEntryVzGeneral;
-	GtkWidget *textEntryFlightState;
+	GtkWidget *textEntryRollSignature;          /**< TextEntry that displays the current roll signature into the debug page. */
+	GtkWidget *textEntryVYawSignature;          /**< TextEntry that displays the current vyaw signature into the debug page. */
+	GtkWidget *textEntryPitchSignature;         /**< TextEntry that displays the current pitch signature into the debug page. */
+	GtkWidget *textEntryVxSignature;            /**< TextEntry that displays the current vx signature into the debug page. */
+	GtkWidget *textEntryVySignature;            /**< TextEntry that displays the current vy signature into the debug page. */
+	GtkWidget *textEntryVzSignature;            /**< TextEntry that displays the current vz signature into the debug page. */
+	GtkWidget *textEntrySignatureState;         /**< TextEntry that displays the current state signature into the debug page. */
+	GtkWidget *textEntryRollGeneral;            /**< TextEntry that displays the current roll into the debug page. */
+	GtkWidget *textEntryVYawGeneral;            /**< TextEntry that displays the current vyaw into the debug page. */
+	GtkWidget *textEntryPitchGeneral;           /**< TextEntry that displays the current pitch into the debug page. */
+	GtkWidget *textEntryVxGeneral;              /**< TextEntry that displays the current vx into the debug page. */
+	GtkWidget *textEntryVyGeneral;              /**< TextEntry that displays the current vy into the debug page. */
+	GtkWidget *textEntryVzGeneral;              /**< TextEntry that displays the current vz into the debug page. */
+	GtkWidget *textEntryFlightState;            /**< TextEntry that displays the current flight state into the debug page. */
 	GtkWidget *textEntryBattery;                /**< TextEntry that displays the battery state. */
 	GtkWidget *textEntryWifi;                   /**< TextEntry that displays the wifi quality. */
 	GtkWidget *textEntryDroneS;                 /**< TextEntry in wich the drone state is diplayed (flying, landing, taking of ...) */
 	GtkWidget *textEntryDroneClass;             /**< TextEntry in wich the recognized class is displayed (Standard fly, Obstacle front/back/left/Right...). */
 	/*-----checkbuttons-----*/
-	GtkWidget *checkButtonSaturation;
-	GtkWidget *checkButtonSys;
-	GtkWidget *checkButtonSePoser;
-	GtkWidget *checkButtonSMLimited;
-	GtkWidget *checkButtonDebug;
-	GtkWidget *checkButtonDisableSSM;
-	GtkWidget *checkButtonMission;
-	GtkWidget *checkButtonReaction;
+	GtkWidget *checkButtonSaturation;           /**< Checkbox used in the configuration page te activate or not the ???. */
+	GtkWidget *checkButtonSys;                  /**< Checkbox used in the configuration page te activate or not the ???. */
+	GtkWidget *checkButtonSePoser;              /**< Checkbox used in the configuration page te activate or not the ???. */
+	GtkWidget *checkButtonSMLimited;            /**< Checkbox used in the configuration page te activate or not the smartfox limited module. */
+	GtkWidget *checkButtonDebug;                /**< Checkbox used in the configuration page te activate or not the debug mode. */
+	GtkWidget *checkButtonDisableSSM;           /**< Checkbox used in the configuration page te activate or not the smartfox safety module (deprecated). */
+	GtkWidget *checkButtonMission;              /**< Checkbox used in the configuration page te activate or not the mission mode. */
+	GtkWidget *checkButtonReaction;             /**< Checkbox used in the configuration page te activate or not the reaction module. */
 	/*-----boxes-----*/
-	GtkWidget *vboxCheckButton;
-	GtkWidget *hboxButtonFinish;
-	GtkWidget *vboxDebugGeneral;
-	GtkWidget *vboxDebugSignature;
-	GtkWidget *vboxDebugGeneral1;
-	GtkWidget *vboxDebugSignature1;
-	GtkWidget *vboxDebugTextEntryGeneral;
-	GtkWidget *vboxDebugTextEntryGeneral1;
-	GtkWidget *vboxDebugTextEntrySignature;
-	GtkWidget *vboxDebugTextEntrySignature1;
-	GtkWidget *hboxDiagnosis;
-	GtkWidget *vboxIndicators;
-	GtkWidget *vboxIndicatorsLabel;
+	GtkWidget *vboxCheckButton;                 /**< Checkbox used in the configuration page te activate or not the reaction module. */
+	GtkWidget *hboxButtonFinish;                /**< VBox layout that contains the finish button in the configuration page. */
+	GtkWidget *vboxDebugGeneral;                /**< VBox layout that contains the labels that are in the left column of the general part of the debug page. */
+	GtkWidget *vboxDebugSignature;              /**< VBox layout that contains the labels that are in the left column of the signature part of the debug page. */
+	GtkWidget *vboxDebugGeneral1;               /**< VBox layout that contains the labels that are in the right column of the general part of the debug page. */
+	GtkWidget *vboxDebugSignature1;             /**< VBox layout that contains the labels that are in the right column of the signature part of the debug page. */
+	GtkWidget *vboxDebugTextEntryGeneral;       /**< VBox layout that contains the textentrys that are in the left column of the general part of the debug page. */
+	GtkWidget *vboxDebugTextEntryGeneral1;      /**< VBox layout that contains the textentrys that are in the right column of the general part of the debug page. */
+	GtkWidget *vboxDebugTextEntrySignature;     /**< VBox layout that contains the textentrys that are in the left column of the signature part of the debug page. */
+	GtkWidget *vboxDebugTextEntrySignature1;    /**< VBox layout that contains the textentrys that are in the right column of the signature part of the debug page. */
+	GtkWidget *hboxDiagnosis;                   /**< HBox layout that contains ??? (seems deprecated). */
+	GtkWidget *vboxIndicators;                  /**< VBox layout that contains all the indicators. */
+	GtkWidget *vboxIndicatorsLabel;             /**< VBox layout that contains all the indicator labels. */
 	/*-----alignements-----*/
-	GtkWidget *valignCheckButton;
-	GtkWidget *halignButtonFinish;
-	GtkWidget *valignDebugGeneral;
-	GtkWidget *valignDebugSignature;
-	GtkWidget *valignDebugTextEntryGeneral;
-	GtkWidget *valignDebugTextEntryGeneral1;
-	GtkWidget *valignDebugTextEntrySignature;
-	GtkWidget *valignDebugTextEntrySignature1;
-	GtkWidget *valignDebugGeneral1;
-	GtkWidget *valignDebugSignature1;
-	GtkWidget *halignDiagnosis;
-	GtkWidget *valignIndicators;
-	GtkWidget *valignIndicatorsLabel;
+    GtkWidget *valignCheckButton;               /**< Alignment of the check buttons in the configure page.*/
+    GtkWidget *halignButtonFinish;              /**< Alignment of the finish button in the configure page */
+    GtkWidget *valignDebugGeneral;              /**< Alignment of the labels that are in the left column of the general part of the debug page.*/
+
+    GtkWidget *valignDebugSignature;            /**< Alignment of the labels that are in the left column of the signature part of the debug page.*/
+
+    GtkWidget *valignDebugTextEntryGeneral;     /**< Alignment of the textentrys that are in the left column of the general part of the debug page.*/
+
+    GtkWidget *valignDebugTextEntryGeneral1;    /**< Alignment of the textentrys that are in the right column of the general part of the debug page.*/
+
+    GtkWidget *valignDebugTextEntrySignature;   /**< Alignment of the textentrys that are in the left column of the signature part of the debug page.*/
+
+	GtkWidget *valignDebugTextEntrySignature1;  /**< Alignment of the textentrys that are in the right column of the signature part of the debug page.*/
+	GtkWidget *valignDebugGeneral1;             /**< Alignment of the labels that are in the right column of the general part of the debug page. */
+	GtkWidget *valignDebugSignature1;           /**< Alignment of the labels that are in the right column of the signature part of the debug page. */
+	GtkWidget *halignDiagnosis;                 /**< Alignment of the ??? (seems deprecated). */
+	GtkWidget *valignIndicators;                /**< Alignment of the indicators textenty into the diagosis page. */
+	GtkWidget *valignIndicatorsLabel;           /**< Alignment of the indicators label in the diagnosis page. */
 	/*-----tooltips-----*/
-	GtkTooltips *tooltipsSaturation;
-	GtkTooltips *tooltipsSePoser;
-	GtkTooltips *tooltipsSMLimited;
-	GtkTooltips *tooltipsDebug;
-	GtkTooltips *tooltipsDisableSSM;
-	GtkTooltips *tooltipsSys;
-	GtkTooltips *tooltipsFile;
-	GtkTooltips *tooltipsMission;
-	GtkTooltips *tooltipsReaction;
+	GtkTooltips *tooltipsSaturation;            /**< Tooltips that gives some information about the saturation checkbox usage to the user. */
+	GtkTooltips *tooltipsSePoser;               /**< Tooltips that gives some information about the se poer checkbox usage to the user. */
+	GtkTooltips *tooltipsSMLimited;             /**< Tooltips that gives some information about the smlimited checkbox usage to the user. */
+	GtkTooltips *tooltipsDebug;                 /**< Tooltips that gives some information about the debug checkbox usage to the user. */
+	GtkTooltips *tooltipsDisableSSM;            /**< Tooltips that gives some information about the diasablessm checkbox usage to the user. */
+	GtkTooltips *tooltipsSys;                   /**< Tooltips that gives some information about the sys checkbox usage to the user. */
+	GtkTooltips *tooltipsFile;                  /**< Tooltips that gives some information about the file checkbox usage to the user. */
+	GtkTooltips *tooltipsMission;               /**< Tooltips that gives some information about the mission checkbox usage to the user. */
+	GtkTooltips *tooltipsReaction;              /**< Tooltips that gives some information about the reaction checkbox usage to the user. */
 	/*-----colors-----*/
-	GdkColor color;
-	GdkColor RED_COLOR;
+	GdkColor color;                             /**< Color used for the general informations. */
+	GdkColor RED_COLOR;                         /**< Red color used to displays alerts. */
 	/*-----event box-----*/
-	GtkWidget *eventBoxImgFile;
+	GtkWidget *eventBoxImgFile;                 /**< Event box used to the file img. */
 	/*-----dialogs-----*/
-	GtkWidget *dialogFile;
+	GtkWidget *dialogFile;                      /**< Dialog used to select a file in debug mode. */
 	/*-----scroll window-----*/
-	GtkWidget *scrolledAlert;
-	GtkWidget *scrolledEmergency;
+	GtkWidget *scrolledAlert;                   /**< Scroller of the alert panel of the diagnosis page. */
+	GtkWidget *scrolledEmergency;               /**< Scroller of the emergency panel of the diagnosis page. */
 	/*-----buffers-----*/
-	GtkTextBuffer* bufferAlert;
-	GtkTextBuffer* bufferEmergency;
+	GtkTextBuffer* bufferAlert;                 /**< Buffer of the alert panel of the diagnosis page. */
+	GtkTextBuffer* bufferEmergency;             /**< Buffer of the emergency panel of the diagnosis page. */
 } gui_t;
 
 
