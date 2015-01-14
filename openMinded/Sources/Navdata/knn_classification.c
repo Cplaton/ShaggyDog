@@ -205,10 +205,12 @@ int getResponse_mean (int buffer[Buffer_Size]) {
 			max = counter[i];
 			response_mean = i;
 			accuracy = ((float)max/(float)Buffer_Size)*100.0;
-			if (response_mean == 2 && accuracy <= 65.0){
+			/*
+			if (response_mean == 2 && accuracy <= 0.0){
 				response_mean = 0;
 				accuracy = 100.0;
 			}
+			*/
 		}
 	}
 	printf("knn : class_id = %d, accuracy = %f\n", response_mean, accuracy);

@@ -14,7 +14,7 @@
 #include <math.h>
 
 #define K 3
-#define Buffer_Size 5
+#define Buffer_Size 3
 #define Trained_Class_Nb 3
 
 typedef struct {
