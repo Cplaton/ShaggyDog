@@ -13,7 +13,7 @@
 #include <glib.h>
 #include <string.h>
 #include <stdio.h>
-#include "smartfox_main.h"
+#include "openminded_main.h"
 #include "diagnosisPage.h"
 #include "debugPage.h"
 #include "configurePage.h"

@@ -26,10 +26,10 @@
 #include "Navdata/navdata_analyse.h"
 #include "Navdata/database/bd_management.h"
 #include "utils.h"
-#include "svm-predict.h"
-#include "svm-train.h"
-#include "naive.h"
-#include "knn_classification.h"
+#include "Navdata/classification/svm-predict.h"
+#include "Navdata/classification/svm-train.h"
+#include "Navdata/classification/naive.h"
+#include "Navdata/classification/knn_classification.h"
 
 #define RECORD_TIME 15 //(en s)
 
