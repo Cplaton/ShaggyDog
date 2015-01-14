@@ -6,6 +6,14 @@
  *---------------------------------------------
  */
 
+/**
+ * @file    model.c
+ * @author  Kevin Delmas
+ * @brief   Handle the smartfox safety mode (model based diagnosis)
+ * @version 1.0
+ * @date    January 2014
+ **/
+
 #include "model.h"
 
 /*-------------------------------------------

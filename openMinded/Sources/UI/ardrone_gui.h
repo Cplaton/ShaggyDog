@@ -1,5 +1,5 @@
 /**
- * @file    ardrone_gui.c
+ * @file    ardrone_gui.h
  * @author  smartfox
  * @date    10/01/14
  * @brief   Contains the initialisation of ardrone gui.

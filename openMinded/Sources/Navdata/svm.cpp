@@ -1,3 +1,10 @@
+/**
+ * @file    svm.cpp
+ * @author  Chih-Chung Chang and Chih-Jen Lin
+ * @brief   libsvm, http://www.csie.ntu.edu.tw/~cjlin/libsvm/
+ * @version 3.20
+ * @date    November 2014
+ **/
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

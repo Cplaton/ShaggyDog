@@ -6,6 +6,14 @@
  *---------------------------------------------
  */
 
+/**
+ * @file    residue.c
+ * @author  Kevin Delmas, modified by the ShaggyDogs
+ * @brief   Handle the smartfox safety mode (model based diagnosis)
+ * @version 1.0
+ * @date    December 2014
+ **/
+
 #include "residue.h"
 
 /*-------------------------------------------
