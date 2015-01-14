@@ -58,13 +58,13 @@ void avoid_front_wall () {
 
 	float command;
 	float fin;
-	int etat = 10;
+	int etat = STOP_ALL_COMMANDS;
 	vp_os_mutex_init(&class_mutex);
 	while (modeReaction == 1) {
 		switch (etat) {
 
 		
-		case 10:
+		case STOP_ALL_COMMANDS:
 
 			vp_os_mutex_lock(&class_mutex);
 			class_id=1;
@@ -80,7 +80,7 @@ void avoid_front_wall () {
 			class_id=0;
 			vp_os_mutex_unlock(&class_mutex);
 
-			command = pitch(0.2,2000000);
+			command = pitch(0.2,1000000);
 
 			if (command != 0) {
 				etat = HOVER_DRONE;
@@ -164,7 +164,7 @@ void avoid_back_wall () {
 			vp_os_mutex_lock(&class_mutex);
 			class_id=0;
 			vp_os_mutex_unlock(&class_mutex);
-			command = pitch(-0.2, 1000000);
+			command = pitch(-0.2, 2000000);
 			if (command != 0) {
 				etat = HOVER_DRONE;
 			}
