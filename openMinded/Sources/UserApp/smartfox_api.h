@@ -3,6 +3,13 @@
  * 13/01/2014 - gayraudbenoit@gmail.com
  */
 
+/**
+ * @file    smartfox_api.h
+ * @author  Benoit Gayraud
+ * @brief   Contains the function that refreshes the command to send and the faults getter (for smartfox diagnosis)
+ * @date    January 2014
+ **/
+
 #ifndef SF_DRONE_COMMAND_H__
 #define SF_DRONE_COMMAND_H__
 #include "../ardrone_move_cmd.h"

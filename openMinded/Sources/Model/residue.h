@@ -6,6 +6,14 @@
  *---------------------------------------------
  */
 
+/**
+ * @file    residue.h
+ * @author  Kevin Delmas, modified by the ShaggyDogs
+ * @brief   Handle the smartfox safety mode (model based diagnosis)
+ * @version 1.0
+ * @date    December 2014
+ **/
+
 #ifndef RESIDUE_H
 #define RESIDUE_H
 
@@ -51,14 +59,19 @@ typedef struct _Residue_t {
 	float32_t r_Vz;
 }Residue_t;
 
+
+/**
+ * @struct  options_t
+ * @abstract   Structure used to share with the other files the mode selected in the GUI.
+ **/
 typedef struct _options_t {
-	unsigned char saturation;
-	unsigned char sysUrgenceExtreme;
-	unsigned char sePoser;
-	unsigned char SMLimited;
-	unsigned char debug;
-	unsigned char disableSSM;
-	unsigned char mission;
+	unsigned char saturation;           /**< Saturation mode (limits the commands sent to the drone). */
+	unsigned char sysUrgenceExtreme;    /**< SmartFox Safety mode. */
+	unsigned char sePoser;              /**< Emergency landing mode. */
+	unsigned char SMLimited;            /**< Smartfox safety mode only for major faults. */
+	unsigned char debug;                /**< Debug mode (for developers). */
+	unsigned char disableSSM;           /**< Disable Smartfox safety mode. */
+	unsigned char mission;              /**< Mission mode for machine learning. */
 }options_t;
 
 

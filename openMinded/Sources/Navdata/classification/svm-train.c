@@ -1,3 +1,10 @@
+/**
+ * @file    svm-train.c
+ * @author  ShaggyDogs
+ * @brief   prediction with svm
+ * @version 1.0
+ * @date    December 2014
+ **/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

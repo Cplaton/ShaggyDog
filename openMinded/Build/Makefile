@@ -29,11 +29,11 @@ GENERIC_BINARIES_SOURCE_DIR:=$(SRC_DIR)
 
 GENERIC_BINARIES_COMMON_SOURCE_FILES+=	\
    Navdata/navdata_analyse.c    	\
-   Navdata/svm-train.c	\
-   Navdata/svm-predict.c	\
-   Navdata/svm.cpp \
-   Navdata/naive.c \
-   Navdata/knn_classification.c \
+   Navdata/classification/svm-train.c	\
+   Navdata/classification/svm-predict.c	\
+   Navdata/classification/svm.cpp \
+   Navdata/classification/naive.c \
+   Navdata/classification/knn_classification.c \
    ardrone_move_cmd.c   		\
    disable_navdata_demo.c    		\
    utils.c		\
@@ -70,7 +70,7 @@ GENERIC_TARGET_BINARIES_PREFIX=
 GENERIC_TARGET_BINARIES_DIR=$(ARDRONE_TARGET_DIR)
 
 GENERIC_BINARIES_SOURCE_ENTRYPOINTS+=			\
-   smartfox_main.c
+   openminded_main.c
 
 GENERIC_INCLUDES:=$(addprefix -I,$(GENERIC_INCLUDES))
 
@@ -103,7 +103,7 @@ all: build_openMinded_db_lib build_libs $(TARGET)
 
 $(TARGET):
 	@$(MAKE) -C $(SDK_PATH)/VP_SDK/Build $(TMP_SDK_FLAGS) $(SDK_FLAGS) $(MAKECMDGOALS) USE_LINUX=yes
-	mv $(ARDRONE_TARGET_DIR)/smartfox_main $(TARGET)
+	mv $(ARDRONE_TARGET_DIR)/openminded_main $(TARGET)
 	mv $(TARGET) $(ARDRONE_TARGET_DIR)/
 
 $(MAKECMDGOALS): build_libs

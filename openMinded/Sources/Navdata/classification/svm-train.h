@@ -12,9 +12,9 @@
  * @fn      training_model_generation
  * @brief   function generating a SVM model from training samples.
  * @param   training_set    path to the file containing the learning base. 
- * @param   training_model  path to the
- * @param 
- * @param
+ * @param   training_model  path to the model generated.
+ * @param   folds   number of folds used for cross-validation.
+ * @param   nb_specimen number of sample stored in the learning base.
  * @return
  **/
 void training_model_generation(char* training_set, char* training_model, int folds, int nb_specimen);

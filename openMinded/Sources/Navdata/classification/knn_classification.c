@@ -1,3 +1,11 @@
+
+/**
+ * @file    knn_classification.c
+ * @author  OussamaBenShaggy
+ * @brief   KNN library
+ * @version 1.0
+ * @date    December 2014
+ **/
 #include "knn_classification.h"
 
 indiv_knn * load_data(char * nomFichier) {

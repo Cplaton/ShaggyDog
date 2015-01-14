@@ -5,6 +5,13 @@
  * File: model.h
  *---------------------------------------------
  */
+/**
+ * @file    model.h
+ * @author  Kevin Delmas
+ * @brief   Handle the smartfox safety mode (model based diagnosis)
+ * @version 1.0
+ * @date    January 2014
+ **/
 #ifndef MODEL_H
 #define MODEL_H
 

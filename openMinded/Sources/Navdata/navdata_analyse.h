@@ -18,10 +18,10 @@
 #define NAME_RESIDUE "residue"
 #define NAME_LOG "logSFM"
 
-#define NAME_TRAINING_SET "Sources/Navdata/BaseApp"
-#define NAME_TRAINING_MODEL "Sources/Navdata/BaseApp.model"
+#define NAME_TRAINING_SET "Sources/Navdata/classification/BaseApp"
+#define NAME_TRAINING_MODEL "Sources/Navdata/classification/BaseApp.model"
 
-#define KNN_DATA_SET "Sources/Navdata/KNN_BaseApp"
+#define KNN_DATA_SET "Sources/Navdata/classification/KNN_BaseApp"
 
 /**
  * @enum        drone_state
