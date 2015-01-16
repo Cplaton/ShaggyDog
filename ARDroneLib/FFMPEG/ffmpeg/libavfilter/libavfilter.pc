@@ -1,0 +1,14 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=/home/zuser/openminded/ShaggyDog/ARDroneLib/FFMPEG/ffmpeg/../../Soft/Build/targets_versions//ffmpeg_i686_PROD_MODE_Linux_2.6.32-67-generic_GNU_Linux_usrbingcc_4.4.3
+includedir=/home/zuser/openminded/ShaggyDog/ARDroneLib/FFMPEG/ffmpeg/../Includes
+
+Name: libavfilter
+Description: FFmpeg video filtering library
+Version: 2.23.0
+Requires: 
+Requires.private: 
+Conflicts:
+Libs: -L${libdir} -lavfilter -lSDL -lm -pthread -lz
+Libs.private: 
+Cflags: -I${includedir}

@@ -45,5 +45,5 @@
 **/.goutputstream/**
 
 # AR DRONE LIB
-**/ARDroneLib/**
+#**/ARDroneLib/**
 

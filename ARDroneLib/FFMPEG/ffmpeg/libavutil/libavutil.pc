@@ -1,0 +1,14 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=/home/zuser/openminded/ShaggyDog/ARDroneLib/FFMPEG/ffmpeg/../../Soft/Build/targets_versions//ffmpeg_i686_PROD_MODE_Linux_2.6.32-67-generic_GNU_Linux_usrbingcc_4.4.3
+includedir=/home/zuser/openminded/ShaggyDog/ARDroneLib/FFMPEG/ffmpeg/../Includes
+
+Name: libavutil
+Description: FFmpeg utility library
+Version: 51.9.1
+Requires: 
+Requires.private: 
+Conflicts:
+Libs: -L${libdir} -lavutil -lm
+Libs.private: 
+Cflags: -I${includedir}
