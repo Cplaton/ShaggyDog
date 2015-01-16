@@ -98,9 +98,7 @@ void avoid_front_wall () {
 			break;
 
 		case END_REACTION:
-			vp_os_mutex_lock(&reaction_mutex);
 			modeReaction = 0;
-			vp_os_mutex_unlock(&reaction_mutex);
 			displayEmergencyMsg(NO_EMERGENCY);
 			break;
 		}
