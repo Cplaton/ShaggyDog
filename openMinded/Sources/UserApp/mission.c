@@ -29,8 +29,6 @@ DEFINE_THREAD_ROUTINE(mission, data) {
 
 	printf("missionModeOn=%d\n",options.mission);
 	while(options.mission==0) {
-
-		//printf("c'est la déprime\n");
 		usleep(1000000);
 	}
 

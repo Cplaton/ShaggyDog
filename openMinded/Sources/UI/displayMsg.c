@@ -11,36 +11,47 @@ extern int debugModeOn;
 
 void showRecognizedClass(int classid){
 
-	char msg[20];
+    char msg[20];
+    const GdkColor RED_COLOR = { 0, 65535, 0, 0 };
+    const GdkColor GREEN_COLOR = { 0, 0, 65535, 0 };
 
 	/*-----switch different fault_t message-----*/
 	switch (classid) {
 	case 2:
-		sprintf(msg,"%s","Front Obs");
+            sprintf(msg,"%s","Front Obs");
+            gtk_widget_modify_text(gui->textEntryDroneClass, GTK_STATE_NORMAL, &RED_COLOR);
 		break;
 	case 3:
-		sprintf(msg,"%s","Rear Obs");
+            sprintf(msg,"%s","Rear Obs");
+            gtk_widget_modify_text(gui->textEntryDroneClass, GTK_STATE_NORMAL, &RED_COLOR);
 		break;
 	case 4:
-		sprintf(msg,"%s","Right Obs");
+            sprintf(msg,"%s","Right Obs");
+            gtk_widget_modify_text(gui->textEntryDroneClass, GTK_STATE_NORMAL, &RED_COLOR);
 		break;
 	case 5:
-		sprintf(msg,"%s","Left Obs");
+            sprintf(msg,"%s","Left Obs");
+            gtk_widget_modify_text(gui->textEntryDroneClass, GTK_STATE_NORMAL, &RED_COLOR);
 		break;
 	case 6:
-		sprintf(msg,"%s","Top Obs");
+            sprintf(msg,"%s","Top Obs");
+            gtk_widget_modify_text(gui->textEntryDroneClass, GTK_STATE_NORMAL, &RED_COLOR);
 		break;
 	case 7:
-		sprintf(msg,"%s","Bottom Obs");
+            sprintf(msg,"%s","Bottom Obs");
+            gtk_widget_modify_text(gui->textEntryDroneClass, GTK_STATE_NORMAL, &RED_COLOR);
 		break;
 	case 1:
-		sprintf(msg,"%s","Stationary");
+            sprintf(msg,"%s","Stationary");
+            gtk_widget_modify_text(gui->textEntryDroneClass, GTK_STATE_NORMAL, &GREEN_COLOR);
 		break;
 	case 0:
-		sprintf(msg,"%s","Unknown");
+            sprintf(msg,"%s","Unknown");
+            gtk_widget_modify_text(gui->textEntryDroneClass, GTK_STATE_NORMAL, &GREEN_COLOR);
 		break;
 	default:
-		sprintf(msg,"%s","No obstacle");
+            sprintf(msg,"%s","No obstacle");
+            gtk_widget_modify_text(gui->textEntryDroneClass, GTK_STATE_NORMAL, &GREEN_COLOR);
 	}
 
 	gtk_entry_set_text(GTK_ENTRY(gui->textEntryDroneClass),msg);
