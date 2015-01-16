@@ -41,6 +41,7 @@
 #define LAND_DRONE 10
 #define HOVER_DRONE 11
 #define END_REACTION 12
+#define STOP_ALL_COMMANDS 13
 
 extern char * mission_select_list[6];
 /**
