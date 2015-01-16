@@ -124,7 +124,7 @@ predict_results predict(specimen * buffer)
 	
 	if (100*((double)(max)/(double)l) < 64.0)
 	{
-		printf("non pris en compte - %d - %lf\n",recog_class, 100*((double)max)/((double)l));
+	//	printf("non pris en compte - %d - %lf\n",recog_class, 100*((double)max)/((double)l));
 		recog_class = 0;
 		max = 0;
 	}

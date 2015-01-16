@@ -8,6 +8,7 @@
  **/
 #include "knn_classification.h"
 
+
 indiv_knn * load_data(char * nomFichier) {
 
 	FILE * fichier = NULL;
@@ -221,8 +222,12 @@ int getResponse_mean (int buffer[Buffer_Size]) {
 			*/
 		}
 	}
-	printf("knn : class_id = %d, accuracy = %f\n", response_mean, accuracy);
-	return response_mean;
+    /************ Uncomment this to see the prediction's result in the terminal *************
+     *
+     * printf("knn : class_id = %d, accuracy = %f\n", response_mean, accuracy);
+     *
+     ***************************************************************************************/
+    return response_mean;
 
 }
 

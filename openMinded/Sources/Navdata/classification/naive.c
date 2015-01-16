@@ -12,6 +12,7 @@
 #include <string.h>
 #include "naive.h"
 
+
 float Calculate_Mean(float * value, int nb_value){
 	int i;
 	float mean=0;
@@ -327,13 +328,14 @@ predict_results naive_predict_mean(sample * buffer, naive_model * model){
 	res.predict_class = recog_class;
 	res.confidence = 100.0*((double)max)/((double)l);
 
-	/*
-	   printf("nombre de classes naive : %d\n",model->nb_class);
-	   printf("Classe naivement reconnue : %d\n",recog_class);
-	   printf("Confiance naive: %lf\n ", 100*((double)max)/((double)l));
-	 */
-	//free(counters);
-	return res;
+    /************ Uncomment this to see the prediction's result in the terminal *************
+     *
+	 *  printf("nombre de classes naive : %d\n",model->nb_class);
+	 *  printf("Classe naivement reconnue : %d\n",recog_class);
+	 *  printf("Confiance naive: %lf\n ", 100*((double)max)/((double)l));
+     *
+	 ***************************************************************************************/
+    return res;
 }
 
 /*
